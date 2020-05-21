@@ -1,2 +1,2 @@
 # overdrive
-A repository to house all code and configuration artefacts produced by the Overdrive team in collaboration with S23M
+A repository to house all code and configuration artefacts produced by the OverDrive Development team in collaboration with S23M
