@@ -6,9 +6,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
-import {MainProgramClass, Canvas} from './mainprogram'
-import {assignElement, canvasDraw} from "./canvasDraw";
+import * as serviceWorker from './ServiceWorker';
+import {MainProgramClass} from './MainProgram';
+import {Canvas} from './UIElements/Canvas';
+import {assignElement, canvasDraw} from "./UIElements/CanvasDraw";
 
 
 ReactDOM.render(

@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { Cardinality } from "./Cardinality";
-import {getDistance} from "../canvasDraw";
+import { getDistance } from "../UIElements/CanvasDraw";
 
 
 const EdgeEnd = {
@@ -13,6 +13,18 @@ const EdgeEnd = {
     FILLED_TRIANGLE: 4,
     DIAMOND: 5,
     FILLED_DIAMOND: 6
+}
+
+const LineColour = {
+    BLACK: 1,
+    RED: 2,
+    BLUE: 3,
+    GREEN: 4
+}
+
+const LineType = {
+    SOLID: 1,
+    DASHED: 2
 }
 
 export class Arrow {
@@ -29,12 +41,85 @@ export class Arrow {
         // Type
         this.startType = EdgeEnd.NONE;
         this.endType = EdgeEnd.ARROW;
+        this.lineColour = LineColour.BLACK;
+        this.LineType = LineType.SOLID;
 
         this.cardinality = null;
     }
 
-    add_cardinality(lowerBound, upperBound) {
+    addCardinality(lowerBound, upperBound) {
         this.cardinality = new Cardinality(lowerBound, upperBound);
+    }
+
+    setStartType(startType) {
+        switch(startType) {
+            case "-No Icon":
+                this.startType = EdgeEnd.NONE;
+                break;
+            case "->":
+                this.startType = EdgeEnd.ARROW;
+                break;
+            case "-▷":
+                this.startType = EdgeEnd.TRIANGLE;
+                break;
+            case "-◆":
+                this.startType = EdgeEnd.DIAMOND;
+                break;
+            default:
+                break;
+        }
+    }
+
+    setEndType(endType) {
+        switch(endType) {
+            case "-No Icon":
+                this.endType = EdgeEnd.NONE;
+                break;
+            case "->":
+                this.endType = EdgeEnd.ARROW;
+                break;
+            case "-▷":
+                this.endType = EdgeEnd.TRIANGLE;
+                break;
+            case "-◆":
+                this.endType = EdgeEnd.DIAMOND;
+                break;
+            default:
+                break;
+        }
+        console.log(this.endType);
+    }
+
+    setLineColour(lineColour) {
+        switch(lineColour) {
+            case "Black":
+                this.lineColour = LineColour.BLACK;
+                break;
+            case "Red":
+                this.lineColour = LineColour.RED;
+                break;
+            case "Blue":
+                this.lineColour = LineColour.BLUE;
+                break;
+            case "Green":
+                this.lineColour = LineColour.GREEN;
+                break;
+            default:
+                break;
+        }
+    }
+
+    setLineType(lineType) {
+        switch(lineType) {
+            case "Solid":
+                this.lineType = LineType.SOLID;
+                break;
+            case "Dashed":
+                this.lineType = LineType.DASHED;
+                break;
+            default:
+                break;
+        }
     }
 
     draw(canvasContext) {

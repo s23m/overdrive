@@ -25,6 +25,7 @@ export class Vertex {
     name;
     content;
     title;
+    icon;
 
     constructor(UUID, title, content, sx, sy, ex, ey){
         this.UUID = UUID;
@@ -34,6 +35,7 @@ export class Vertex {
         this.sy = sy;
         this.width = ex-sx;
         this.height = ey-sy;
+        this.icon = "";
     }
 
     setTitle(title){
@@ -42,6 +44,11 @@ export class Vertex {
 
     setContent(content){
         this.content = content;
+    }
+
+    //TODO: Check if there's a better way to store icon
+    setIcon(name){
+        this.icon = name;
     }
 
     drawNode(canvasContext, x, y) {
