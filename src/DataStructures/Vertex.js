@@ -57,6 +57,14 @@ export class Vertex {
         this.icon = name;
     }
 
+    setSX(x){
+        this.sx = x
+    }
+
+    setSY(y){
+        this.sy = y
+    }
+
     drawNode(canvasContext, x, y) {
         canvasContext.beginPath();
         canvasContext.arc(x, y, 3, 0, Math.PI*2, false);

@@ -94,7 +94,7 @@ function setScroll(){
 function findNearestGridY(y,top){
 
     // distance to topmost top rowLine
-    let slotHeight = 25*zoom/100;
+    let slotHeight = 25*zoom/100 * 200/zoom;
 
     // which row to put it in
     let slot = Math.floor(y/slotHeight);
@@ -148,7 +148,7 @@ function onMouseMove(e, canvas) {
 }
 
 export function onMiddleClick(canvas, x, y) {
-    console.log("Moving Object")
+    console.log("Moving Object");
     let selectedObject = findIntersected(x,y);
     canvasElement.onmousemove = function(e) {moveObject(e, selectedObject)}
 }
@@ -159,7 +159,7 @@ function moveObject(e, object) {
         var position = getGraphXYFromMouseEvent(e);
         var x = position[0]; var y = findNearestGridY(position[1],0);
 
-        object.setSX(x)
+        object.setSX(x);
 
         object.setSY(findNearestGridY(y,1))
     }
@@ -382,7 +382,7 @@ function orderCoordinates(sx, sy, ex, ey) {
     return [x1, y1, x2, y2];
 }
 
-// Gets the effective (decimal) zoom from the current zoom
+// Gets the effective (percentage) zoom from the current zoom
 function getEffectiveZoom() {
     return zoom/100;
 }
