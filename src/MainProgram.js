@@ -107,17 +107,23 @@ export class MainProgramClass extends React.Component{
             <div className="Program">
                 <div className= "TopMenus">
                     <div className="TopBarFile"> &nbsp;File </div>
-                    <div className="TopBar"> 1 </div>
+
+                    <div className="TopBar">
+                        <a href="#" id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
+                    </div>
+
                     <div className="TopBar"> 2 </div>
                     <div className="TopBar"> 3 </div>
+
                     <div className="TopBarIcon"> S </div>
                     <input className="TopBarSearch" type = "text" name = "search" placeholder = "Search Here" onChange={(e) => this.searchFor(e)}/>
+
                     <div className="TopBarIcon">&nbsp;</div>
                     {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
+
                     <div className="TopBarLabel"> {this.state.zoomLevel}% </div>
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
-
                 </div>
 
                 <div className="LowerPanel">

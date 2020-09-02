@@ -121,16 +121,6 @@ export function setZoom(newZoom) {
     drawAll();
 }
 
-// Returns the nearest object to the supplied mouse event
-// TODO currently unused?
-export function getNearestObject(x, y) {
-    var result = findNearestObjectAndSide(x, y,0);
-    if (result === null) {
-        return null
-    }
-    return result[0]
-}
-
 // returns the x,y coordinates of the supplied side for the supplied vertex
 export function getXYFromSide(vertex, side) {
     var x;
@@ -291,6 +281,7 @@ function createObject(canvas, x1, y1, x2, y2) {
             var toNode   = findConnectable(x2, y2);
 
             if (fromNode !== null && toNode !== null) {
+                getDownload();
                 return new Arrow("", fromNode[3], fromNode[2], toNode[3], toNode[2]);
             } else {
                 return undefined;
@@ -315,8 +306,12 @@ export function getGraphXYFromMouseEvent(e) {
 }
 
 function exportImage() {
-    var img = canvasElement.toDataURL("drawnCanvas.png");
-    // TODO add download request here
+    getDownload();
+}
+
+export function getDownload() {
+    document.getElementById("downloader").download = "image.png";
+    document.getElementById("downloader").href = canvasElement.toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream');
 }
 
 function orderCoordinates(sx, sy, ex, ey) {
