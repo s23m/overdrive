@@ -119,6 +119,10 @@ export function onMouseRelease(canvas, x, y) {
 
     currentObjects.push(newObject);
 
+    if(newObject.constructor.name === "Arrow"){
+        newObject.bindNodes()
+    }
+
     // Disable example draw
     canvasElement.onmousemove = null;
 
