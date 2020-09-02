@@ -4,7 +4,7 @@ A repository to house all code and configuration artefacts produced by the OverD
 This project is licensed under the MP2 license, and this project includes a copy of said license in the LICENSE file. For more information visit: https://www.mozilla.org/en-US/MPL/2.0/FAQ/
 
 
-### Available Scripts
+### How to start
 
 In the project directory, you can run:
 
