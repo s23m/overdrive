@@ -26,6 +26,7 @@ export class Vertex {
     content;
     title;
     icon;
+    children;
 
     constructor(UUID, title, content, sx, sy, ex, ey){
         this.UUID = UUID;
@@ -36,6 +37,11 @@ export class Vertex {
         this.width = ex-sx;
         this.height = ey-sy;
         this.icon = "";
+        this.children = [];
+    }
+
+    addChild(child){
+        this.children.push(child)
     }
 
     setTitle(title){

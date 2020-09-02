@@ -45,6 +45,11 @@ export class Arrow {
         this.LineType = LineType.SOLID;
 
         this.cardinality = null;
+
+    }
+
+    bindNodes(){
+        this.fromVertex.addChild(this.toVertex);
     }
 
     addCardinality(lowerBound, upperBound) {

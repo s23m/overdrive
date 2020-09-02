@@ -87,10 +87,11 @@ export class LeftMenu extends React.Component{
 
         }else if (this.state.menu === "Vertex"){
             console.log("Vertex Selected");
+            console.log(this.state.selectedObject);
 
             // todo: remove statement directly below this
             // temporary way to show a vertex is selected
-            this.state.selectedObject.setTitle("Selected");
+            //this.state.selectedObject.setTitle("Selected");
             canvasDraw.drawAll();
 
             //todo: do not remove this in the todo above, then remove this todo
@@ -151,7 +152,7 @@ export class LeftMenu extends React.Component{
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
-                // -1 represents n or *
+                {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Carindality</label>
                     Visible: <input type="checkbox" id = "sourceCardinalityShown"/>
                     <input type="number" id = "sourceFromCardindality" min="-1" max="25"/>
@@ -171,10 +172,10 @@ export class LeftMenu extends React.Component{
                 <label className="LeftLabel">Destination Label</label>
                     <input id="DestLabel" className="LeftTitle"/>
                 <label className="LeftSpacer">&nbsp;</label>
-
+                {
                 // todo: to/from caridnality, comment, 1..n represented as a dot
-                // require ability to select arbitrary number or no number n or * for cardinality
-
+                    // require ability to select arbitrary number or no number n or * for cardinality
+                }
                 <button className="RemoveButton">Remove</button>
 
 
