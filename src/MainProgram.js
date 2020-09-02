@@ -81,7 +81,7 @@ export class MainProgramClass extends React.Component{
             // todo: remove statement directly below this
             // temporary way to show item has been de-selected
             if(this.state.selectedObject !== null){
-                this.state.selectedObject.setTitle("Not Selected Anymore");
+                //this.state.selectedObject.setTitle("Not Selected Anymore");
                 canvasDraw.drawAll();
             }
 
