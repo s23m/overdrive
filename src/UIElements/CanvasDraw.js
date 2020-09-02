@@ -16,6 +16,9 @@ var mouseStartY;
 var scrollX = 0;
 var scrollY = 0;
 
+//todo: make this selectable by the user
+const yRows = 35;
+
 export var mouseOriginX;
 export var mouseOriginY;
 
@@ -51,12 +54,28 @@ export function resetMouseOrigin(){
     drawAll()
 }
 
+function drawLine(x0,y0,x1,y1,color) {
+    canvasContext.beginPath();
+    canvasContext.strokeStyle = color;
+    canvasContext.moveTo(x0,y0);
+    canvasContext.lineTo(x1,y1);
+    canvasContext.stroke();
+    canvasContext.strokeStyle = "#000000"
+}
+
 // Core functions
 export function drawAll() {
     clearCanvas();
 
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
+
+    for(let i = 0; i < canvasHeight; i+= canvasHeight/yRows/2){
+        let y1 = findNearestGridY(i,1);
+        let y2 = findNearestGridY(i,0);
+        drawLine(0,y1,canvasWidth,y1,"#D0D0D0");
+        drawLine(0,y2,canvasWidth,y2,"#E0E0E0");
+    }
 
     currentObjects.forEach((item) => {
         if (item !== undefined) {
@@ -71,11 +90,24 @@ function setScroll(){
     scrollY = canvasContainerElement.scrollTop;
 }
 
+// format co-ordinate so that the value aligns with a row
+function findNearestGridY(y,top){
+
+    // distance to topmost top rowLine
+    let slotHeight = (canvasHeight)/ yRows;
+
+    // which row to put it in
+    let slot = Math.floor(y/slotHeight);
+
+    // y co-ordinate of that row (if bottom then go up by row gap)
+    return slotHeight * slot + (slotHeight/2 * + top)
+}
+
 // Event based functions
 export function onMousePress(canvas, x, y) {
     setScroll();
     mouseStartX = x;
-    mouseStartY = y;
+    mouseStartY = findNearestGridY(y,1);
 
     // Enable example draw while user is deciding shape
     canvasElement.onmousemove = function(e) {onMouseMove(e, canvas)}
@@ -83,7 +115,7 @@ export function onMousePress(canvas, x, y) {
 
 export function onMouseRelease(canvas, x, y) {
     setScroll();
-    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y)
+    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, findNearestGridY(y,0))
 
     currentObjects.push(newObject);
 
@@ -96,7 +128,7 @@ export function onMouseRelease(canvas, x, y) {
 function onMouseMove(e, canvas) {
     setScroll();
     var position = getGraphXYFromMouseEvent(e);
-    var x = position[0]; var y = position[1];
+    var x = position[0]; var y = findNearestGridY(position[1],0);
 
     var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
 
