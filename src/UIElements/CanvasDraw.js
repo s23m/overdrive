@@ -32,6 +32,8 @@ var zoom = 200.0;
 // Renderable objects
 var currentObjects = [];
 
+var resizing = false;
+
 // Init
 export function assignElement(elementID) {
     canvasElement = document.getElementById(elementID);
@@ -103,8 +105,76 @@ function findNearestGridY(y,top){
     return slotHeight * slot + (slotHeight/2 * + top)
 }
 
+function checkResizeBounds(x,y){
+    let vertex = null;
+    let side = null;
+    currentObjects.forEach((item) => {
+        if(item.constructor.name === "Vertex") {
+            let bounds = item.getBounds();
+            let x1 = bounds[0];
+            let y1 = bounds[1];
+            let x2 = bounds[2];
+            let y2 = bounds[3];
+
+            let top = Math.abs(y1-y) < 10;
+            let bottom = Math.abs(y2-y) < 10;
+            let left = Math.abs(x1-x) < 10;
+            let right = Math.abs(x2-x) < 10;
+            let inYbounds = y > y1 && y < y2;
+            let inXbounds = x > x1 && x < x2;
+
+            if(top && left){
+                vertex = item;
+                side = "topLeft"
+            }else if(top && right){
+                vertex = item;
+                side = "topRight";
+            }else if(bottom && left){
+                vertex = item;
+                side = "bottomLeft"
+            }else if(bottom && right){
+                vertex = item;
+                side = "bottomRight"
+            }else if(left && inYbounds){
+                vertex = item;
+                side = "left"
+            }else if(right && inYbounds){
+                vertex = item;
+                side = "right"
+            }else if(top && inXbounds){
+                vertex = item;
+                side = "top"
+            }else if(bottom && inXbounds){
+                vertex = item;
+                side = "bottom"
+            }
+        }
+    });
+    return [vertex,side];
+}
+
+function resizeObjectOnMouseMove(e,resizeVars) {
+    let coOrds = getGraphXYFromMouseEvent(e);
+    resizeVars[0].expandSide(resizeVars[1],coOrds[0],coOrds[1]);
+}
+
 // Event based functions
 export function onMousePress(canvas, x, y) {
+
+    let resizeVars = checkResizeBounds(x,y);
+
+    if(canvas.tool === "Vertex") {
+
+        if (resizeVars[0] !== null) {
+            resizing = true;
+            canvasElement.onmousemove = function (e) {
+                resizeObjectOnMouseMove(e, resizeVars)
+            };
+            return
+        }
+    }
+
+
     setScroll();
     mouseStartX = x;
     mouseStartY = findNearestGridY(y,1);
@@ -114,6 +184,13 @@ export function onMousePress(canvas, x, y) {
 }
 
 export function onMouseRelease(canvas, x, y) {
+
+    if(resizing === true){
+        resizing = false;
+        canvasElement.onmousemove = null;
+        return
+    }
+
     setScroll();
     var newObject = createObject(canvas, mouseStartX, mouseStartY, x, findNearestGridY(y,0))
 
@@ -154,14 +231,17 @@ export function onMiddleClick(canvas, x, y) {
 }
 
 function moveObject(e, object) {
-    if(object.constructor.name === "Vertex"){
+    if(object != null) {
+        if (object.constructor.name === "Vertex") {
 
-        var position = getGraphXYFromMouseEvent(e);
-        var x = position[0]; var y = findNearestGridY(position[1],0);
+            var position = getGraphXYFromMouseEvent(e);
+            var x = position[0];
+            var y = findNearestGridY(position[1], 0);
 
-        object.setSX(x);
+            object.setSX(x);
 
-        object.setSY(findNearestGridY(y,1))
+            object.setSY(findNearestGridY(y, 1))
+        }
     }
 }
 
@@ -320,14 +400,15 @@ export function findIntersected(x, y) {
     currentObjects.forEach((item) => {
         if(item !== undefined) {
             if (item.intersects(x, y)) {
-                console.log("Intersection detected");
-                console.log(item.constructor.name);
+                console.log("Intersection detected with ",item.constructor.name);
                 selectedItem = item;
             }
         }
     });
     return selectedItem;
 }
+
+
 
 function createObject(canvas, x1, y1, x2, y2) {
     switch(canvas.tool) {

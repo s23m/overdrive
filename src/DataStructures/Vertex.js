@@ -65,6 +65,63 @@ export class Vertex {
         this.sy = y
     }
 
+    getBounds(){
+        return [this.sx,this.sy,this.sx+this.width,this.sy+this.height]
+    }
+
+    expandSide(side, x, y) {
+        switch (side) {
+
+            case "topLeft":
+                var ey = this.sy + this.height;
+                this.sy = y;
+                this.height = ey-this.sy;
+                var ex = this.sx + this.width;
+                this.sx = x;
+                this.width = ex-this.sx;
+                break;
+
+            case "topRight":
+                var ey = this.sy + this.height;
+                this.sy = y;
+                this.height = ey-this.sy;
+                this.width = x-this.sx;
+                break;
+
+            case "bottomLeft":
+                this.height = y-this.sy;
+                var ex = this.sx + this.width;
+                this.sx = x;
+                this.width = ex-this.sx;
+                break;
+
+            case "bottomRight":
+                this.height = y-this.sy;
+                this.width = x-this.sx;
+                break;
+
+            case "left":
+                var ex = this.sx + this.width;
+                this.sx = x;
+                this.width = ex-this.sx;
+
+                break;
+            case "right":
+                this.width = x-this.sx;
+                break;
+
+            case "top":
+                var ey = this.sy + this.height;
+                this.sy = y;
+                this.height = ey-this.sy;
+                break;
+
+            case "bottom":
+                this.height = y-this.sy;
+                break;
+        }
+    }
+
     drawNode(canvasContext, x, y) {
         canvasContext.beginPath();
         canvasContext.arc(x, y, 3, 0, Math.PI*2, false);

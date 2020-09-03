@@ -55,7 +55,6 @@ export class MainProgramClass extends React.Component{
         // todo: remove statement directly below this
         // temporary way to show item has been de-selected
 
-        console.log("Set selected object to " + nearestObject);
         /*
         if(this.state.selectedObject !== null){
             this.state.selectedObject.setTitle("Not Selected Anymore");

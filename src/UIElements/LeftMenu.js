@@ -86,8 +86,7 @@ export class LeftMenu extends React.Component{
             </div>;
 
         }else if (this.state.menu === "Vertex"){
-            console.log("Vertex Selected");
-            console.log(this.state.selectedObject);
+            console.log("Vertex Selected",this.state.selectedObject);
 
             // todo: remove statement directly below this
             // temporary way to show a vertex is selected

@@ -27,7 +27,6 @@ export class Canvas extends React.Component {
     //todo: add canvas method for mouse out, to prevent drawing bug when starting draw and then leaving the canvas
 
     mouseDown = (e, canvas) => {
-        console.log(e.button);
         var position = canvasDraw.getGraphXYFromMouseEvent(e);
         var x = position[0]; var y = position[1];
 
