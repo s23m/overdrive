@@ -13,9 +13,6 @@ var canvasContext;
 var mouseStartX;
 var mouseStartY;
 
-var scrollX = 0;
-var scrollY = 0;
-
 //todo: make this selectable by the user
 const yRows = 35;
 
@@ -30,7 +27,7 @@ var canvasHeight;
 var zoom = 200.0;
 
 // Renderable objects
-var currentObjects = [];
+export var currentObjects = [];
 
 var resizing = false;
 
@@ -88,8 +85,6 @@ export function drawAll() {
 
 function setScroll(){
     var canvasContainerElement = document.getElementsByClassName("Canvas")[0];
-    scrollX = canvasContainerElement.scrollLeft;
-    scrollY = canvasContainerElement.scrollTop;
 }
 
 // format co-ordinate so that the value aligns with a row
@@ -158,6 +153,17 @@ function resizeObjectOnMouseMove(e,resizeVars) {
     resizeVars[0].expandSide(resizeVars[1],coOrds[0],coOrds[1]);
 }
 
+// Sets the objects uuid and adds it to the currentObjects
+function addObject(object) {
+    currentObjects.push(object);
+}
+
+// Sets the currentObjects value to a new one. WARNING it will override the current value without any checks
+export function setCurrentObjects(newObjects) {
+    currentObjects = newObjects;
+    drawAll();
+}
+
 // Event based functions
 export function onMousePress(canvas, x, y) {
 
@@ -194,7 +200,7 @@ export function onMouseRelease(canvas, x, y) {
     setScroll();
     var newObject = createObject(canvas, mouseStartX, mouseStartY, x, findNearestGridY(y,0))
 
-    currentObjects.push(newObject);
+    addObject(newObject);
 
     if(newObject.constructor.name === "Arrow"){
         newObject.bindNodes()
@@ -332,68 +338,6 @@ export function getDistance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
 }
 
-
-//returns the object with the nearest cardinal side to the given coordinates,
-// and returns that object + side if a vertex was closest
-function findNearestObjectAndSide(x, y, verticesOnly) {
-
-    const edges = ["north","south","east","west"];
-
-    var nearestItem;
-    var lowestDistance = Number.MAX_VALUE;
-    var nearestEdge;
-
-    currentObjects.forEach((item) => {
-
-        if(item !== undefined) {
-
-            if (item.constructor.name === "Vertex") {
-                edges.forEach((edge) => {
-
-                    var coOrds = getXYFromSide(item, edge);
-                    //todo: make this solution much cleaner
-                    var dist = Math.hypot(coOrds[0] - x * (verticesOnly ? 1 : zoom/400), coOrds[1] - y * (verticesOnly ? 1 : zoom/400));
-                    if (dist < lowestDistance) {
-                        lowestDistance = dist;
-                        nearestItem = item;
-                        nearestEdge = edge;
-                    }
-                })
-            } else if (item.constructor.name === "Arrow") {
-                if (!verticesOnly) {
-                    // find centre of the line and check distance
-                    var v1 = item.fromVertex;
-                    var s1 = item.fromSide;
-                    var v2 = item.toVertex;
-                    var s2 = item.toSide;
-
-                    var c1 = getXYFromSide(v1, s1);
-                    var c2 = getXYFromSide(v2, s2);
-
-                    var cX = (c1[0] + c2[0])/2;
-                    var cY = (c1[1] + c2[1])/2;
-
-                    //todo: make this solution much cleaner
-                    var dist = Math.hypot(cX - x*zoom/400, cY - y*zoom/400);
-                    console.log("VD" + lowestDistance + " ED" + dist)
-                    console.log(cX,cY,x,y)
-                    if (dist < lowestDistance) {
-                        lowestDistance = dist;
-                        nearestItem = item;
-                        nearestEdge = null;
-                    }
-                }
-            }
-        }
-    });
-  
-    if (nearestItem === undefined || lowestDistance >= 200) {
-        return null
-    } else {
-        return [nearestItem, nearestEdge];
-    }
-}
-
 // Finds the object that is intersected with the cursor, returns null if no objects are intersected
 export function findIntersected(x, y) {
     var selectedItem = null;
@@ -408,20 +352,17 @@ export function findIntersected(x, y) {
     return selectedItem;
 }
 
-
-
 function createObject(canvas, x1, y1, x2, y2) {
     switch(canvas.tool) {
         case "Vertex":
             var pos = orderCoordinates(x1, y1, x2, y2);
-            return new Vertex("","",[""], pos[0], pos[1], pos[2], pos[3]);
+            return new Vertex(createUUID(),"",[""], pos[0], pos[1], pos[2]-pos[0], pos[3]-pos[1]);
         case "Arrow":
             var fromNode = findConnectable(x1, y1);
             var toNode   = findConnectable(x2, y2);
 
             if (fromNode !== null && toNode !== null) {
-                getDownload();
-                return new Arrow("", fromNode[3], fromNode[2], toNode[3], toNode[2]);
+                return new Arrow(createUUID(), currentObjects, fromNode[3].UUID, fromNode[2], toNode[3].UUID, toNode[2]);
             } else {
                 return undefined;
             }
@@ -472,7 +413,7 @@ function getEffectiveZoom() {
 function recalculateScale() {
     // Adjusts the aspect ratio so it is 1:1 instead of matching the windows.
     // Also removes blurry rendering
-    let dpi = window.devicePixelRatio;
+    //let dpi = window.devicePixelRatio;
     let canvasContainer = document.getElementsByClassName("Canvas")[0]
     let styleHeight = +getComputedStyle(canvasContainer).getPropertyValue("height").slice(0, -2);
     let styleWidth = +getComputedStyle(canvasContainer).getPropertyValue("width").slice(0, -2);
@@ -489,4 +430,10 @@ function clearCanvas() {
      // Fill base canvas
     canvasContext.fillStyle = "#ffffff";
     canvasContext.fillRect(0, 0, canvasWidth, canvasHeight);
+}
+
+function createUUID() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
 }

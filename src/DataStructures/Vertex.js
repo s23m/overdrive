@@ -17,25 +17,16 @@ const VertexNodes = {
 
 export class Vertex {
 
-    UUID;
-    sx;
-    sy;
-    width;
-    height;
-    name;
-    content;
-    title;
-    icon;
-    children;
-
-    constructor(UUID, title, content, sx, sy, ex, ey){
+    constructor(UUID, title, content, sx, sy, width, height){
         this.UUID = UUID;
+        this.name = "Vertex";
+
         this.title = title;
         this.content = content;
         this.sx = sx;
         this.sy = sy;
-        this.width = ex-sx;
-        this.height = ey-sy;
+        this.width = width;
+        this.height = height;
         this.icon = "";
         this.children = [];
     }

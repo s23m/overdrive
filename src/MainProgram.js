@@ -1,12 +1,17 @@
 import React from 'react';
 import './App.css';
 import * as canvasDraw from "./UIElements/CanvasDraw";
+import * as fileManager from './Serialisation/FileManager'
 
 import {Canvas} from './UIElements/Canvas';
 import {LeftMenu} from './UIElements/LeftMenu';
 
 //todo: add other types of tools
 const leftMenuTypes = ["Tools","Vertex","Arrow"];
+
+// Simple incremental version
+// 1->2->3->4
+export const version = 1;
 
 export class MainProgramClass extends React.Component{
 
@@ -100,6 +105,21 @@ export class MainProgramClass extends React.Component{
         }
     };
 
+    // Code for file uploading
+    // If you know how to move it elsewhere to clean up this file
+    // Please move it to src/DataStructures/FileManager.js or similar
+    showFile = () => {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            var file = document.querySelector('input[type=file]').files[0];
+
+            var reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload=function(){fileManager.open(reader.result)}
+        } else {
+            alert("Your browser is too old to support HTML5 File API");
+        }
+    }
+
     render() {
 
         var GUI =
@@ -111,8 +131,13 @@ export class MainProgramClass extends React.Component{
                         <a href="#" id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
                     </div>
 
-                    <div className="TopBar"> 2 </div>
-                    <div className="TopBar"> 3 </div>
+                    <div className="TopBar">
+                        <input type="file" onChange={this.showFile} />
+                    </div>
+
+                    <div className="TopBar">
+                        <a href="#" id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</a>
+                    </div>
 
                     <div className="TopBarIcon"> S </div>
                     <input className="TopBarSearch" type = "text" name = "search" placeholder = "Search Here" onChange={(e) => this.searchFor(e)}/>

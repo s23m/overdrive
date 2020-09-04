@@ -28,15 +28,18 @@ const LineType = {
 }
 
 export class Arrow {
-    constructor(UUID, fromVertex, fromVertexNode, toVertex, toVertexNode, zoom) {
+    constructor(UUID, objectsList, fromVertexUUID, fromVertexNode, toVertexUUID, toVertexNode) {
         this.UUID = UUID;
+        this.name = "Arrow";
 
         // Connections
-        this.fromVertex = fromVertex;
         this.fromVertexNode = fromVertexNode;
+        this.fromVertexUUID = fromVertexUUID;
+        this.fromVertex = this.getObjectFromUUID(objectsList, fromVertexUUID);
 
-        this.toVertex = toVertex;
         this.toVertexNode = toVertexNode;
+        this.toVertexUUID = toVertexUUID;
+        this.toVertex = this.getObjectFromUUID(objectsList, toVertexUUID);
 
         // Type
         this.startType = EdgeEnd.NONE;
@@ -45,7 +48,20 @@ export class Arrow {
         this.LineType = LineType.SOLID;
 
         this.cardinality = null;
+    }
 
+    // Gets the object (hopefully a vertex) from UUID
+    getObjectFromUUID(objects, uuid) {
+        for (var i=0; i < objects.length; i++) {
+            if (objects[i] !== null) {
+                if (objects[i].UUID === uuid) {
+                    return objects[i];
+                }
+            }
+        }
+
+        console.error("Could not find vertex to connect for uuid", uuid);
+        return null;
     }
 
     bindNodes(){
