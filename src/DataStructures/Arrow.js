@@ -65,7 +65,7 @@ export class Arrow {
     }
 
     bindNodes(){
-        this.fromVertex.addChild(this.toVertex);
+        this.toVertex.addChild(this.fromVertex);
     }
 
     addCardinality(lowerBound, upperBound) {
