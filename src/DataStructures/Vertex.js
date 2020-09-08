@@ -33,6 +33,9 @@ export class Vertex {
 
     addChild(child){
         this.children.push(child)
+        if(this.width < this.children.length * 60){
+            this.width = this.children.length * 60
+        }
     }
 
     setTitle(title){
