@@ -6,6 +6,8 @@ import iconVertex from "../Resources/vertex.png";
 import iconArrow from "../Resources/arrow.png";
 import iconDiamond from "../Resources/diamond.png";
 import iconCircle from "../Resources/circle.png";
+import iconSpeech from "../Resources/speech.png";
+import iconSpecBox from "../Resources/specbox.png";
 import iconTriangle from "../Resources/triangle.png";
 
 // class to display the left hand menu, where we will be showing
@@ -81,18 +83,18 @@ export class LeftMenu extends React.Component{
 
 // return the correct menu based on the selected item
     getMenu = () =>{
-        if(this.state.menu === "Tools"){
+        if (this.state.menu === "Tools") {
             return <div className={this.props.className}>
                 <div className="LeftBar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex}/></div>
                 <div className="LeftBar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow}/></div>
                 <div className="LeftBar" onClick={() => this.props.setMode('Diamond')}><img src={iconDiamond}/></div>
                 <div className="LeftBar" onClick={() => this.props.setMode('Circle')}><img src={iconCircle}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Speech')}>Speech</div>
-                <div className="LeftBar" onClick={() => this.props.setMode('SpecBox')}>SpecBox</div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Speech')}><img src={iconSpeech}/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('SpecBox')}><img src={iconSpecBox}/></div>
                 <div className="LeftBar" onClick={() => this.props.setMode('Triangle')}><img src={iconTriangle}/></div>
             </div>;
 
-        }else if (this.state.menu === "Vertex"){
+        } else if (this.state.menu === "Vertex") {
             console.log("Vertex Selected",this.state.selectedObject);
 
             // todo: remove statement directly below this
