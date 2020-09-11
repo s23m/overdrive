@@ -4,6 +4,9 @@ import * as canvasDraw from "./CanvasDraw";
 // Icons
 import iconVertex from "../Resources/vertex.png";
 import iconArrow from "../Resources/arrow.png";
+import iconDiamond from "../Resources/diamond.png";
+import iconCircle from "../Resources/circle.png";
+import iconTriangle from "../Resources/triangle.png";
 
 // class to display the left hand menu, where we will be showing
 // object editing tools for now
@@ -82,11 +85,11 @@ export class LeftMenu extends React.Component{
             return <div className={this.props.className}>
                 <div className="LeftBar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex}/></div>
                 <div className="LeftBar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Diamond')}>Diamond</div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Circle')}>Circle</div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Diamond')}><img src={iconDiamond}/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Circle')}><img src={iconCircle}/></div>
                 <div className="LeftBar" onClick={() => this.props.setMode('Speech')}>Speech</div>
                 <div className="LeftBar" onClick={() => this.props.setMode('SpecBox')}>SpecBox</div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Triangle')}>Triangle</div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Triangle')}><img src={iconTriangle}/></div>
             </div>;
 
         }else if (this.state.menu === "Vertex"){

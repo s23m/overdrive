@@ -7,6 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="650.23999"
+   inkscape:export-xdpi="650.23999"
+   inkscape:export-filename="/ocean/pacific/University/2020/IFB398/overdrive/src/Resources/vertex.png"
    sodipodi:docname="vertex.svg"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    id="svg915"
@@ -27,7 +30,7 @@
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
      inkscape:cy="18.180572"
-     inkscape:cx="14.652605"
+     inkscape:cx="1.8678617"
      inkscape:zoom="15.839192"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -43,7 +46,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -52,29 +55,24 @@
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
     <path
-       transform="scale(0.26458333)"
-       d="M 6.6132812 3.7792969 L 6.6132812 5.6699219 L 31.181641 5.6699219 L 31.181641 3.7792969 L 6.6132812 3.7792969 z M 3.7792969 6.6132812 L 3.7792969 31.181641 L 5.6699219 31.181641 L 5.6699219 6.6132812 L 3.7792969 6.6132812 z M 32.126953 6.6132812 L 32.126953 31.181641 L 34.015625 31.181641 L 34.015625 6.6132812 L 32.126953 6.6132812 z M 6.6132812 32.126953 L 6.6132812 34.015625 L 31.181641 34.015625 L 31.181641 32.126953 L 6.6132812 32.126953 z "
-       style="fill:#000000;stroke-width:0.655121;stroke-linejoin:round"
+       d="M 2.8226417,2.3203209 V 2.6554322 H 7.1773584 V 2.3203209 Z M 2.3203209,2.8226417 V 7.1773584 H 2.6554322 V 2.8226417 Z m 5.0245931,0 V 7.1773584 H 7.6796792 V 2.8226417 Z M 2.8226417,7.344914 V 7.6796792 H 7.1773584 V 7.344914 Z"
+       style="fill:#000000;stroke-width:0.11612;stroke-linejoin:round"
        id="rect917" />
     <path
-       transform="scale(0.26458333)"
-       d="M 0.9453125 0.9453125 L 0.9453125 8.5039062 L 8.5039062 8.5039062 L 8.5039062 0.9453125 L 0.9453125 0.9453125 z M 2.8339844 2.8339844 L 6.6132812 2.8339844 L 6.6132812 6.6132812 L 2.8339844 6.6132812 L 2.8339844 2.8339844 z "
-       style="fill:#000000;stroke-width:0.737008;stroke-linejoin:round"
+       d="M 1.818,1.818 V 3.1577531 H 3.157753 V 1.818 Z M 2.1527652,2.1527652 H 2.8226417 V 2.8226417 H 2.1527652 Z"
+       style="fill:#000000;stroke-width:0.130634;stroke-linejoin:round"
        id="rect931" />
     <path
-       transform="scale(0.26458333)"
-       d="M 29.291016 0.9453125 L 29.291016 8.5039062 L 36.849609 8.5039062 L 36.849609 0.9453125 L 29.291016 0.9453125 z M 31.181641 2.8339844 L 34.960938 2.8339844 L 34.960938 6.6132812 L 31.181641 6.6132812 L 31.181641 2.8339844 z "
-       style="fill:#000000;stroke-width:0.737008;stroke-linejoin:round"
+       d="M 6.8422471,1.818 V 3.1577531 H 8.182 V 1.818 Z M 7.1773584,2.1527652 H 7.8472351 V 2.8226417 H 7.1773584 Z"
+       style="fill:#000000;stroke-width:0.130634;stroke-linejoin:round"
        id="rect931-3" />
     <path
-       transform="scale(0.26458333)"
-       d="M 29.291016 29.291016 L 29.291016 36.849609 L 36.849609 36.849609 L 36.849609 29.291016 L 29.291016 29.291016 z M 31.181641 31.181641 L 34.960938 31.181641 L 34.960938 34.960938 L 31.181641 34.960938 L 31.181641 31.181641 z "
-       style="fill:#000000;stroke-width:0.737008;stroke-linejoin:round"
+       d="M 6.8422471,6.8422471 V 8.182 H 8.182 V 6.8422471 Z M 7.1773584,7.1773584 H 7.8472351 V 7.847235 H 7.1773584 Z"
+       style="fill:#000000;stroke-width:0.130634;stroke-linejoin:round"
        id="rect931-3-6" />
     <path
-       transform="scale(0.26458333)"
-       d="M 0.9453125 29.291016 L 0.9453125 36.849609 L 8.5039062 36.849609 L 8.5039062 29.291016 L 0.9453125 29.291016 z M 2.8339844 31.181641 L 6.6132812 31.181641 L 6.6132812 34.960938 L 2.8339844 34.960938 L 2.8339844 31.181641 z "
-       style="fill:#000000;stroke-width:0.737008;stroke-linejoin:round"
+       d="M 1.818,6.8422471 V 8.182 H 3.157753 V 6.8422471 Z M 2.1527652,7.1773584 H 2.8226417 V 7.847235 H 2.1527652 Z"
+       style="fill:#000000;stroke-width:0.130634;stroke-linejoin:round"
        id="rect931-3-6-7" />
   </g>
 </svg>
