@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 import {currentObjects, setCurrentObjects} from "../UIElements/CanvasDraw"
 import {version} from "../MainProgram"
 
@@ -9,7 +13,7 @@ export function save() {
     var objectsToSave = currentObjects;
     // Process objects to save
     objectsToSave.forEach((item) => {
-        if (item !== undefined) {
+        if (item !== null) {
             switch (item.name) {
                 case "Arrow":
                     // Prevent cyclic loop
@@ -54,7 +58,7 @@ export function open(jsonString) {
 
         // Copy behaviour over (vertexs first)
         loadedObjects.forEach((item) => {
-            if (item !== undefined) {
+            if (item !== null) {
                 switch (item.name) {
                     case "Vertex":
                         var newVertex = new Vertex(item.UUID, item.title, item.content, item.sx, item.sy, item.width, item.height);
@@ -68,7 +72,7 @@ export function open(jsonString) {
 
         // Copy behaviour over (everything else)
         loadedObjects.forEach((item) => {
-            if (item !== undefined) {
+            if (item !== null) {
                 switch (item.name) {
                     case "Vertex":
                         break;

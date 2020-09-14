@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { Cardinality } from "./Cardinality";
-import { getDistance } from "../UIElements/CanvasDraw";
+import {currentObjects, drawMarker, getDistance} from "../UIElements/CanvasDraw";
 
 
 const EdgeEnd = {
@@ -28,18 +28,37 @@ const LineType = {
 }
 
 export class Arrow {
-    constructor(UUID, objectsList, fromVertexUUID, fromVertexNode, toVertexUUID, toVertexNode) {
+    // Connects an arrow fromVertex to toVertex
+    // if the UUID parameter is null:
+    //      x, y are treated as coordinates
+    // if the UUID is set:
+    //      are treated as vertex relative 0->1 percentages
+    //      0,0 represents top left, 0.5,0.5 represents middle etc
+
+    constructor(UUID, objectsList, fromVertexUUID, fromX, fromY, toVertexUUID, toX, toY) {
+        //fromVertexUUID, fromX, fromY, toVertexUUID, toX, toY
         this.UUID = UUID;
         this.name = "Arrow";
 
-        // Connections
-        this.fromVertexNode = fromVertexNode;
+        // From Connection
         this.fromVertexUUID = fromVertexUUID;
-        this.fromVertex = this.getObjectFromUUID(objectsList, fromVertexUUID);
+        if (this.fromVertexUUID !== null) {
+            this.fromVertex = this.getObjectFromUUID(objectsList, fromVertexUUID);
+        } else {
+            this.fromVertex = null;
+        }
+        this.fromX = fromX;
+        this.fromY = fromY;
 
-        this.toVertexNode = toVertexNode;
+        // To Connection
         this.toVertexUUID = toVertexUUID;
-        this.toVertex = this.getObjectFromUUID(objectsList, toVertexUUID);
+        if (this.toVertexUUID !== null) {
+            this.toVertex = this.getObjectFromUUID(objectsList, toVertexUUID);
+        } else {
+            this.toVertex = null;
+        }
+        this.toX = toX;
+        this.toY = toY;
 
         // Type
         this.startType = EdgeEnd.NONE;
@@ -49,6 +68,7 @@ export class Arrow {
 
         this.cardinality = null;
     }
+
 
     // Gets the object (hopefully a vertex) from UUID
     getObjectFromUUID(objects, uuid) {
@@ -62,10 +82,6 @@ export class Arrow {
 
         console.error("Could not find vertex to connect for uuid", uuid);
         return null;
-    }
-
-    bindNodes(){
-        this.toVertex.addChild(this.fromVertex);
     }
 
     addCardinality(lowerBound, upperBound) {
@@ -144,23 +160,32 @@ export class Arrow {
     }
 
     draw(canvasContext) {
-        var fromNode = this.fromVertex.getNodeByVertexNode(this.fromVertexNode);
-        var toNode = this.toVertex.getNodeByVertexNode(this.toVertexNode);
+        // Preinitalise
+        var fromX = this.fromX;
+        var fromY = this.fromY;
+        var toX = this.toX;
+        var toY = this.toY;
 
+        // Update if connecting to nodes
+        if (this.fromVertex !== null) {
+            fromX = fromX*this.fromVertex.width + this.fromVertex.sx;
+            fromY = fromY*this.fromVertex.height + this.fromVertex.sy;
+        }
+        if (this.toVertex !== null) {
+            toX = toX*this.toVertex.width + this.toVertex.sx;
+            toY = toY*this.toVertex.height + this.toVertex.sy;
+        }
+
+        // Draw
         canvasContext.beginPath();
-        canvasContext.moveTo(fromNode[0], fromNode[1]);
-        canvasContext.lineTo(toNode[0], toNode[1]);
+        canvasContext.moveTo(fromX, fromY);
+        canvasContext.lineTo(toX, toY);
         canvasContext.stroke();
 
         // Arrow types
         if (this.endType === EdgeEnd.ARROW) {
             // TODO arrow types
         }
-    }
-
-    // Returns all nodes for this object
-    getNodes() {
-        return null;
     }
 
     // Checks if it intersects with point

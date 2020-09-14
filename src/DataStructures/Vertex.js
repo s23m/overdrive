@@ -2,19 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+import { getDistance } from "../UIElements/CanvasDraw";
+
 export var padding = 5;
 
-const VertexNodes = {
-    TOP_LEFT: 1,
-    TOP: 2,
-    TOP_RIGHT: 3,
-    RIGHT: 4,
-    BOTTOM_RIGHT: 5,
-    BOTTOM: 6,
-    BOTTOM_LEFT: 7,
-    LEFT: 8,
-}
-
+// TODO change sx, sy to x, y
 export class Vertex {
 
     constructor(UUID, title, content, sx, sy, width, height){
@@ -25,10 +17,12 @@ export class Vertex {
         this.content = content;
         this.sx = sx;
         this.sy = sy;
-        this.width = width;
-        this.height = height;
         this.icon = "";
         this.children = [];
+
+        // Note these values often change in runtime
+        this.width = width;
+        this.height = height;
     }
 
     addChild(child){
@@ -116,13 +110,6 @@ export class Vertex {
         }
     }
 
-    drawNode(canvasContext, x, y) {
-        canvasContext.beginPath();
-        canvasContext.arc(x, y, 3, 0, Math.PI*2, false);
-        canvasContext.fill();
-        canvasContext.closePath();
-    }
-
     draw(canvasContext) {
         //todo: fix automatically increasing width when text is too long
 
@@ -169,22 +156,6 @@ export class Vertex {
         canvasContext.strokeRect(this.sx, this.sy, rectWidth, fontSize+padding+padding);
         canvasContext.strokeRect(this.sx, this.sy, rectWidth, rectHeight);
 
-        // Prepare to Draw nodes
-        canvasContext.fillStyle = "#000000";
-        canvasContext.globalAlpha = 0.6;
-
-        this.drawNode(canvasContext, this.sx, this.sy); // Top Left
-        this.drawNode(canvasContext, this.sx+rectWidth/2, this.sy); // Top
-        this.drawNode(canvasContext, this.sx+rectWidth, this.sy); // Top Right
-        this.drawNode(canvasContext, this.sx+rectWidth, this.sy+rectHeight/2); // Right
-        this.drawNode(canvasContext, this.sx+rectWidth, this.sy+rectHeight); // Bottom Right
-        this.drawNode(canvasContext, this.sx+rectWidth/2, this.sy+rectHeight); // Bottom
-        this.drawNode(canvasContext, this.sx, this.sy+rectHeight); // Bottom Left
-        this.drawNode(canvasContext, this.sx, this.sy+rectHeight/2); // Left
-
-        // Finish drawing nodes
-        canvasContext.globalAlpha = 1.0;
-
         // Reset color for text
         canvasContext.fillStyle = "#000000";
 
@@ -205,41 +176,6 @@ export class Vertex {
         }
     }
 
-    getNodeByVertexNode(vertexNode) {
-        switch (vertexNode) {
-            case VertexNodes.TOP_LEFT:
-                return [this.sx,              this.sy,               VertexNodes.TOP_LEFT,     this];
-            case VertexNodes.TOP:
-                return [this.sx+this.width/2, this.sy,               VertexNodes.TOP,          this];
-            case VertexNodes.TOP_RIGHT:
-                return [this.sx+this.width,   this.sy,               VertexNodes.TOP_RIGHT,    this];
-            case VertexNodes.RIGHT:
-                return [this.sx+this.width,   this.sy+this.height/2, VertexNodes.RIGHT,        this];
-            case VertexNodes.BOTTOM_RIGHT:
-                return [this.sx+this.width,   this.sy+this.height,   VertexNodes.BOTTOM_RIGHT, this];
-            case VertexNodes.BOTTOM:
-                return [this.sx+this.width/2, this.sy+this.height,   VertexNodes.BOTTOM,       this];
-            case VertexNodes.BOTTOM_LEFT:
-                return [this.sx,              this.sy+this.height,   VertexNodes.BOTTOM_LEFT,  this];
-            case VertexNodes.LEFT:
-                return [this.sx,              this.sy+this.height/2, VertexNodes.LEFT,         this];
-        }
-    }
-
-    // Returns all nodes for this object
-    getNodes() {
-        var nodes = [];
-        nodes.push(this.getNodeByVertexNode(VertexNodes.TOP_LEFT));
-        nodes.push(this.getNodeByVertexNode(VertexNodes.TOP));
-        nodes.push(this.getNodeByVertexNode(VertexNodes.TOP_RIGHT));
-        nodes.push(this.getNodeByVertexNode(VertexNodes.RIGHT));
-        nodes.push(this.getNodeByVertexNode(VertexNodes.BOTTOM_RIGHT));
-        nodes.push(this.getNodeByVertexNode(VertexNodes.BOTTOM));
-        nodes.push(this.getNodeByVertexNode(VertexNodes.BOTTOM_LEFT));
-        nodes.push(this.getNodeByVertexNode(VertexNodes.LEFT));
-        return nodes;
-    }
-
     // Checks if it intersects with point
     intersects(x, y) {
         if (x < this.sx) return false;
@@ -247,5 +183,55 @@ export class Vertex {
         if (x > this.sx+this.width) return false;
         if (y > this.sy+this.height) return false;
         return true;
+    }
+
+    // Gets the nearest side, in Arrow compatible x,y percentage values
+    // Also returns a threshold distance
+    // Parameters are the cursor X and Y coordinates
+    // Return value:
+    //      [threshold, xRel, yRel]
+    //
+    // If threshold is -1, xRel and yRel are equal to cursorX, cursorY
+    // This only happens when cursor shouldn't connect to vertex
+    getNearestSide(cursorX, cursorY) {
+        // Get basic distances
+        var topLeftDist = getDistance(cursorX, cursorY, this.sx, this.sy);
+        var botLeftDist = getDistance(cursorX, cursorY, this.sx, this.sy+this.height);
+        var topRightDist = getDistance(cursorX, cursorY, this.sx+this.width, this.sy);
+        var botRightDist = getDistance(cursorX, cursorY, this.sx+this.width, this.sy+this.height);
+
+        // First, since it can either lock on to the vertex horizontally or vertically
+        // Find which one it is or if it's neither
+        if (cursorX > this.sx && cursorX < this.sx+this.width) { // X case
+            // Get threshold distance
+            var topDist = topLeftDist+topRightDist;
+            var botDist = botLeftDist+botRightDist;
+
+            // Get x percentage
+            var xPercentage = (cursorX-this.sx)/this.width;
+
+            // Decide between top or bot
+            if (topDist < botDist) { // top
+                return [topDist, xPercentage, 0];
+            } else { // bot
+                return [botDist, xPercentage, 1];
+            }
+        } else if (cursorY > this.sy && cursorY < this.sy+this.height) { // Y case
+            // Get threshold distance
+            var leftDist = topLeftDist+botLeftDist;
+            var rightDist = topRightDist+botRightDist;
+
+            // Get y percentage
+            var yPercentage = (cursorY-this.sy)/this.height;
+
+            // Decide between left or right
+            if (leftDist < rightDist) { // left
+                return [leftDist, 0, yPercentage];
+            } else { // right
+                return [rightDist, 1, yPercentage];
+            }
+        } else { // Cursor can't connect
+            return [-1, cursorX, cursorY];
+        }
     }
 }

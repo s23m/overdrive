@@ -77,7 +77,7 @@ export function drawAll() {
     }
 
     currentObjects.forEach((item) => {
-        if (item !== undefined) {
+        if (item !== null) {
             item.draw(canvasContext);
         }
     })
@@ -87,7 +87,7 @@ function setScroll(){
     var canvasContainerElement = document.getElementsByClassName("Canvas")[0];
 }
 
-// format co-ordinate so that the value aligns with a row
+// Format co-ordinate so that the value aligns with a row
 function findNearestGridY(y,top){
 
     // distance to topmost top rowLine
@@ -100,11 +100,12 @@ function findNearestGridY(y,top){
     return slotHeight * slot + (slotHeight/2 * + top)
 }
 
-function checkResizeBounds(x,y){
+// TODO comment this function
+function checkResizeBounds(x, y){
     let vertex = null;
     let side = null;
     currentObjects.forEach((item) => {
-        if(item.constructor.name === "Vertex") {
+        if (item.constructor.name === "Vertex") {
             let bounds = item.getBounds();
             let x1 = bounds[0];
             let y1 = bounds[1];
@@ -148,9 +149,34 @@ function checkResizeBounds(x,y){
     return [vertex,side];
 }
 
+// Find connectable vertex if possible
+function getConnectionDataForArrow(cursorX, cursorY) {
+    // Find fromVertex & toVertex if possible
+    //                      dist, vert, posx, posy
+    var nearest = [null, cursorX, cursorY];
+    var nearestDistance =  -1;
+
+    currentObjects.forEach((item) => {
+        if (item !== null && item.constructor.name === "Vertex") {
+            let sideData = item.getNearestSide(cursorX, cursorY);
+
+            // Only check if valid
+            if (sideData[0] !== -1) {
+                // Compare dist
+                if (nearestDistance === -1 || sideData[0] < nearestDistance) {
+                    nearest = [item.UUID, sideData[1], sideData[2]];
+                    nearestDistance = sideData[0];
+                }
+            }
+        }
+    });
+
+    return nearest;
+}
+
 function resizeObjectOnMouseMove(e,resizeVars) {
-    let coOrds = getGraphXYFromMouseEvent(e);
-    resizeVars[0].expandSide(resizeVars[1],coOrds[0],coOrds[1]);
+    let coords = getGraphXYFromMouseEvent(e);
+    resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1]);
 }
 
 // Sets the objects uuid and adds it to the currentObjects
@@ -166,7 +192,6 @@ export function setCurrentObjects(newObjects) {
 
 // Event based functions
 export function onMousePress(canvas, x, y) {
-
     let resizeVars = checkResizeBounds(x,y);
 
     if(canvas.tool === "Vertex") {
@@ -174,19 +199,19 @@ export function onMousePress(canvas, x, y) {
         if (resizeVars[0] !== null) {
             resizing = true;
             canvasElement.onmousemove = function (e) {
-                resizeObjectOnMouseMove(e, resizeVars)
+                resizeObjectOnMouseMove(e, resizeVars);
             };
-            return
+            return;
         }
     }
 
 
     setScroll();
     mouseStartX = x;
-    mouseStartY = findNearestGridY(y,1);
+    mouseStartY = y;
 
     // Enable example draw while user is deciding shape
-    canvasElement.onmousemove = function(e) {onMouseMove(e, canvas)}
+    canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
 }
 
 export function onMouseRelease(canvas, x, y) {
@@ -198,13 +223,9 @@ export function onMouseRelease(canvas, x, y) {
     }
 
     setScroll();
-    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, findNearestGridY(y,0))
+    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
 
     addObject(newObject);
-
-    if(newObject.constructor.name === "Arrow"){
-        newObject.bindNodes()
-    }
 
     // Disable example draw
     canvasElement.onmousemove = null;
@@ -215,16 +236,15 @@ export function onMouseRelease(canvas, x, y) {
 function onMouseMove(e, canvas) {
     setScroll();
     var position = getGraphXYFromMouseEvent(e);
-    var x = position[0]; var y = findNearestGridY(position[1],0);
 
-    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+    var newObject = createObject(canvas, mouseStartX, mouseStartY, position[0], position[1]);
 
     // Redraw Existing Objects
     drawAll(currentObjects);
 
     // Draw the new object
     canvasContext.globalAlpha = 0.75;
-    if(newObject !== undefined) {
+    if(newObject !== null) {
         newObject.draw(canvasContext);
     }
     canvasContext.globalAlpha = 1.0;
@@ -265,6 +285,16 @@ export function setZoom(newZoom) {
     drawAll();
 }
 
+// Useful for debugging
+export function drawMarker(xpos, ypos) {
+    canvasContext.fillStyle = "#0000ff";
+    canvasContext.globalAlpha = 1.0;
+    canvasContext.beginPath();
+    canvasContext.arc(xpos, ypos, 3, 0, Math.PI*2, false);
+    canvasContext.fill();
+    canvasContext.closePath();
+}
+
 // returns the x,y coordinates of the supplied side for the supplied vertex
 export function getXYFromSide(vertex, side) {
     var x;
@@ -288,51 +318,6 @@ export function getXYFromSide(vertex, side) {
     return [x,y]
 }
 
-// Checks all nodes and finds the nearest node within some threshold distance
-// If no nodes are found returns null
-function findConnectable(x, y) {
-    // The maximum distance allowed for a node to be considered connectable
-    var thesholdDistance = 100;
-
-    // Get nodes from all items
-    // Note: All drawable objects should include the getNodes function even if it simply returns null
-    // It should return a list, with each item formated as follows
-    // [x, y, ...]
-    var nodes = [];
-    currentObjects.forEach((item) => {
-        if (item !== undefined) {
-            var itemNodes = item.getNodes();
-            if (itemNodes != null) {
-                nodes = nodes.concat(itemNodes);
-            }
-        }
-    });
-
-    // If empty (because there are no nodes) return null
-    if (nodes.length === 0) {
-        return null;
-    }
-
-    // Find closest node
-    var closestNode = nodes[0];
-    var closestDistance = getDistance(x, y, closestNode[0], closestNode[1]);
-    for (var i = 1; i < nodes.length; i++) {
-        var distance = getDistance(x, y, nodes[i][0], nodes[i][1]);
-        if (distance < closestDistance) {
-            closestNode = nodes[i];
-            closestDistance = distance;
-        }
-    }
-
-    // Check if within threshold
-    if (closestDistance < thesholdDistance) {
-        return closestNode;
-    }
-
-    // Exceeds threshold return null
-    return null;
-}
-
 // Gets the distance between x1, y1 and x2, y2
 export function getDistance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
@@ -342,7 +327,7 @@ export function getDistance(x1, y1, x2, y2) {
 export function findIntersected(x, y) {
     var selectedItem = null;
     currentObjects.forEach((item) => {
-        if(item !== undefined) {
+        if(item !== null) {
             if (item.intersects(x, y)) {
                 console.log("Intersection detected with ",item.constructor.name);
                 selectedItem = item;
@@ -356,15 +341,20 @@ function createObject(canvas, x1, y1, x2, y2) {
     switch(canvas.tool) {
         case "Vertex":
             var pos = orderCoordinates(x1, y1, x2, y2);
-            return new Vertex(createUUID(),"",[""], pos[0], pos[1], pos[2]-pos[0], pos[3]-pos[1]);
+            let vy1 = findNearestGridY(pos[1],0);
+            let vy2 = findNearestGridY(pos[3],0);
+            return new Vertex(createUUID(),"",[""], pos[0], y1, pos[2]-pos[0], vy2-vy1);
         case "Arrow":
-            var fromNode = findConnectable(x1, y1);
-            var toNode   = findConnectable(x2, y2);
+            var fromData = getConnectionDataForArrow(x1, y1);
+            var toData = getConnectionDataForArrow(x2, y2);
 
-            if (fromNode !== null && toNode !== null) {
-                return new Arrow(createUUID(), currentObjects, fromNode[3].UUID, fromNode[2], toNode[3].UUID, toNode[2]);
+            // If nearest vertices are the same don't connect
+            if (fromData[0] !== null && toData[0] !== null && fromData[0] === toData[0]) {
+                console.log("2");
+                return new Arrow(createUUID(), currentObjects, null, x1, y1, null, x2, y2);
             } else {
-                return undefined;
+                console.log("3");
+                return new Arrow(createUUID(), currentObjects, fromData[0], fromData[1], fromData[2], toData[0], toData[1], toData[2]);
             }
         case "Diamond":
         case "Circle":
@@ -373,6 +363,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         case "Triangle":
         default:
     }
+    return null;
 }
 
 export function getGraphXYFromMouseEvent(e) {

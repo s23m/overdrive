@@ -7,7 +7,7 @@ import {Canvas} from './UIElements/Canvas';
 import {LeftMenu} from './UIElements/LeftMenu';
 
 //todo: add other types of tools
-const leftMenuTypes = ["Tools","Vertex","Arrow"];
+const leftMenuTypes = ["Tools", "Vertex", "Arrow"];
 
 // Simple incremental version
 // 1->2->3->4
@@ -100,8 +100,8 @@ export class MainProgramClass extends React.Component{
 
     searchFor = (e) => {
         var searchTerm = e.target.value;
-        if(searchTerm === ""){
-            return null
+        if (searchTerm === "") {
+            return null;
         }
     };
 
