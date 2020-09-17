@@ -287,12 +287,16 @@ export function setZoom(newZoom) {
 
 // Useful for debugging
 export function drawMarker(xpos, ypos) {
-    canvasContext.fillStyle = "#0000ff";
     canvasContext.globalAlpha = 1.0;
     canvasContext.beginPath();
     canvasContext.arc(xpos, ypos, 3, 0, Math.PI*2, false);
     canvasContext.fill();
     canvasContext.closePath();
+}
+
+// Setting colors indirectly
+export function setFillStyle(color) {
+    canvasContext.fillStyle = color;
 }
 
 // returns the x,y coordinates of the supplied side for the supplied vertex
@@ -350,10 +354,8 @@ function createObject(canvas, x1, y1, x2, y2) {
 
             // If nearest vertices are the same don't connect
             if (fromData[0] !== null && toData[0] !== null && fromData[0] === toData[0]) {
-                console.log("2");
                 return new Arrow(createUUID(), currentObjects, null, x1, y1, null, x2, y2);
             } else {
-                console.log("3");
                 return new Arrow(createUUID(), currentObjects, fromData[0], fromData[1], fromData[2], toData[0], toData[1], toData[2]);
             }
         case "Diamond":
