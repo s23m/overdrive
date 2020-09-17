@@ -125,7 +125,7 @@ export class LeftMenu extends React.Component{
                 <button className="LeftLabel">Remove</button>
             </div>;
 
-        }else if (this.state.menu === "Arrow"){
+        } else if (this.state.menu === "Arrow") {
             console.log("Arrow Selected");
             return <div className={this.props.className}>
                 <div className="LeftBar">Arrow Properties</div>
@@ -197,12 +197,11 @@ export class LeftMenu extends React.Component{
     };
 
     render() {
-
-            return this.getMenu()
-        }
-
-
+        return this.getMenu()
     }
+
+
+}
 
 function getS23MIconsSelector() {
     var dropdownOptions = [<option key = "-No Icon">-No Icon</option>];

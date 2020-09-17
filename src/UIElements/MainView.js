@@ -1,17 +1,13 @@
 import React from 'react';
 import './App.css';
-import * as canvasDraw from "./UIElements/CanvasDraw";
-import * as fileManager from './Serialisation/FileManager'
+import * as canvasDraw from "./CanvasDraw";
+import * as fileManager from '../Serialisation/FileManager'
 
-import {Canvas} from './UIElements/Canvas';
-import {LeftMenu} from './UIElements/LeftMenu';
+import {Canvas} from './Canvas';
+import {LeftMenu} from './LeftMenu';
 
 //todo: add other types of tools
 const leftMenuTypes = ["Tools", "Vertex", "Arrow"];
-
-// Simple incremental version
-// 1->2->3->4
-export const version = 1;
 
 export class MainProgramClass extends React.Component {
 
