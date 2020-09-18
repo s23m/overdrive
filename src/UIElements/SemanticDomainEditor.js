@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 // React imports
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
@@ -141,8 +145,6 @@ export default () => {
     const [startEditAction, setStartEditAction] = useState('click');
     const [selectTextOnEditStart, setSelectTextOnEditStart] = useState(true);
 
-    console.log("THING: ", generatedRows)
-
     const commitChanges = ({ added, changed, deleted}) => {
         let changedRows;
         if (added) {
@@ -157,11 +159,13 @@ export default () => {
         }
         if (changed) {
             changedRows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
+            updateChangedObject(changedRows);
         }
         if (deleted) {
             const deletedSet = new Set(deleted);
             changedRows = rows.filter(row => !deletedSet.has(row.id));
         }
+
         setRows(changedRows);
     };
 
@@ -225,4 +229,22 @@ export function resetRows() {
     setRows(newRows);
 
     console.log("Updating rows?")
+}
+
+function updateChangedObject(rows) {
+    for (let i = 0; i < rows.length; i++) {
+        var row = rows[i];
+
+        // Find object
+        for (let o = 0; o < currentObjects.length; o++) {
+            var object = currentObjects[i];
+
+            if (row['UUID'] === object.UUID) {
+                // Update
+                if (object.constructor.name === "Vertex") {
+                    object.title = row['name'];
+                }
+            }
+        }
+    }
 }

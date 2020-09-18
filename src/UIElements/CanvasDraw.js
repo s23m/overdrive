@@ -40,7 +40,7 @@ export function assignElement(elementID) {
 
 }
 
-export function resetMouseOrigin(){
+export function resetMouseOrigin() {
     try {
         var canvasRect = canvasElement.getBoundingClientRect();
         mouseOriginX = canvasRect.left;
@@ -69,7 +69,7 @@ export function drawAll() {
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
 
-    for(let i = 0; i < canvasHeight; i+= canvasHeight/yRows/2){
+    for (let i = 0; i < canvasHeight; i+= canvasHeight/yRows/2) {
         let y1 = findNearestGridY(i,1);
         let y2 = findNearestGridY(i,0);
         drawLine(0,y1,canvasWidth,y1,"#D0D0D0");
@@ -83,12 +83,12 @@ export function drawAll() {
     })
 }
 
-function setScroll(){
+function setScroll() {
     var canvasContainerElement = document.getElementsByClassName("Canvas")[0];
 }
 
 // Format co-ordinate so that the value aligns with a row
-function findNearestGridY(y,top){
+function findNearestGridY(y,top) {
 
     // distance to topmost top rowLine
     let slotHeight = 25*zoom/100 * 200/zoom;
@@ -101,7 +101,7 @@ function findNearestGridY(y,top){
 }
 
 // TODO comment this function
-function checkResizeBounds(x, y){
+function checkResizeBounds(x, y) {
     let vertex = null;
     let side = null;
     currentObjects.forEach((item) => {
@@ -119,28 +119,28 @@ function checkResizeBounds(x, y){
             let inYbounds = y > y1 && y < y2;
             let inXbounds = x > x1 && x < x2;
 
-            if(top && left){
+            if (top && left) {
                 vertex = item;
                 side = "topLeft"
-            }else if(top && right){
+            } else if (top && right) {
                 vertex = item;
                 side = "topRight";
-            }else if(bottom && left){
+            } else if (bottom && left) {
                 vertex = item;
                 side = "bottomLeft"
-            }else if(bottom && right){
+            } else if (bottom && right) {
                 vertex = item;
                 side = "bottomRight"
-            }else if(left && inYbounds){
+            } else if (left && inYbounds) {
                 vertex = item;
                 side = "left"
-            }else if(right && inYbounds){
+            } else if (right && inYbounds) {
                 vertex = item;
                 side = "right"
-            }else if(top && inXbounds){
+            } else if (top && inXbounds) {
                 vertex = item;
                 side = "top"
-            }else if(bottom && inXbounds){
+            } else if (bottom && inXbounds) {
                 vertex = item;
                 side = "bottom"
             }
@@ -194,7 +194,7 @@ export function setCurrentObjects(newObjects) {
 export function onMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
 
-    if(canvas.tool === "Vertex") {
+    if (canvas.tool === "Vertex") {
 
         if (resizeVars[0] !== null) {
             resizing = true;
@@ -216,7 +216,7 @@ export function onMousePress(canvas, x, y) {
 
 export function onMouseRelease(canvas, x, y) {
 
-    if(resizing === true){
+    if (resizing === true) {
         resizing = false;
         canvasElement.onmousemove = null;
         return
@@ -244,7 +244,7 @@ function onMouseMove(e, canvas) {
 
     // Draw the new object
     canvasContext.globalAlpha = 0.75;
-    if(newObject !== null) {
+    if (newObject !== null) {
         newObject.draw(canvasContext);
     }
     canvasContext.globalAlpha = 1.0;
@@ -257,7 +257,7 @@ export function onMiddleClick(canvas, x, y) {
 }
 
 function moveObject(e, object) {
-    if(object != null) {
+    if (object != null) {
         if (object.constructor.name === "Vertex") {
 
             var position = getGraphXYFromMouseEvent(e);
@@ -271,7 +271,7 @@ function moveObject(e, object) {
     }
 }
 
-export function solidifyObject(){
+export function solidifyObject() {
     canvasElement.onmousemove = null;
 }
 
@@ -331,7 +331,7 @@ export function getDistance(x1, y1, x2, y2) {
 export function findIntersected(x, y) {
     var selectedItem = null;
     currentObjects.forEach((item) => {
-        if(item !== null) {
+        if (item !== null) {
             if (item.intersects(x, y)) {
                 console.log("Intersection detected with ",item.constructor.name);
                 selectedItem = item;

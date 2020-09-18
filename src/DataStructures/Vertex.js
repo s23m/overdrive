@@ -9,7 +9,7 @@ export var padding = 5;
 // TODO change sx, sy to x, y
 export class Vertex {
 
-    constructor(UUID, title, content, sx, sy, width, height){
+    constructor(UUID, title, content, sx, sy, width, height) {
         this.UUID = UUID;
         this.name = "Vertex";
 
@@ -25,35 +25,35 @@ export class Vertex {
         this.height = height;
     }
 
-    addChild(child){
+    addChild(child) {
         this.children.push(child)
-        if(this.width < this.children.length * 60){
+        if (this.width < this.children.length * 60) {
             this.width = this.children.length * 60
         }
     }
 
-    setTitle(title){
+    setTitle(title) {
         this.title = title;
     }
 
-    setContent(content){
+    setContent(content) {
         this.content = content;
     }
 
     //TODO: Check if there's a better way to store icon
-    setIcon(name){
+    setIcon(name) {
         this.icon = name;
     }
 
-    setSX(x){
+    setSX(x) {
         this.sx = x
     }
 
-    setSY(y){
+    setSY(y) {
         this.sy = y
     }
 
-    getBounds(){
+    getBounds() t{
         return [this.sx,this.sy,this.sx+this.width,this.sy+this.height]
     }
 
@@ -132,7 +132,7 @@ export class Vertex {
             textHeight += fontSize+padding;
         }
 
-        if(maxWidth > this.width) {
+        if (maxWidth > this.width) {
             this.width = maxWidth
         }
 

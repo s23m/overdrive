@@ -8,19 +8,19 @@ import { Vertex } from "./Vertex";
 import { Arrow } from "./Arrow";
 
 export class Graph {
-    constructor(){
+    constructor() {
         this.vertices = {};
         this.arrows = {};
     }
 
-    add_vertex(){
+    add_vertex() {
         var UUID = uuidv4();
         this.vertices[UUID] = new Vertex(UUID);
 
         return UUID;
     }
 
-    add_arrow(startVertexUUID, endVertexUUID){
+    add_arrow(startVertexUUID, endVertexUUID) {
         var UUID = uuidv4();
         this.arrows[UUID] = new Arrow(UUID, startVertexUUID, endVertexUUID);
 

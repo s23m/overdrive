@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 import React from 'react';
 import './App.css';
 import * as canvasDraw from "./UIElements/CanvasDraw";
@@ -55,24 +59,24 @@ export class MainProgramClass extends React.Component {
         }
     };
 
-    setMode(mode){
+    setMode(mode) {
         this.setState({drawMode: mode});
         console.log("Mode set to: " + mode)
     };
 
     // chooses which left hand menu to display, based on the selected item
-    setLeftMenu(nearestObject){
+    setLeftMenu(nearestObject) {
         // todo: remove statement directly below this
         // temporary way to show item has been de-selected
 
         /*
-        if(this.state.selectedObject !== null){
+        if (this.state.selectedObject !== null) {
             this.state.selectedObject.setTitle("Not Selected Anymore");
             canvasDraw.drawAll();
         }
         */
         // check if the nearest object was too far away or didnt exist
-        if(nearestObject === null){
+        if (nearestObject === null) {
             this.setState({
                 menu: "Tools",
                 selectedObject: null
@@ -81,15 +85,15 @@ export class MainProgramClass extends React.Component {
         }
 
         // if the selected object has a left menu,
-        else if(leftMenuTypes.includes(nearestObject.constructor.name)) {
+        else if (leftMenuTypes.includes(nearestObject.constructor.name)) {
             this.setState({
                 menu: nearestObject.constructor.name,
                 selectedObject: nearestObject
             });
-        }else{
+        } else {
             // todo: remove statement directly below this
             // temporary way to show item has been de-selected
-            if(this.state.selectedObject !== null){
+            if (this.state.selectedObject !== null) {
                 //this.state.selectedObject.setTitle("Not Selected Anymore");
                 canvasDraw.drawAll();
             }
@@ -119,21 +123,21 @@ export class MainProgramClass extends React.Component {
 
             var reader = new FileReader();
             reader.readAsText(file);
-            reader.onload=function(){fileManager.open(reader.result)}
+            reader.onload=function() {fileManager.open(reader.result)}
         } else {
             alert("Your browser is too old to support HTML5 File API");
         }
     }
 
     // Used to enable/disable the semantic domain editor
-    setSemanticDomainState = (enabled) => {
-        this.semanticTableEnabled = enabled;
-
+    toggleSemanticDomainState = () => {
         if (this.semanticTableEnabled) {
+            this.semanticTableEnabled = false;
+            console.log("Semantic Domain disabled");
+        } else {
+            this.semanticTableEnabled = true;
             resetRows();
             console.log("Semantic Domain enabled");
-        } else {
-            console.log("Semantic Domain disabled");
         }
 
         // Force redraw
@@ -162,7 +166,7 @@ export class MainProgramClass extends React.Component {
                         <a href="#" id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</a>
                     </div>
 
-                    <div className="TopBar" onClick={() => this.setSemanticDomainState(true)}>
+                    <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>
                         Semantic Editor
                     </div>
                     <input className="TopBarSearch" type = "text" name = "search" placeholder = "Search Here" onChange={(e) => this.searchFor(e)}/>

@@ -41,45 +41,45 @@ export class LeftMenu extends React.Component{
     }
 
     //VERTEX SETTERS
-    setTitle(){
+    setTitle() {
         var newTitle =  document.getElementsByClassName("LeftTitle")[0].value;
         this.state.selectedObject.setTitle(newTitle);
         canvasDraw.drawAll()
     }
 
-    setContent(){
+    setContent() {
         var newContent = document.getElementsByClassName("LeftContent")[0].value;
         newContent = newContent.split("\n");
         this.state.selectedObject.setContent(newContent);
         canvasDraw.drawAll()
     }
 
-    setIcon(){
+    setIcon() {
         var iconName = document.getElementsByClassName("IconSelector")[0].value;
         this.state.selectedObject.setIcon(iconName);
         canvasDraw.drawAll()
     }
 
     //ARROW SETTERS
-    setFromNodeHead(){
+    setFromNodeHead() {
         var newFromHead = document.getElementsByClassName("ArrowHeadFrom")[0].value;
         this.state.selectedObject.setStartType(newFromHead);
         canvasDraw.drawAll()
     }
 
-    setToNodeHead(){
+    setToNodeHead() {
         var newToHead = document.getElementsByClassName("ArrowHeadTo")[0].value;
         this.state.selectedObject.setEndType(newToHead);
         canvasDraw.drawAll()
     }
 
-    setLineType(){
+    setLineType() {
         var newLineType = document.getElementsByClassName("ArrowType")[0].value;
         this.state.selectedObject.setLineType(newLineType);
         canvasDraw.drawAll()
     }
 
-    setColour(){
+    setColour() {
         var newColour = document.getElementsByClassName("ArrowHeadColour")[0].value;
         this.state.selectedObject.setLineType(newColour);
         canvasDraw.drawAll()
@@ -209,10 +209,10 @@ function getS23MIconsSelector() {
     let name = "";
     fileNames.forEach(fileName => {
 
-        if(fileName.slice(-6,-4) === "_n"){
+        if (fileName.slice(-6,-4) === "_n") {
             name = fileName.slice(0,-6);
                 dropdownOptions.push(<option key = {name}>{name}</option>)
-            }else{
+            } else {
             name = fileName.slice(0,-4);
                 dropdownOptions.push(<option key = {name}>{name}</option>)
             }

@@ -31,15 +31,15 @@ export class Canvas extends React.Component {
         var x = position[0]; var y = position[1];
 
         // If it was a left click
-        if(e.button === 0){
+        if (e.button === 0) {
             canvasDraw.onMousePress(canvas, x, y);
         }
         // if it was a right click
-        if(e.button === 2){
+        if (e.button === 2) {
             this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
         }
         // If it was a middle click
-        if(e.button === 1){
+        if (e.button === 1) {
             e.preventDefault();
             canvasDraw.onMiddleClick(canvas, x, y)
         }
@@ -50,11 +50,11 @@ export class Canvas extends React.Component {
         var x = position[0]; var y = position[1];
 
         // If it was a left click
-        if(e.button === 0) {
+        if (e.button === 0) {
             canvasDraw.onMouseRelease(canvas, x, y);
         }
 
-        if(e.button === 1){
+        if (e.button === 1) {
             canvasDraw.solidifyObject()
         }
 
