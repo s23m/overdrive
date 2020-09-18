@@ -53,8 +53,8 @@ export class Vertex {
         this.sy = y
     }
 
-    getBounds() t{
-        return [this.sx,this.sy,this.sx+this.width,this.sy+this.height]
+    getBounds() {
+        return [this.sx,this.sy,this.sx+this.width,this.sy+this.height];
     }
 
     expandSide(side, x, y) {
