@@ -6,7 +6,7 @@
     text-align: center;
 }
 
-.Program{
+.Program {
     display: flex;
     overflow: hidden;
     font-family: Arial, serif;
@@ -17,7 +17,7 @@
     flex-direction: column;
 }
 
-.TopMenus{
+.TopMenus {
     display: flex;
     width: 100vw;
     height: 5vh;
@@ -25,7 +25,7 @@
     flex-direction: row;
 }
 
-.LeftMenus{
+.LeftMenus {
     display: flex;
     height: 93vh;
     width: 15vw;
@@ -33,7 +33,7 @@
     flex-direction: column;
 }
 
-.LowerPanel{
+.LowerPanel {
     display: flex;
     flex-wrap: nowrap;
     //flex-direction: column;
@@ -41,7 +41,7 @@
     //border: 4px solid magenta;
 }
 
-.TopBar{
+.TopBar {
     display: flex;
     border: 2px solid blue;
     height: 5vh;
@@ -50,7 +50,7 @@
     justify-content: center;
  }
 
-.TopBarFile{
+.TopBarFile {
     display: flex;
     border: 2px solid blue;
     height: 5vh;
@@ -59,7 +59,7 @@
     justify-content: left;
 }
 
-.TopBarLabel{
+.TopBarLabel {
     display: flex;
     flex-direction: row;
     border: 2px solid blue;
@@ -69,7 +69,7 @@
     justify-content: center;
 }
 
-.TopBarSearch{
+.TopBarSearch {
     display: flex;
     flex-direction: row;
     border: 2px solid blue;
@@ -83,7 +83,7 @@
     font-size: calc(1vh + 1vw);
 }
 
-.TopBarIcon{
+.TopBarIcon {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
@@ -94,7 +94,7 @@
     justify-content: center;
 }
 
-.LeftBar{
+.LeftBar {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
@@ -103,7 +103,7 @@
     justify-content: center;
 }
 
-.LeftLabel{
+.LeftLabel {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
@@ -112,13 +112,13 @@
     justify-content: center;
 }
 
-.LeftTitle{
+.LeftTitle {
     border: 2px solid blue;
     align-items: center;
     justify-content: center;
 }
 
-.LeftContent{
+.LeftContent {
     border: 2px solid blue;
     align-items: center;
     justify-content: center;
@@ -126,7 +126,7 @@
     height: 10vh;
 }
 
-.Canvas{
+.Canvas {
     height: 90vh;
     width:85vw;
     overflow-x: scroll;
@@ -134,7 +134,7 @@
     border: 2px solid lime;
 }
 
-.LeftSpacer{
+.LeftSpacer {
     align-items: center;
     justify-content: center;
 }
@@ -152,4 +152,18 @@ img {
     image-rendering: -o-crisp-edges; /* Opera */
     image-rendering: crisp-edges;
     -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+}
+
+.SemanticDomain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    background: white; /* Just to visualize the extent */
+}
+
+.hidden {
+    display: none;
 }

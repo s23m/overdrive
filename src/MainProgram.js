@@ -6,6 +6,10 @@ import * as fileManager from './Serialisation/FileManager'
 import {Canvas} from './UIElements/Canvas';
 import {LeftMenu} from './UIElements/LeftMenu';
 
+// Semantic domain editor
+import SemanticDomainEditor from "./UIElements/SemanticDomainEditor";
+import {resetRows} from "./UIElements/SemanticDomainEditor"
+
 //todo: add other types of tools
 const leftMenuTypes = ["Tools", "Vertex", "Arrow"];
 
@@ -26,6 +30,7 @@ export class MainProgramClass extends React.Component {
 
         this.setMode = this.setMode.bind(this);
         this.setLeftMenu = this.setLeftMenu.bind(this);
+        this.semanticTableEnabled = false;
     }
 
     componentDidMount() {
@@ -120,9 +125,28 @@ export class MainProgramClass extends React.Component {
         }
     }
 
+    // Used to enable/disable the semantic domain editor
+    setSemanticDomainState = (enabled) => {
+        this.semanticTableEnabled = enabled;
+
+        if (this.semanticTableEnabled) {
+            resetRows();
+            console.log("Semantic Domain enabled");
+        } else {
+            console.log("Semantic Domain disabled");
+        }
+
+        // Force redraw
+        this.setState(this.state);
+    }
+
     render() {
         var GUI =
             <div className="Program">
+                <div className={this.semanticTableEnabled ? "SemanticDomain" : "hidden"}>
+                    <SemanticDomainEditor/>
+                </div>
+
                 <div className= "TopMenus">
                     <div className="TopBarFile"> &nbsp;File </div>
 
@@ -138,7 +162,9 @@ export class MainProgramClass extends React.Component {
                         <a href="#" id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</a>
                     </div>
 
-                    <div className="TopBar"> Semantic Editor </div>
+                    <div className="TopBar" onClick={() => this.setSemanticDomainState(true)}>
+                        Semantic Editor
+                    </div>
                     <input className="TopBarSearch" type = "text" name = "search" placeholder = "Search Here" onChange={(e) => this.searchFor(e)}/>
 
                     <div className="TopBarIcon">&nbsp;</div>

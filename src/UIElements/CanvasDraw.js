@@ -47,7 +47,7 @@ export function resetMouseOrigin(){
         mouseOriginY = canvasRect.top;
         recalculateScale();
         clearCanvas();
-    }catch{
+    } catch {
         console.error("Failed to aquire canvas element");
     }
     drawAll()
