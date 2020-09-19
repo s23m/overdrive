@@ -17,6 +17,9 @@ node_modules/
 .idea
 .idea/workspace.xml
 
+#graph auto-save files
+public/saves
+
 # misc
 .DS_Store
 .env.local
