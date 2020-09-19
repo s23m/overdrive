@@ -295,6 +295,18 @@ export class Arrow {
     draw(canvasContext) {
         // Get path
         var path = this.createPath();
+        
+        switch (this.lineType) {
+            case LineType.SOLID:
+                canvasContext.setLineDash([]);
+                break;
+            case LineType.DASHED:
+                canvasContext.setLineDash([10, 10]);
+                break;
+            default:
+                canvasContext.setLineDash([]);
+                break;
+        }
 
         // Draw
         for (var i = 0; i < path.length-1; i++) {
