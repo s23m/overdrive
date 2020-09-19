@@ -5,6 +5,7 @@
 import { getDistance } from "../UIElements/CanvasDraw";
 
 export var padding = 5;
+export var defaultColour = "#FFD5A9";
 
 // TODO change sx, sy to x, y
 export class Vertex {
@@ -19,6 +20,7 @@ export class Vertex {
         this.sy = sy;
         this.icon = "";
         this.children = [];
+        this.colour = defaultColour;
 
         // Note these values often change in runtime
         this.width = width;
@@ -146,12 +148,12 @@ export class Vertex {
         var rectHeight = Math.max(this.height, textHeight);
 
         // Setup gradient fill
-        var grd = canvasContext.createLinearGradient(this.sx, this.sy, this.sx+rectWidth, this.sy+rectHeight);
-        grd.addColorStop(0, "#e3895f");
-        grd.addColorStop(1, "#e66229");
+        //var grd = canvasContext.createLinearGradient(this.sx, this.sy, this.sx+rectWidth, this.sy+rectHeight);
+        //grd.addColorStop(0, "#e3895f");
+        //grd.addColorStop(1, "#e66229");
 
         // Draw rect
-        canvasContext.fillStyle = grd;
+        canvasContext.fillStyle = this.colour;
         canvasContext.fillRect(this.sx, this.sy, rectWidth, rectHeight);
         canvasContext.strokeRect(this.sx, this.sy, rectWidth, fontSize+padding+padding);
         canvasContext.strokeRect(this.sx, this.sy, rectWidth, rectHeight);
