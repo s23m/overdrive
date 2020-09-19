@@ -17,9 +17,11 @@ app.use(function (req,res,next) {
 app.post('/serialisation/save', (req,res) => {
 
     const serialisation = req.query.serialisation;
-    var success = false;
-    let date = Date.now();
-    let filePath = __dirname.substring(0,__dirname.length-7) + '/public/saves/' + date + '.json';
+    let success = false;
+    let date = new Date(Date.now());
+    let weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    let dateString = weekday[date.getDay()] + ' ' + date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + date.getHours() + '.' + date.getMinutes() + ' ' + date.getSeconds() + '.'+ date.getMilliseconds()
+    let filePath = __dirname.substring(0,__dirname.length-7) + '/public/saves/' + dateString + '.json';
     let content = JSON.stringify(req.body);
 
     fs.writeFile(filePath,content,function (error) {

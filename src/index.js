@@ -35,7 +35,7 @@ let saveToServer = () => {
         },
         body: data
     });
-}
+};
 
 setInterval(saveToServer,60000);
 
