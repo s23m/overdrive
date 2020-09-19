@@ -15,11 +15,11 @@ const EdgeEnd = {
 };
 
 const LineColour = {
-    BLACK: 1,
-    RED: 2,
-    BLUE: 3,
-    GREEN: 4
-};
+    BLACK: "#000000",
+    RED: "#FF0000",
+    BLUE: "#0000FF",
+    GREEN: "#00FF00"
+}
 
 const LineType = {
     SOLID: 1,
@@ -294,22 +294,24 @@ export class Arrow {
     }
 
     draw(canvasContext) {
+        var dashLength = 5;
+
         switch (this.lineType) {
             case LineType.SOLID:
                 canvasContext.setLineDash([]);
                 break;
             case LineType.DASHED:
-                canvasContext.setLineDash([10, 10]);
+                canvasContext.setLineDash([dashLength, dashLength]);
                 break;
             default:
                 canvasContext.setLineDash([]);
-                break;
         }
 
         // Get path
         var path = this.createPath();
 
         // Draw
+        canvasContext.strokeStyle = this.lineColour;
         for (var i = 0; i < path.length-1; i++) {
             let from = path[i];
             let to = path[i+1];
@@ -318,6 +320,8 @@ export class Arrow {
             canvasContext.lineTo(to[0], to[1]);
             canvasContext.stroke();
         }
+        canvasContext.strokeStyle = "#000000";
+        canvasContext.setLineDash([]);
 
         // Arrow types
         if (this.endType === EdgeEnd.ARROW) {

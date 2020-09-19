@@ -81,7 +81,7 @@ export class LeftMenu extends React.Component{
 
     setColour() {
         var newColour = document.getElementsByClassName("ArrowHeadColour")[0].value;
-        this.state.selectedObject.setLineType(newColour);
+        this.state.selectedObject.setLineColour(newColour);
         canvasDraw.drawAll()
     }
 
