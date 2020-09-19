@@ -26,7 +26,7 @@ assignElement("drawCanvas");
 let saveToServer = () => {
     let data = JSON.stringify(getSaveData());
 
-    fetch('http://localhost:8080/serialisation/save',{
+    fetch('http://localhost:3001/serialisation/save',{
         method:'POST',
         headers: {
             'Accept': '*/*',
