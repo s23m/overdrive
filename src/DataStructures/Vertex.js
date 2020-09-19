@@ -47,6 +47,23 @@ export class Vertex {
         this.content = content;
     }
 
+    getContentAsString() {
+        if (this.content !== null) {
+            var mergedContent = "";
+            
+            for (let i = 0; i < this.content.length; i++) {
+                mergedContent = mergedContent.concat(this.content[i]);
+                if (i < this.content.length - 1) {
+                    mergedContent = mergedContent.concat("\n");
+                }
+            }
+
+            return mergedContent;
+        } else {
+            return "";
+        }
+    }
+
     //TODO: Check if there's a better way to store icon
     setIcon(name) {
         this.icon = name;

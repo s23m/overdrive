@@ -111,11 +111,11 @@ export class LeftMenu extends React.Component{
                 <div className="LeftBar">Vertex Properties</div>
 
                 <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" className="LeftTitle" onKeyUp={() => this.setTitle()}/>
+                <input id="LeftTitle" defaultValue={this.state.selectedObject.title} className="LeftTitle" onKeyUp={() => this.setTitle()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Content</label>
-                <textarea className ="LeftContent" onKeyUp={() => this.setContent()}/>
+                <textarea defaultValue={this.state.selectedObject.getContentAsString()} className ="LeftContent" onKeyUp={() => this.setContent()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Icon</label>
