@@ -66,8 +66,12 @@ export class Arrow {
         this.LineType = LineType.SOLID;
 
         this.cardinality = null;
+        this.selected = false;
     }
 
+    setSelected(selected){
+        this.selected = selected;
+    }
 
     // Gets the object (hopefully a vertex) from UUID
     getObjectFromUUID(objects, uuid) {
@@ -307,11 +311,31 @@ export class Arrow {
                 canvasContext.setLineDash([]);
         }
 
+
         // Get path
         var path = this.createPath();
 
         // Draw
         canvasContext.strokeStyle = this.lineColour;
+
+        if(this.selected){
+            let x0 = path[0][0];
+            let x1 = path[path.length-1][0];
+            let y0 = path[0][1];
+            let y1 = path[path.length-1][1];
+            let r = Math.hypot(x1-x0,y1-y0);
+            let midX = (x0+x1)/2;
+            let midY = (y0+y1)/2;
+            //canvasContext.setLineDash([1,dashLength]);
+            let gradient = canvasContext.createRadialGradient(midX,midY,0,midX,midY,r);
+            gradient.addColorStop(0,this.lineColour);
+            gradient.addColorStop(0.4,"orange");
+            gradient.addColorStop(0.5,"yellow");
+            gradient.addColorStop(0.6,"orange");
+            gradient.addColorStop(1,this.lineColour);
+            canvasContext.strokeStyle = gradient;
+        }
+
         for (var i = 0; i < path.length-1; i++) {
             let from = path[i];
             let to = path[i+1];
@@ -327,6 +351,7 @@ export class Arrow {
         if (this.endType === EdgeEnd.ARROW) {
             // TODO arrow types
         }
+
     }
 
     // Checks if it intersects with point

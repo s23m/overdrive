@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as ServiceWorker from './ServiceWorker';
-import {MainProgramClass} from './MainProgram';
+import {MainProgramClass} from './UIElements/MainView';
 import {assignElement} from "./UIElements/CanvasDraw";
 import {getSaveData} from "./Serialisation/FileManager";
 

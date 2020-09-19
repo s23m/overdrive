@@ -21,10 +21,15 @@ export class Vertex {
         this.icon = "";
         this.children = [];
         this.colour = defaultColour;
+        this.selected = false;
 
         // Note these values often change in runtime
         this.width = width;
         this.height = height;
+    }
+
+    setSelected(selected){
+        this.selected = selected;
     }
 
     addChild(child) {
@@ -119,6 +124,18 @@ export class Vertex {
     draw(canvasContext) {
         //todo: fix automatically increasing width when text is too long
 
+        if(this.selected){
+            let r = Math.hypot(this.sx +this.width-this.sx,this.sy + this.height-this.sy);
+            //canvasContext.setLineDash([1,dashLength]);
+            let gradient = canvasContext.createRadialGradient(this.sx+(this.width/2),this.sy+(this.height/2),0,this.sx + (this.width/2),this.sy + (this.height/2),r);
+            gradient.addColorStop(0.5,"black");
+            gradient.addColorStop(0.6,"orange");
+            gradient.addColorStop(0,"yellow");
+            gradient.addColorStop(0.4,"orange");
+            gradient.addColorStop(1,"yellow");
+            canvasContext.strokeStyle = gradient;
+        }
+
         // Font size
         var fontSize = 12;
         padding = 5;
@@ -180,6 +197,9 @@ export class Vertex {
             canvasContext.fillText(this.content[i], this.sx+padding, this.sy+dy);
             dy += fontSize + padding;
         }
+
+        canvasContext.strokeStyle = "black"
+
     }
 
     // Checks if it intersects with point

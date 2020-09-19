@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import {currentObjects, setCurrentObjects} from "../UIElements/CanvasDraw"
-import {version} from "../MainProgram"
+import {version} from "../UIElements/MainView"
 
 import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";

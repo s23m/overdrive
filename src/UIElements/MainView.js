@@ -1,13 +1,25 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 import React from 'react';
-import './App.css';
+import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
 import * as fileManager from '../Serialisation/FileManager'
 
 import {Canvas} from './Canvas';
 import {LeftMenu} from './LeftMenu';
 
+// Semantic domain editor
+import SemanticDomainEditor from "./SemanticDomainEditor";
+import {resetRows} from "./SemanticDomainEditor"
+
 //todo: add other types of tools
 const leftMenuTypes = ["Tools", "Vertex", "Arrow"];
+
+// Simple incremental version
+// 1->2->3->4
+export const version = 1;
 
 export class MainProgramClass extends React.Component {
 
@@ -21,10 +33,13 @@ export class MainProgramClass extends React.Component {
         };
 
         this.setMode = this.setMode.bind(this);
+
         this.setLeftMenu = this.setLeftMenu.bind(this);
+        this.semanticTableEnabled = false;
     }
 
     componentDidMount() {
+        this.setMode("Vertex");
         console.log("Mounted")
     }
 
@@ -47,21 +62,27 @@ export class MainProgramClass extends React.Component {
     };
 
     setMode(mode) {
+
+        let div = document.getElementById(this.state.drawMode);
+        div.style.backgroundColor = "#FFFFFF";
+
         this.setState({drawMode: mode});
-        console.log("Mode set to: " + mode)
+        div = document.getElementById(mode);
+
+        div.style.backgroundColor = "#CFFFFF";
+
+        console.log("Mode set to: " + mode);
     };
 
     // chooses which left hand menu to display, based on the selected item
     setLeftMenu(nearestObject) {
-        // todo: remove statement directly below this
-        // temporary way to show item has been de-selected
 
-        /*
-        if (this.state.selectedObject !== null) {
-            this.state.selectedObject.setTitle("Not Selected Anymore");
-            canvasDraw.drawAll();
+        if(this.state.selectedObject !== null) {
+            this.state.selectedObject.setSelected(false);
         }
-        */
+
+        console.log(nearestObject);
+
         // check if the nearest object was too far away or didnt exist
         if (nearestObject === null) {
             this.setState({
@@ -77,11 +98,9 @@ export class MainProgramClass extends React.Component {
                 menu: nearestObject.constructor.name,
                 selectedObject: nearestObject
             });
+            nearestObject.setSelected(true);
         } else {
-            // todo: remove statement directly below this
-            // temporary way to show item has been de-selected
             if (this.state.selectedObject !== null) {
-                //this.state.selectedObject.setTitle("Not Selected Anymore");
                 canvasDraw.drawAll();
             }
 
@@ -110,20 +129,39 @@ export class MainProgramClass extends React.Component {
 
             var reader = new FileReader();
             reader.readAsText(file);
-            reader.onload=function(){fileManager.open(reader.result)}
+            reader.onload=function() {fileManager.open(reader.result)}
         } else {
             alert("Your browser is too old to support HTML5 File API");
         }
     }
 
+    // Used to enable/disable the semantic domain editor
+    toggleSemanticDomainState = () => {
+        if (this.semanticTableEnabled) {
+            this.semanticTableEnabled = false;
+            console.log("Semantic Domain disabled");
+        } else {
+            this.semanticTableEnabled = true;
+            resetRows();
+            console.log("Semantic Domain enabled");
+        }
+
+        // Force redraw
+        this.setState(this.state);
+    }
+
     render() {
         var GUI =
             <div className="Program">
+                <div className={this.semanticTableEnabled ? "SemanticDomain" : "hidden"}>
+                    <SemanticDomainEditor/>
+                </div>
+
                 <div className= "TopMenus">
                     <div className="TopBarFile"> &nbsp;File </div>
 
                     <div className="TopBar">
-                        <a href="#" id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
+                        <button id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</button>
                     </div>
 
                     <div className="TopBar">
@@ -131,10 +169,12 @@ export class MainProgramClass extends React.Component {
                     </div>
 
                     <div className="TopBar">
-                        <a href="#" id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</a>
+                        <button id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</button>
                     </div>
 
-                    <div className="TopBar"> Semantic Editor </div>
+                    <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>
+                        Semantic Editor
+                    </div>
                     <input className="TopBarSearch" type = "text" name = "search" placeholder = "Search Here" onChange={(e) => this.searchFor(e)}/>
 
                     <div className="TopBarIcon">&nbsp;</div>
