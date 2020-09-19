@@ -19,7 +19,7 @@
   },
   "scripts": {
     "server": "node-env-run server --exec nodemon | pino-colada",
-    "start": "run-p server start",
+    "start": "run-p server client",
     "client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
