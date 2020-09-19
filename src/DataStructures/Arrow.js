@@ -346,7 +346,7 @@ export class Arrow {
         var n = getDistance(cx, cy, x2, y2);
         var l = getDistance(x1, y1, x2, y2);
 
-        var threshold = 5;
+        var threshold = 1;
 
         return (m+n-threshold < l);
     }
