@@ -4,6 +4,7 @@
 
 import {Vertex, padding} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
+import {getSaveData} from "../Serialisation/FileManager";
 
 // Core variables
 var canvasElement;
@@ -212,6 +213,20 @@ export function onMousePress(canvas, x, y) {
 
     // Enable example draw while user is deciding shape
     canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
+}
+
+function saveToServer(){
+    let data = JSON.stringify(getSaveData());
+
+    fetch('http://localhost:3001/serialisation/save',{
+        method:'POST',
+        headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Content-Length':data.length
+        },
+        body: data
+    });
 }
 
 export function onMouseRelease(canvas, x, y) {

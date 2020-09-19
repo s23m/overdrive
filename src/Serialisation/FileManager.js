@@ -8,9 +8,9 @@ import {version} from "../MainProgram"
 import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
 
-export function save() {
+export function getSaveData() {
 
-    var objectsToSave = currentObjects;
+    let objectsToSave = currentObjects;
     // Process objects to save
     objectsToSave.forEach((item) => {
         if (item !== null) {
@@ -28,7 +28,7 @@ export function save() {
     });
 
     // Combine into save data
-    var saveData = {
+    let saveData = {
         // The version is being saved in the savefile
         // this is so in future versions, if the serialisation changes
         // They can upgrade the the file to one compatibile with the newer version
@@ -36,9 +36,16 @@ export function save() {
 
         // The data here should all have uuids and should be convertible back into their objects.
         currentObjects: objectsToSave,
-    }
+    };
 
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(saveData));
+    return saveData;
+}
+
+export function save() {
+
+    let JSONdata = getSaveData();
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSONdata));
+
     var downloadElem = document.getElementById('json-downloader');
     downloadElem.setAttribute("href",     dataStr     );
     downloadElem.setAttribute("download", "export.json");
