@@ -14,14 +14,19 @@ app.use(function (req,res,next) {
     next();
 });
 
+app.get('/', (req,res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400);
+    res.send(JSON.stringify({response:"Bad Request"}))
+});
+
 // save a JSON Serialisation
 app.post('/serialisation/save', (req,res) => {
 
-    const serialisation = req.query.serialisation;
    //file name is current date time
     let date = new Date(Date.now());
     let weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    let dateString = weekday[date.getDay()] + ' ' + date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + date.getHours() + '.' + date.getMinutes() + ' ' + date.getSeconds() + '.'+ date.getMilliseconds()
+    let dateString = weekday[date.getDay()] + ' ' + date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + date.getHours() + '.' + date.getMinutes() + ' ' + date.getSeconds() + '.'+ date.getMilliseconds();
 
     let filePath = __dirname.substring(0,__dirname.length-7) + '/public/saves/' + dateString + '.json';
     let content = JSON.stringify(req.body);
@@ -32,12 +37,12 @@ app.post('/serialisation/save', (req,res) => {
         //return in the response whether saving was successful
         res.setHeader('Content-Type', 'application/json');
         if(!error) {
-            console.log("File write successful")
+            console.log("File write successful");
             res.status(200);
-            res.send(JSON.stringify({"success":true}));
+            res.send(JSON.stringify({success:true}));
         }else{
             res.status(500);
-            res.send(JSON.stringify({"success":false}));
+            res.send(JSON.stringify({success:false}));
         }
 
 
