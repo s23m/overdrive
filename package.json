@@ -19,8 +19,8 @@
   },
   "scripts": {
     "server": "node-env-run server --exec nodemon | pino-colada",
-    "S23M": "run-p server start",
-    "start": "react-scripts start",
+    "start": "run-p server start",
+    "client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
