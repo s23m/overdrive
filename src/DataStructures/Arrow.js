@@ -16,10 +16,10 @@ const EdgeEnd = {
 }
 
 const LineColour = {
-    BLACK: 1,
-    RED: 2,
-    BLUE: 3,
-    GREEN: 4
+    BLACK: "#000000",
+    RED: "#FF0000",
+    BLUE: "#0000FF",
+    GREEN: "#00FF00"
 }
 
 const LineType = {
@@ -310,6 +310,7 @@ export class Arrow {
         var path = this.createPath();
 
         // Draw
+        canvasContext.strokeStyle = this.lineColour;
         for (var i = 0; i < path.length-1; i++) {
             let from = path[i];
             let to = path[i+1];
@@ -318,6 +319,7 @@ export class Arrow {
             canvasContext.lineTo(to[0], to[1]);
             canvasContext.stroke();
         }
+        canvasContext.strokeStyle = "#000000";
         canvasContext.setLineDash([]);
 
         // Arrow types
