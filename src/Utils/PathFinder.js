@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import {currentObjects, drawMarker, getDistance, setFillStyle} from "../UIElements/CanvasDraw";
+import {getDistance} from "../UIElements/CanvasDraw";
 
 export function pathFindTo(nodes, start, dest) {
     var startNode = getNodeByID(nodes, start);

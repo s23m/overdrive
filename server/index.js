@@ -14,30 +14,32 @@ app.use(function (req,res,next) {
     next();
 });
 
+// save a JSON Serialisation
 app.post('/serialisation/save', (req,res) => {
 
     const serialisation = req.query.serialisation;
-    let success = false;
+   //file name is current date time
     let date = new Date(Date.now());
     let weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     let dateString = weekday[date.getDay()] + ' ' + date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + date.getHours() + '.' + date.getMinutes() + ' ' + date.getSeconds() + '.'+ date.getMilliseconds()
+
     let filePath = __dirname.substring(0,__dirname.length-7) + '/public/saves/' + dateString + '.json';
     let content = JSON.stringify(req.body);
 
+    //write json to file
     fs.writeFile(filePath,content,function (error) {
-        if(!error) {
-            success = true;
-            console.log("File write successful")
-        }
 
+        //return in the response whether saving was successful
         res.setHeader('Content-Type', 'application/json');
-        if(success){
+        if(!error) {
+            console.log("File write successful")
             res.status(200);
             res.send(JSON.stringify({"success":true}));
         }else{
             res.status(500);
             res.send(JSON.stringify({"success":false}));
         }
+
 
     })
 

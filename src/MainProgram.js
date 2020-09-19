@@ -155,7 +155,7 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarFile"> &nbsp;File </div>
 
                     <div className="TopBar">
-                        <a href="#" id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
+                        <button id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</button>
                     </div>
 
                     <div className="TopBar">
@@ -163,7 +163,7 @@ export class MainProgramClass extends React.Component {
                     </div>
 
                     <div className="TopBar">
-                        <a href="#" id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</a>
+                        <button id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</button>
                     </div>
 
                     <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>

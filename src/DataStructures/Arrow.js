@@ -2,9 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { Cardinality } from "./Cardinality";
-import {currentObjects, drawMarker, getDistance, setFillStyle} from "../UIElements/CanvasDraw";
-import {pathFindTo, getDistanceFromNodes} from "../Utils/PathFinder";
+import {Cardinality} from "./Cardinality";
+import {getDistance} from "../UIElements/CanvasDraw";
 
 const EdgeEnd = {
     NONE: 1,
@@ -13,19 +12,19 @@ const EdgeEnd = {
     FILLED_TRIANGLE: 4,
     DIAMOND: 5,
     FILLED_DIAMOND: 6
-}
+};
 
 const LineColour = {
     BLACK: 1,
     RED: 2,
     BLUE: 3,
     GREEN: 4
-}
+};
 
 const LineType = {
     SOLID: 1,
     DASHED: 2
-}
+};
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
@@ -208,6 +207,7 @@ export class Arrow {
         // Disables the pathing feature
         return [[fromX, fromY], [toX, toY]];
 
+        /*
         // Create nodes
         var nodeIndex = 0;
         let d = 10; // buffer distance
@@ -290,6 +290,7 @@ export class Arrow {
         path.push([toX, toY]);
 
         return path;
+        */
     }
 
     draw(canvasContext) {

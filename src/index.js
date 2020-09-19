@@ -8,8 +8,7 @@ import './index.css';
 import App from './App';
 import * as ServiceWorker from './ServiceWorker';
 import {MainProgramClass} from './MainProgram';
-import {Canvas} from './UIElements/Canvas';
-import {assignElement, canvasDraw} from "./UIElements/CanvasDraw";
+import {assignElement} from "./UIElements/CanvasDraw";
 import {getSaveData} from "./Serialisation/FileManager";
 
 
@@ -23,7 +22,8 @@ ReactDOM.render(
 ReactDOM.render(<MainProgramClass />,document.getElementById("program"));
 assignElement("drawCanvas");
 
-let saveToServer = () => {
+// save to server every interval
+setInterval(() => {
     let data = JSON.stringify(getSaveData());
 
     fetch('http://localhost:8080/serialisation/save',{
@@ -35,9 +35,7 @@ let saveToServer = () => {
         },
         body: data
     });
-};
-
-setInterval(saveToServer,60000);
+},60000);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -89,13 +89,13 @@ export class LeftMenu extends React.Component{
     getMenu = () =>{
         if (this.state.menu === "Tools") {
             return <div className={this.props.className}>
-                <div className="LeftBar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Diamond')}><img src={iconDiamond}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Circle')}><img src={iconCircle}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Speech')}><img src={iconSpeech}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('SpecBox')}><img src={iconSpecBox}/></div>
-                <div className="LeftBar" onClick={() => this.props.setMode('Triangle')}><img src={iconTriangle}/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Diamond')}><img src={iconDiamond} alt ="Diamond"/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Circle')}><img src={iconCircle} alt ="Circle"/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Speech')}><img src={iconSpeech} alt ="Speech"/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('SpecBox')}><img src={iconSpecBox} alt ="SpecBox"/></div>
+                <div className="LeftBar" onClick={() => this.props.setMode('Triangle')}><img src={iconTriangle} alt ="Triangle"/></div>
             </div>;
 
         } else if (this.state.menu === "Vertex") {

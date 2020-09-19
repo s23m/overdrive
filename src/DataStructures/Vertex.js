@@ -60,19 +60,21 @@ export class Vertex {
     }
 
     expandSide(side, x, y) {
+        var ex = 0;
+        var ey = 0;
         switch (side) {
 
             case "topLeft":
-                var ey = this.sy + this.height;
+                ey = this.sy + this.height;
                 this.sy = y;
                 this.height = ey-this.sy;
-                var ex = this.sx + this.width;
+                ex = this.sx + this.width;
                 this.sx = x;
                 this.width = ex-this.sx;
                 break;
 
             case "topRight":
-                var ey = this.sy + this.height;
+                ey = this.sy + this.height;
                 this.sy = y;
                 this.height = ey-this.sy;
                 this.width = x-this.sx;
@@ -80,7 +82,7 @@ export class Vertex {
 
             case "bottomLeft":
                 this.height = y-this.sy;
-                var ex = this.sx + this.width;
+                ex = this.sx + this.width;
                 this.sx = x;
                 this.width = ex-this.sx;
                 break;
@@ -91,7 +93,7 @@ export class Vertex {
                 break;
 
             case "left":
-                var ex = this.sx + this.width;
+                ex = this.sx + this.width;
                 this.sx = x;
                 this.width = ex-this.sx;
 
@@ -101,7 +103,7 @@ export class Vertex {
                 break;
 
             case "top":
-                var ey = this.sy + this.height;
+                ey = this.sy + this.height;
                 this.sy = y;
                 this.height = ey-this.sy;
                 break;
@@ -109,6 +111,8 @@ export class Vertex {
             case "bottom":
                 this.height = y-this.sy;
                 break;
+
+            default:break;
         }
     }
 
@@ -117,7 +121,7 @@ export class Vertex {
 
         // Font size
         var fontSize = 12;
-        padding = 5
+        padding = 5;
         // Set font settings
         canvasContext.font = fontSize+"px Arial";
         canvasContext.fontSize = fontSize;
@@ -128,7 +132,7 @@ export class Vertex {
         var textHeight = padding*2+fontSize*2;
 
         // Iterate over all content text lines
-        for (var i = 0; i < this.content.length; i++) {
+        for (let i = 0; i < this.content.length; i++) {
             var measuredText = canvasContext.measureText(this.content[i]);
             maxWidth = Math.max(maxWidth, measuredText.width);
             textHeight += fontSize+padding;

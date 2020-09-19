@@ -4,7 +4,6 @@
 
 import {Vertex, padding} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
-import {getSaveData} from "../Serialisation/FileManager";
 
 // Core variables
 var canvasElement;
@@ -82,10 +81,6 @@ export function drawAll() {
             item.draw(canvasContext);
         }
     })
-}
-
-function setScroll() {
-    var canvasContainerElement = document.getElementsByClassName("Canvas")[0];
 }
 
 // Format co-ordinate so that the value aligns with a row
@@ -207,7 +202,6 @@ export function onMousePress(canvas, x, y) {
     }
 
 
-    setScroll();
     mouseStartX = x;
     mouseStartY = y;
 
@@ -223,7 +217,6 @@ export function onMouseRelease(canvas, x, y) {
         return
     }
 
-    setScroll();
     var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
 
     addObject(newObject);
@@ -235,7 +228,7 @@ export function onMouseRelease(canvas, x, y) {
 }
 
 function onMouseMove(e, canvas) {
-    setScroll();
+
     var position = getGraphXYFromMouseEvent(e);
 
     var newObject = createObject(canvas, mouseStartX, mouseStartY, position[0], position[1]);
@@ -281,7 +274,6 @@ export function setZoom(newZoom) {
     zoom = newZoom;
 
     resetMouseOrigin();
-    setScroll();
 
     drawAll();
 }
@@ -371,16 +363,11 @@ function createObject(canvas, x1, y1, x2, y2) {
 
 export function getGraphXYFromMouseEvent(e) {
     resetMouseOrigin();
-    setScroll();
 
     var x = (e.clientX-mouseOriginX)/getEffectiveZoom();
     var y = (e.clientY-mouseOriginY)/getEffectiveZoom();
 
     return [x, y];
-}
-
-function exportImage() {
-    getDownload();
 }
 
 export function getDownload() {
@@ -428,6 +415,7 @@ function clearCanvas() {
 
 function createUUID() {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        // eslint-disable-next-line
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     );
 }
