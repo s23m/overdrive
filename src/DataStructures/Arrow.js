@@ -293,16 +293,17 @@ export class Arrow {
     }
 
     draw(canvasContext) {
+        var dashLength = 5;
+
         switch (this.lineType) {
             case LineType.SOLID:
                 canvasContext.setLineDash([]);
                 break;
             case LineType.DASHED:
-                canvasContext.setLineDash([10, 10]);
+                canvasContext.setLineDash([dashLength, dashLength]);
                 break;
             default:
                 canvasContext.setLineDash([]);
-                break;
         }
 
         // Get path
@@ -317,6 +318,7 @@ export class Arrow {
             canvasContext.lineTo(to[0], to[1]);
             canvasContext.stroke();
         }
+        canvasContext.setLineDash([]);
 
         // Arrow types
         if (this.endType === EdgeEnd.ARROW) {
