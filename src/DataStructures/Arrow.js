@@ -293,9 +293,6 @@ export class Arrow {
     }
 
     draw(canvasContext) {
-        // Get path
-        var path = this.createPath();
-        
         switch (this.lineType) {
             case LineType.SOLID:
                 canvasContext.setLineDash([]);
@@ -307,6 +304,9 @@ export class Arrow {
                 canvasContext.setLineDash([]);
                 break;
         }
+
+        // Get path
+        var path = this.createPath();
 
         // Draw
         for (var i = 0; i < path.length-1; i++) {
@@ -326,12 +326,25 @@ export class Arrow {
 
     // Checks if it intersects with point
     intersects(x, y) {
-        var fromNode = this.fromVertex.getNodeByVertexNode(this.fromVertexNode);
-        var toNode = this.toVertex.getNodeByVertexNode(this.toVertexNode);
+        // Get path
+        var path = this.createPath();
 
-        var m = getDistance(x, y, fromNode[0], fromNode[1]);
-        var n = getDistance(x, y, toNode[0], toNode[1]);
-        var l = getDistance(fromNode[0], fromNode[1], toNode[0], toNode[1]);
+        // Draw
+        for (var i = 0; i < path.length-1; i++) {
+            let from = path[i];
+            let to = path[i+1];
+            if (this.intersectsSegment(x, y, from[0], from[1], to[0], to[1])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    intersectsSegment(cx, cy, x1, y1, x2, y2) {
+        var m = getDistance(cx, cy, x1, y1);
+        var n = getDistance(cx, cy, x2, y2);
+        var l = getDistance(x1, y1, x2, y2);
 
         var threshold = 5;
 
