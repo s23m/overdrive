@@ -145,12 +145,8 @@ export class LeftMenu extends React.Component{
         } else if (this.state.menu === "Vertex") {
             console.log("Vertex Selected",this.state.selectedObject);
 
-            // todo: remove statement directly below this
-            // temporary way to show a vertex is selected
-            //this.state.selectedObject.setTitle("Selected");
             canvasDraw.drawAll();
 
-            //todo: do not remove this in the todo above, then remove this todo
             return <form ref={this.setFormRef} className={this.props.className}>
                 <div className="LeftBar">Vertex Properties</div>
 
