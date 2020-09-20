@@ -149,15 +149,15 @@ export class LeftMenu extends React.Component{
                 <div className="LeftBar">Vertex Properties</div>
 
                 <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" defaultValue={this.state.selectedObject.title} className="LeftTitle" onKeyUp={() => this.setTitle()}/>
+                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Content</label>
-                <textarea defaultValue={this.state.selectedObject.getContentAsString()} className ="LeftContent" onKeyUp={() => this.setContent()}/>
+                <textarea className ="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Icon</label>
-                {getS23MIconsSelector()}
+                {getS23MIconsSelector(this)}
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <button className="LeftLabel">Remove</button>
@@ -216,11 +216,11 @@ export class LeftMenu extends React.Component{
                     <input type="number" id = "destToCardindality" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Source Label</label>
-                    <input id="SourceLabel" defaultValue={this.state.selectedObject.startLabel} className="SourceLabel" onKeyUp={() => this.setStartLabel()}/>
+                    <input id="SourceLabel" className="SourceLabel" defaultValue={this.state.selectedObject.startLabel} onKeyUp={() => this.setStartLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Destination Label</label>
-                    <input id="DestLabel" defaultValue={this.state.selectedObject.endLabel} className="DestLabel" onKeyUp={() => this.setEndLabel()}/>
+                    <input id="DestLabel" className="DestLabel" defaultValue={this.state.selectedObject.endLabel} onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 // todo: to/from caridnality, comment, 1..n represented as a dot
@@ -241,7 +241,7 @@ export class LeftMenu extends React.Component{
 
 }
 
-function getS23MIconsSelector() {
+function getS23MIconsSelector(leftMenu) {
     var dropdownOptions = [<option key = "-No Icon">-No Icon</option>];
     var fileNames = ['Activity.png', 'Agent.png', 'BioSphere.png', 'Critical.png', 'Designed.png', 'Ecosystem.png', 'Error.png', 'Event.png', 'Grow_n.png', 'Human.png', 'listFileNames.py', 'Make_n.png', 'Move_n.png', 'Organic.png', 'Organisation.png', 'Play_n.png', 'Resource.png', 'SaaS_n.png', 'Social.png', 'Software.png', 'Sustain_n.png', 'Symbolic.png', 'Tacit Knowledge.png', 'Team.png', 'Trust.png', 'UI Device.png']
     let name = "";
@@ -257,7 +257,7 @@ function getS23MIconsSelector() {
 
     });
 
-    return <select name="Icons" className="IconSelector"> 
+    return <select name="Icons" className="IconSelector" defaultValue={leftMenu.state.selectedObject.icon} onChange={() => leftMenu.setIcon()}> 
         {dropdownOptions}
     </select>;
 
