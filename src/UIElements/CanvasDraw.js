@@ -86,11 +86,11 @@ export function drawAll() {
 export function deleteElement(element){
     currentObjects.forEach((item,index,object) => {
         if (item !== null) {
-            if(item.UUID == element.UUID){
+            if(item.UUID === element.UUID){
                 object.splice(index,1)
             }
         }
-    })
+    });
     drawAll()
 }
 

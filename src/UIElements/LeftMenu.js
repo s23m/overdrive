@@ -28,6 +28,13 @@ export class LeftMenu extends React.Component{
         };
         this.setTitle = this.setTitle.bind(this);
         this.setContent = this.setContent.bind(this);
+
+        this.formRef = null;
+
+        this.setFormRef = element =>{
+            this.formRef = element;
+        }
+
     }
 
     componentDidMount() {
@@ -122,10 +129,11 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.destCardinality.toggleVisibility();
     }
 
+
 // return the correct menu based on the selected item
     getMenu = () =>{
         if (this.state.menu === "Tools") {
-            return <div className={this.props.className}>
+            return <form ref={this.setFormRef} className={this.props.className}>
                 <div id = "Vertex" className="LeftBar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
                 <div id = "Arrow" className="LeftBar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
                 <div id = "Diamond" className="LeftBar" onClick={() => this.props.setMode('Diamond')}><img src={iconDiamond} alt ="Diamond"/></div>
@@ -133,7 +141,7 @@ export class LeftMenu extends React.Component{
                 <div id = "Speech" className="LeftBar" onClick={() => this.props.setMode('Speech')}><img src={iconSpeech} alt ="Speech"/></div>
                 <div id = "SpecBox" className="LeftBar" onClick={() => this.props.setMode('SpecBox')}><img src={iconSpecBox} alt ="SpecBox"/></div>
                 <div id = "Triangle" className="LeftBar" onClick={() => this.props.setMode('Triangle')}><img src={iconTriangle} alt ="Triangle"/></div>
-            </div>;
+            </form>;
 
         } else if (this.state.menu === "Vertex") {
             console.log("Vertex Selected",this.state.selectedObject);
@@ -144,7 +152,7 @@ export class LeftMenu extends React.Component{
             canvasDraw.drawAll();
 
             //todo: do not remove this in the todo above, then remove this todo
-            return <div className={this.props.className}>
+            return <form ref={this.setFormRef} className={this.props.className}>
                 <div className="LeftBar">Vertex Properties</div>
 
                 <label className="LeftLabel">Title</label>
@@ -160,11 +168,11 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
-            </div>;
+            </form>;
 
         } else if (this.state.menu === "Arrow") {
             console.log("Arrow Selected");
-            return <div className={this.props.className}>
+            return <form ref={this.setFormRef} className={this.props.className}>
                 <div className="LeftBar">Arrow Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
@@ -228,13 +236,17 @@ export class LeftMenu extends React.Component{
                 <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
 
 
-            </div>;
+            </form>;
         }
 
     };
 
     render() {
-        return this.getMenu()
+        let menu = this.getMenu();
+        if(this.formRef !== null) {
+            this.formRef.reset();
+        }
+        return menu;
     }
 
 
