@@ -63,19 +63,35 @@ export class Arrow {
     }
 
     setStartType(startType) {
-        this.startType = ArrowProps.StringToEdgeEnd[startType];
+        if (ArrowProps.StringToEdgeEnd[startType] !== undefined) {
+            this.startType = ArrowProps.StringToEdgeEnd[startType];
+        } else {
+            console.log("Attempted to assign invalid startType: %s", startType);
+        }
     }
 
     setEndType(endType) {
-        this.endType = ArrowProps.StringToEdgeEnd[endType];
+        if (ArrowProps.StringToEdgeEnd[endType] !== undefined) {
+            this.endType = ArrowProps.StringToEdgeEnd[endType];
+        } else {
+            console.log("Attempted to assign invalid endType: %s", endType);
+        }
     }
 
     setLineColour(lineColour) {
-        this.lineColour = ArrowProps.StringNameToLineColour[lineColour];
+        if (ArrowProps.StringNameToLineColour[lineColour] !== undefined) {
+            this.lineColour = ArrowProps.StringNameToLineColour[lineColour];
+        } else {
+            console.log("Attempted to assign invalid lineColour: %s", lineColour);
+        }
     }
 
     setLineType(lineType) {
-        this.lineType = ArrowProps.StringToLineType[lineType];
+        if (ArrowProps.StringToLineType[lineType] !== undefined) {
+            this.lineType = ArrowProps.StringToLineType[lineType];
+        } else {
+            console.log("Attempted to assign invalid lineType: %s", lineType);
+        }
     }
 
     // Creates nodes for an algorithmn to path find around a vertex
