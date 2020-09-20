@@ -14,6 +14,7 @@ import iconCircle from "../Resources/circle.png";
 import iconSpeech from "../Resources/speech.png";
 import iconSpecBox from "../Resources/specbox.png";
 import iconTriangle from "../Resources/triangle.png";
+import {deleteElement} from "./CanvasDraw";
 
 // class to display the left hand menu, where we will be showing
 // object editing tools for now
@@ -121,10 +122,6 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.destCardinality.toggleVisibility();
     }
 
-    removeSelectedObject() {
-        console.log("TEMP: Object removal button pressed");
-    }
-
 // return the correct menu based on the selected item
     getMenu = () =>{
         if (this.state.menu === "Tools") {
@@ -162,7 +159,7 @@ export class LeftMenu extends React.Component{
                 {getS23MIconsSelector(this)}
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <button className="LeftLabel">Remove</button>
+                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
             </div>;
 
         } else if (this.state.menu === "Arrow") {
@@ -228,7 +225,7 @@ export class LeftMenu extends React.Component{
                 // todo: to/from caridnality, comment, 1..n represented as a dot
                     // require ability to select arbitrary number or no number n or * for cardinality
                 }
-                <button className="RemoveButton" onClick={() => this.removeSelectedObject()}>Remove</button>
+                <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
 
 
             </div>;
@@ -245,7 +242,7 @@ export class LeftMenu extends React.Component{
 
 function getS23MIconsSelector(leftMenu) {
     var dropdownOptions = [<option value = "-No Icon">-No Icon</option>];
-    var fileNames = ['Activity.png', 'Agent.png', 'BioSphere.png', 'Critical.png', 'Designed.png', 'Ecosystem.png', 'Error.png', 'Event.png', 'Grow_n.png', 'Human.png', 'listFileNames.py', 'Make_n.png', 'Move_n.png', 'Organic.png', 'Organisation.png', 'Play_n.png', 'Resource.png', 'SaaS_n.png', 'Social.png', 'Software.png', 'Sustain_n.png', 'Symbolic.png', 'Tacit Knowledge.png', 'Team.png', 'Trust.png', 'UI Device.png']
+    var fileNames = ['Activity.png', 'Agent.png', 'BioSphere.png', 'Critical.png', 'Designed.png', 'Ecosystem.png', 'Error.png', 'Event.png', 'Grow_n.png', 'Human.png', 'listFileNames.py', 'Make_n.png', 'Move_n.png', 'Organic.png', 'Organisation.png', 'Play_n.png', 'Resource.png', 'SaaS_n.png', 'Social.png', 'Software.png', 'Sustain_n.png', 'Symbolic.png', 'Tacit Knowledge.png', 'Team.png', 'Trust.png', 'UI Device.png'];
     let name = "";
     fileNames.forEach(fileName => {
 
