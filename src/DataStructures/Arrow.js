@@ -111,10 +111,8 @@ export class Arrow {
 
         canvasContext.beginPath();
         canvasContext.moveTo(points[0].X, points[0].Y);
-        console.log("X: %f, Y: %f", points[0].X, points[0].Y)
         for (let i = 1; i < points.length; i++) {
             canvasContext.lineTo(points[i].X, points[i].Y)
-            console.log("X: %f, Y: %f", points[i].X, points[i].Y)
         }
         
         if (fillColour !== undefined) {
