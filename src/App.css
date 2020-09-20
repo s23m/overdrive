@@ -25,25 +25,18 @@
     flex-direction: row;
 }
 
-.LeftMenus {
-    display: flex;
-    height: 93vh;
-    width: 15vw;
-    border: 2px solid black;
-    flex-direction: column;
-}
 
 .LowerPanel {
     display: flex;
     flex-wrap: nowrap;
     //flex-direction: column;
     height: 95vh;
-    //border: 4px solid magenta;
+    //border: 4px solid black;
 }
 
 .TopBar {
     display: flex;
-    border: 2px solid blue;
+    border: 2px solid black;
     height: 5vh;
     width: 10vw;
     align-items: center;
@@ -52,7 +45,7 @@
 
 .TopBarFile {
     display: flex;
-    border: 2px solid blue;
+    border: 2px solid black;
     height: 5vh;
     width: 10vw;
     align-items: center;
@@ -62,7 +55,7 @@
 .TopBarLabel {
     display: flex;
     flex-direction: row;
-    border: 2px solid blue;
+    border: 2px solid black;
     height: 5vh;
     width: 10vw;
     align-items: center;
@@ -72,8 +65,8 @@
 .TopBarSearch {
     display: flex;
     flex-direction: row;
-    border: 2px solid blue;
-    height: 4.8vh;
+    border: 2px solid black;
+    height: 4.7vh;
     width: 15vw;
     border-radius: 10px;
     align-items: center;
@@ -89,25 +82,34 @@
     flex-direction: row;
     height: 5vh;
     width: 5vh;
-    border: 2px solid blue;
+    border: 2px solid black;
     align-items: center;
     justify-content: center;
+}
+
+.LeftMenus {
+    display: flex;
+    height: 93vh;
+    width: 15vw;
+    border: 2px solid black;
+    flex-direction: column;
 }
 
 .LeftBar {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    border: 2px solid blue;
-    height: calc(95vh/7);
+    border: 2px solid black;
+    height: calc(91.5vh/7);
     justify-content: center;
+    width:15vw;
 }
 
 .LeftLabel {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    border: 2px solid blue;
+    border: 2px solid black;
     align-items: center;
     justify-content: center;
 }
@@ -127,11 +129,11 @@
 }
 
 .Canvas {
-    height: 90vh;
+    height: 94vh;
     width:85vw;
     overflow-x: scroll;
     overflow-y: scroll;
-    border: 2px solid lime;
+    border: 2px solid black;
 }
 
 .LeftSpacer {
