@@ -263,7 +263,7 @@ export class Arrow {
                 canvasContext.setLineDash([dashLength, dashLength]);
                 break;
             default:
-                canvasContext.setLineDash([]);
+                console.log("Arrow had invalid lineType: %s", this.lineType);
         }
 
         // Draw
