@@ -43,20 +43,20 @@ export class LeftMenu extends React.Component{
 
     //VERTEX SETTERS
     setTitle() {
-        var newTitle = document.getElementsByClassName("LeftTitle")[0].value;
+        var newTitle = document.getElementById("LeftTitle").value;
         this.state.selectedObject.setTitle(newTitle);
         canvasDraw.drawAll()
     }
 
     setContent() {
-        var newContent = document.getElementsByClassName("LeftContent")[0].value;
+        var newContent = document.getElementById("LeftContent").value;
         newContent = newContent.split("\n");
         this.state.selectedObject.setContent(newContent);
         canvasDraw.drawAll()
     }
 
     setIcon() {
-        var iconName = document.getElementsByClassName("IconSelector")[0].value;
+        var iconName = document.getElementById("IconSelector").value;
         this.state.selectedObject.setIcon(iconName);
         console.log(iconName);
         canvasDraw.drawAll()
@@ -64,37 +64,37 @@ export class LeftMenu extends React.Component{
 
     //ARROW SETTERS
     setFromNodeHead() {
-        var newFromHead = document.getElementsByClassName("ArrowHeadFrom")[0].value;
+        var newFromHead = document.getElementById("ArrowHeadFrom").value;
         this.state.selectedObject.setStartType(newFromHead);
         canvasDraw.drawAll()
     }
 
     setToNodeHead() {
-        var newToHead = document.getElementsByClassName("ArrowHeadTo")[0].value;
+        var newToHead = document.getElementById("ArrowHeadTo").value;
         this.state.selectedObject.setEndType(newToHead);
         canvasDraw.drawAll()
     }
 
     setLineType() {
-        var newLineType = document.getElementsByClassName("LineType")[0].value;
+        var newLineType = document.getElementById("LineType").value;
         this.state.selectedObject.setLineType(newLineType);
         canvasDraw.drawAll()
     }
 
     setColour() {
-        var newColour = document.getElementsByClassName("LineColour")[0].value;
+        var newColour = document.getElementById("LineColour").value;
         this.state.selectedObject.setLineColour(newColour);
         canvasDraw.drawAll()
     }
 
     setStartLabel() {
-        var newLabel = document.getElementsByClassName("SourceLabel")[0].value;
+        var newLabel = document.getElementById("SourceLabel").value;
         this.state.selectedObject.setStartLabel(newLabel);
         canvasDraw.drawAll();
     }
 
     setEndLabel() {
-        var newLabel = document.getElementsByClassName("DestLabel")[0].value;
+        var newLabel = document.getElementById("DestLabel").value;
         this.state.selectedObject.setEndLabel(newLabel);
         canvasDraw.drawAll();
     }
@@ -155,7 +155,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Content</label>
-                <textarea className ="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()}/>
+                <textarea id="LeftContent" className ="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Icon</label>
@@ -171,7 +171,7 @@ export class LeftMenu extends React.Component{
                 <div className="LeftBar">Arrow Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
-                <select name="ArrowHeadFrom" className="ArrowHeadFrom" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
+                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="ArrowHeadFrom" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
@@ -180,7 +180,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">To Node Head</label>
-                <select name="ArrowHeadTo" className="ArrowHeadTo" defaultValue={EdgeEndToString[this.state.selectedObject.endType]} onChange={() => this.setToNodeHead()}>
+                <select name="ArrowHeadTo" id="ArrowHeadTo" className="ArrowHeadTo" defaultValue={EdgeEndToString[this.state.selectedObject.endType]} onChange={() => this.setToNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
@@ -189,14 +189,14 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Line Type</label>
-                <select name="LineType" className="LineType" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
+                <select name="LineType" id="LineType" className="LineType" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
                     <option value = "Solid">Solid</option>
                     <option value = "Dashed">Dashed</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Line Colour</label>
-                <select name="LineColour" className="LineColour" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
+                <select name="LineColour" id="LineColour" className="LineColour" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
                     <option value = "Black">Black</option>
                     <option value = "Red">Red</option>
                     <option value = "Blue">Blue</option>
@@ -259,7 +259,7 @@ function getS23MIconsSelector(leftMenu) {
 
     });
 
-    return <select name="Icons" className="IconSelector" defaultValue={leftMenu.state.selectedObject.icon} onChange={() => leftMenu.setIcon()}> 
+    return <select name="Icons" id="IconSelector" className="IconSelector" defaultValue={leftMenu.state.selectedObject.icon} onChange={() => leftMenu.setIcon()}> 
         {dropdownOptions}
     </select>;
 
