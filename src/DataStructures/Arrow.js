@@ -31,7 +31,7 @@ export class Arrow {
         this.startType = ArrowProps.EdgeEnd.NONE;
         this.endType = ArrowProps.EdgeEnd.ARROW;
         this.lineColour = ArrowProps.LineColour.BLACK;
-        this.LineType = ArrowProps.LineType.SOLID;
+        this.lineType = ArrowProps.LineType.SOLID;
 
         this.sourceCardinality = new Cardinality(1, 1);
         this.destCardinality = new Cardinality(1, 1);
@@ -63,34 +63,38 @@ export class Arrow {
     }
 
     setStartType(startType) {
-        if (ArrowProps.StringToEdgeEnd[startType] !== undefined) {
-            this.startType = ArrowProps.StringToEdgeEnd[startType];
+        var val = ArrowProps.StringToEdgeEnd[startType];
+        if (val !== undefined) {
+            this.startType = val;
         } else {
-            console.log("Attempted to assign invalid startType: %s", startType);
+            console.log("Attempted to assign invalid startType: %s", val);
         }
     }
 
     setEndType(endType) {
-        if (ArrowProps.StringToEdgeEnd[endType] !== undefined) {
-            this.endType = ArrowProps.StringToEdgeEnd[endType];
+        var val = ArrowProps.StringToEdgeEnd[endType];
+        if (val !== undefined) {
+            this.endType = val;
         } else {
-            console.log("Attempted to assign invalid endType: %s", endType);
+            console.log("Attempted to assign invalid endType: %s", val);
         }
     }
 
     setLineColour(lineColour) {
-        if (ArrowProps.StringNameToLineColour[lineColour] !== undefined) {
-            this.lineColour = ArrowProps.StringNameToLineColour[lineColour];
+        var val = ArrowProps.StringNameToLineColour[lineColour];
+        if (val !== undefined) {
+            this.lineColour = val;
         } else {
-            console.log("Attempted to assign invalid lineColour: %s", lineColour);
+            console.log("Attempted to assign invalid lineColour: %s", val);
         }
     }
 
     setLineType(lineType) {
-        if (ArrowProps.StringToLineType[lineType] !== undefined) {
-            this.lineType = ArrowProps.StringToLineType[lineType];
+        var val = ArrowProps.StringToLineType[lineType];
+        if (val !== undefined) {
+            this.lineType = val;
         } else {
-            console.log("Attempted to assign invalid lineType: %s", lineType);
+            console.log("Attempted to assign invalid lineType: %s", val);
         }
     }
 
