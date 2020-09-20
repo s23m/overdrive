@@ -67,7 +67,7 @@ export class Arrow {
         if (val !== undefined) {
             this.startType = val;
         } else {
-            console.log("Attempted to assign invalid startType: %s", val);
+            console.log("Attempted to assign invalid startType: %s", startType);
         }
     }
 
@@ -76,7 +76,7 @@ export class Arrow {
         if (val !== undefined) {
             this.endType = val;
         } else {
-            console.log("Attempted to assign invalid endType: %s", val);
+            console.log("Attempted to assign invalid endType: %s", endType);
         }
     }
 
@@ -85,7 +85,7 @@ export class Arrow {
         if (val !== undefined) {
             this.lineColour = val;
         } else {
-            console.log("Attempted to assign invalid lineColour: %s", val);
+            console.log("Attempted to assign invalid lineColour: %s", lineColour);
         }
     }
 
@@ -94,7 +94,7 @@ export class Arrow {
         if (val !== undefined) {
             this.lineType = val;
         } else {
-            console.log("Attempted to assign invalid lineType: %s", val);
+            console.log("Attempted to assign invalid lineType: %s", lineType);
         }
     }
 
