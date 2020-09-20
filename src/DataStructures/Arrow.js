@@ -103,6 +103,155 @@ export class Arrow {
         return [nodeIndex, vertexNodes];
     }
 
+    drawLines(canvasContext, points, strokeColour, fillColour) {
+        canvasContext.strokeStyle = strokeColour;
+        if (fillColour !== undefined) {
+            canvasContext.fillStyle = fillColour;
+        }
+
+        canvasContext.beginPath();
+        canvasContext.moveTo(points[0].X, points[0].Y);
+        for (let i = 1; i < points.length; i++) {
+            canvasContext.lineTo(points[i].X, points[i].Y)
+        }
+        
+        if (fillColour !== undefined) {
+            canvasContext.closePath();
+            canvasContext.fill();
+        }
+        canvasContext.stroke();
+
+        canvasContext.fillStyle = "#000"
+        canvasContext.strokeStyle = "#000";
+    }
+
+    drawArrowEnd(canvasContext, x, y, angle) {
+        //Constants
+        const strokeLength = 7;
+        const angleFromLine = Math.PI/6;
+        const angleInverted = angle + Math.PI;
+
+        //Generate points for the arrowhead
+        var arrowPoints = [];
+        arrowPoints.push({
+            X: x + strokeLength * Math.cos(angleInverted - angleFromLine),
+            Y: y + strokeLength * Math.sin(angleInverted - angleFromLine)
+        });
+        arrowPoints.push({
+            X: x,
+            Y: y
+        });
+        arrowPoints.push({
+            X: x + strokeLength * Math.cos(angleInverted + angleFromLine),
+            Y: y + strokeLength * Math.sin(angleInverted + angleFromLine)
+        });
+
+        //Arrowhead drawing
+        this.drawLines(canvasContext, arrowPoints, this.lineColour)
+    }
+
+    drawTriangleEnd(canvasContext, x, y, angle, fillColour = "#FFF") {
+        //Constants
+        const sideLength = 7;
+        const deg30 = Math.PI / 6;
+        const angleInverted = angle + Math.PI;
+
+        //Generate points for the triangle
+        var trianglePoints = [];
+        trianglePoints.push({
+            X: x,
+            Y: y
+        });
+        trianglePoints.push({
+            X: x + sideLength * Math.cos(angleInverted - deg30),
+            Y: y + sideLength * Math.sin(angleInverted - deg30)
+        });
+        trianglePoints.push({
+            X: x + sideLength * Math.cos(angleInverted + deg30),
+            Y: y + sideLength * Math.sin(angleInverted + deg30)
+        });
+        trianglePoints.push({
+            X: x,
+            Y: y
+        });
+
+        //Triangle drawing
+        this.drawLines(canvasContext, trianglePoints, this.lineColour, fillColour);
+    }
+
+    drawDiamondEnd(canvasContext, x, y, angle, fillColour = "#FFF") {
+        //Constants
+        const sideLength = 7;
+        const deg45 = Math.PI / 4;
+        const angleInverted = angle + Math.PI;
+
+        //Generate points for the diamond
+        var diamondPoints = [];
+        diamondPoints.push({
+            X: x,
+            Y: y
+        });
+        diamondPoints.push({
+            X: x + sideLength * Math.cos(angleInverted - deg45),
+            Y: y + sideLength * Math.sin(angleInverted - deg45)
+        });
+        diamondPoints.push({
+            X: x + sideLength * Math.SQRT2 * Math.cos(angleInverted),
+            Y: y + sideLength * Math.SQRT2 * Math.sin(angleInverted)
+        });
+        diamondPoints.push({
+            X: x + sideLength * Math.cos(angleInverted + deg45),
+            Y: y + sideLength * Math.sin(angleInverted + deg45)
+        });
+        diamondPoints.push({
+            X: x,
+            Y: y
+        });
+
+        //Diamond drawing
+        this.drawLines(canvasContext, diamondPoints, this.lineColour, fillColour);
+    }
+
+    drawStartHead(canvasContext) {
+        var lineAngle = Math.atan2(this.fromY - this.toY, this.fromX - this.toX);
+
+        switch (this.startType) {
+            case ArrowProps.EdgeEnd.NONE:
+                break;
+            case ArrowProps.EdgeEnd.ARROW:
+                this.drawArrowEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                break;
+            case ArrowProps.EdgeEnd.TRIANGLE:
+                this.drawTriangleEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                break;
+            case ArrowProps.EdgeEnd.DIAMOND:
+                this.drawDiamondEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                break;
+            default:
+                console.log("Arrow had unexpected startType: %s", this.startType);
+        }
+    }
+
+    drawEndHead(canvasContext) {
+        var lineAngle = Math.atan2(this.toY - this.fromY, this.toX - this.fromX);
+
+        switch (this.endType) {
+            case ArrowProps.EdgeEnd.NONE:
+                break;
+            case ArrowProps.EdgeEnd.ARROW:
+                this.drawArrowEnd(canvasContext, this.toX, this.toY, lineAngle);
+                break;
+            case ArrowProps.EdgeEnd.TRIANGLE:
+                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle);
+                break;
+            case ArrowProps.EdgeEnd.DIAMOND:
+                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle);
+                break;
+            default:
+                console.log("Arrow had unexpected endType: %s", this.endType);
+        }
+    }
+
     draw(canvasContext) {
         var dashLength = 5;
 
@@ -142,11 +291,8 @@ export class Arrow {
         canvasContext.strokeStyle = "#000000";
         canvasContext.setLineDash([]);
 
-        // Arrow types
-        if (this.endType === ArrowProps.EdgeEnd.ARROW) {
-            // TODO arrow types
-        }
-
+        this.drawStartHead(canvasContext);
+        this.drawEndHead(canvasContext);
     }
 
     // Checks if it intersects with point

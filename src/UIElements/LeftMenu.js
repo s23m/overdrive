@@ -40,7 +40,6 @@ export class LeftMenu extends React.Component{
     componentDidMount() {
         this.menu = this.props.mainState.menu;
         this.selectedItem = this.props.mainState.selectedItem;
-
     }
 
     componentWillReceiveProps(nextProps) {
