@@ -149,7 +149,7 @@ function checkResizeBounds(x, y) {
 function getConnectionDataForArrow(cursorX, cursorY) {
     // Find fromVertex & toVertex if possible
     //                      dist, vert, posx, posy
-    var nearest = [null, cursorX, cursorY];
+    var nearest = [cursorX, cursorY];
     var nearestDistance =  -1;
 
     currentObjects.forEach((item) => {
@@ -160,7 +160,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
             if (sideData[0] !== -1) {
                 // Compare dist
                 if (nearestDistance === -1 || sideData[0] < nearestDistance) {
-                    nearest = [item.UUID, sideData[1], sideData[2]];
+                    nearest = [sideData[1], sideData[2]];
                     nearestDistance = sideData[0];
                 }
             }
@@ -345,12 +345,7 @@ function createObject(canvas, x1, y1, x2, y2) {
             var fromData = getConnectionDataForArrow(x1, y1);
             var toData = getConnectionDataForArrow(x2, y2);
 
-            // If nearest vertices are the same don't connect
-            if (fromData[0] !== null && toData[0] !== null && fromData[0] === toData[0]) {
-                return new Arrow(createUUID(), currentObjects, null, x1, y1, null, x2, y2);
-            } else {
-                return new Arrow(createUUID(), currentObjects, fromData[0], fromData[1], fromData[2], toData[0], toData[1], toData[2]);
-            }
+            return new Arrow(createUUID(), currentObjects, fromData[0], fromData[1], toData[0], toData[1]);
         case "Diamond":
         case "Circle":
         case "Speech":

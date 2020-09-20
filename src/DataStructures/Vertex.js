@@ -253,11 +253,16 @@ export class Vertex {
             // Get x percentage
             var xPercentage = (cursorX-this.sx)/this.width;
 
+            // TODO this could be written more compactly
+            let x = xPercentage*this.width+this.sx;
+
             // Decide between top or bot
             if (topDist < botDist) { // top
-                return [topDist, xPercentage, 0];
+                let y = this.sy;
+                return [topDist, x, y];
             } else { // bot
-                return [botDist, xPercentage, 1];
+                let y = this.height+this.sy;
+                return [botDist, x, y];
             }
         } else if (cursorY > this.sy && cursorY < this.sy+this.height) { // Y case
             // Get threshold distance
@@ -267,11 +272,16 @@ export class Vertex {
             // Get y percentage
             var yPercentage = (cursorY-this.sy)/this.height;
 
+            // TODO this could be written more compactly
+            let y = yPercentage*this.height+this.sy;
+
             // Decide between left or right
             if (leftDist < rightDist) { // left
-                return [leftDist, 0, yPercentage];
+                let x = this.sx;
+                return [leftDist, x, y];
             } else { // right
-                return [rightDist, 1, yPercentage];
+                let x = this.width+this.sx;
+                return [rightDist, x, y];
             }
         } else { // Cursor can't connect
             return [-1, cursorX, cursorY];
