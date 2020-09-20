@@ -18,7 +18,7 @@ export class Vertex {
         this.content = content;
         this.sx = sx;
         this.sy = sy;
-        this.icon = "";
+        this.icon = "-No Icon";
         this.children = [];
         this.colour = defaultColour;
         this.selected = false;

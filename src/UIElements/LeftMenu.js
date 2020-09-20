@@ -4,6 +4,7 @@
 
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
+import {EdgeEndToString, LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
 
 // Icons
 import iconVertex from "../Resources/vertex.png";
@@ -57,6 +58,7 @@ export class LeftMenu extends React.Component{
     setIcon() {
         var iconName = document.getElementsByClassName("IconSelector")[0].value;
         this.state.selectedObject.setIcon(iconName);
+        console.log(iconName);
         canvasDraw.drawAll()
     }
 
@@ -74,13 +76,13 @@ export class LeftMenu extends React.Component{
     }
 
     setLineType() {
-        var newLineType = document.getElementsByClassName("ArrowType")[0].value;
+        var newLineType = document.getElementsByClassName("LineType")[0].value;
         this.state.selectedObject.setLineType(newLineType);
         canvasDraw.drawAll()
     }
 
     setColour() {
-        var newColour = document.getElementsByClassName("ArrowHeadColour")[0].value;
+        var newColour = document.getElementsByClassName("LineColour")[0].value;
         this.state.selectedObject.setLineColour(newColour);
         canvasDraw.drawAll()
     }
@@ -169,47 +171,47 @@ export class LeftMenu extends React.Component{
                 <div className="LeftBar">Arrow Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
-                <select name="ArrowHeadFrom" className="ArrowHeadFrom" onChange={() => this.setFromNodeHead()}>
-                    <option key = "-No Head">-No Icon</option>
-                    <option key = "->">-></option>
-                    <option key = "-▷">-▷</option>
-                    <option key = "-◆">-◆</option>
+                <select name="ArrowHeadFrom" className="ArrowHeadFrom" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
+                    <option value = "None">-No Icon</option>
+                    <option value = "Arrow">-></option>
+                    <option value = "Triangle">-▷</option>
+                    <option value = "Diamond">-◆</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">To Node Head</label>
-                <select name="ArrowHeadTo" className="ArrowHeadTo" onChange={() => this.setToNodeHead()}>
-                    <option key = "-No Head">-No Icon</option>
-                    <option key = "->">-></option>
-                    <option key = "-▷">-▷</option>
-                    <option key = "-◆">-◆</option>
+                <select name="ArrowHeadTo" className="ArrowHeadTo" defaultValue={EdgeEndToString[this.state.selectedObject.endType]} onChange={() => this.setToNodeHead()}>
+                    <option value = "None">-No Icon</option>
+                    <option value = "Arrow">-></option>
+                    <option value = "Triangle">-▷</option>
+                    <option value = "Diamond">-◆</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Line Type</label>
-                <select name="ArrowType" className="ArrowType" onChange={() => this.setLineType()}>
-                    <option key = "Solid">Solid</option>
-                    <option key = "Red">Dashed</option>
+                <select name="LineType" className="LineType" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
+                    <option value = "Solid">Solid</option>
+                    <option value = "Dashed">Dashed</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Line Colour</label>
-                <select name="ArrowHeadColour" className="ArrowHeadColour" onChange={() => this.setColour()}>
-                    <option key = "Black">Black</option>
-                    <option key = "Red">Red</option>
-                    <option key = "Blue">Blue</option>
-                    <option key = "Green">Green</option>
+                <select name="LineColour" className="LineColour" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
+                    <option value = "Black">Black</option>
+                    <option value = "Red">Red</option>
+                    <option value = "Blue">Blue</option>
+                    <option value = "Green">Green</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 {/* -1 represents n or *  */}
-                <label className="LeftLabel">Source Carindality</label>
+                <label className="LeftLabel">Source Cardinality</label>
                     Visible: <input type="checkbox" id = "sourceCardinalityShown" defaultChecked={this.state.selectedObject.sourceCardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
                     <input type="number" id = "sourceFromCardindality" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "sourceToCardindality" defaultValue={this.state.selectedObject.sourceCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
-                <label className="LeftLabel">Destination Carindality</label>
+                <label className="LeftLabel">Destination Cardinality</label>
                     Visible: <input type="checkbox" id = "destCardinalityShown" defaultChecked={this.state.selectedObject.destCardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
                     <input type="number" id = "destFromCardindality" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
@@ -242,17 +244,17 @@ export class LeftMenu extends React.Component{
 }
 
 function getS23MIconsSelector(leftMenu) {
-    var dropdownOptions = [<option key = "-No Icon">-No Icon</option>];
+    var dropdownOptions = [<option value = "-No Icon">-No Icon</option>];
     var fileNames = ['Activity.png', 'Agent.png', 'BioSphere.png', 'Critical.png', 'Designed.png', 'Ecosystem.png', 'Error.png', 'Event.png', 'Grow_n.png', 'Human.png', 'listFileNames.py', 'Make_n.png', 'Move_n.png', 'Organic.png', 'Organisation.png', 'Play_n.png', 'Resource.png', 'SaaS_n.png', 'Social.png', 'Software.png', 'Sustain_n.png', 'Symbolic.png', 'Tacit Knowledge.png', 'Team.png', 'Trust.png', 'UI Device.png']
     let name = "";
     fileNames.forEach(fileName => {
 
         if (fileName.slice(-6,-4) === "_n") {
             name = fileName.slice(0,-6);
-                dropdownOptions.push(<option key = {name}>{name}</option>)
+                dropdownOptions.push(<option value = {name}>{name}</option>)
             } else {
             name = fileName.slice(0,-4);
-                dropdownOptions.push(<option key = {name}>{name}</option>)
+                dropdownOptions.push(<option value = {name}>{name}</option>)
             }
 
     });

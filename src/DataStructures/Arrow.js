@@ -4,27 +4,7 @@
 
 import {Cardinality} from "./Cardinality";
 import {getDistance} from "../UIElements/CanvasDraw";
-
-const EdgeEnd = {
-    NONE: 1,
-    ARROW: 2,
-    TRIANGLE: 3,
-    FILLED_TRIANGLE: 4,
-    DIAMOND: 5,
-    FILLED_DIAMOND: 6
-};
-
-const LineColour = {
-    BLACK: "#000000",
-    RED: "#FF0000",
-    BLUE: "#0000FF",
-    GREEN: "#00FF00"
-}
-
-const LineType = {
-    SOLID: 1,
-    DASHED: 2
-};
+import * as ArrowProps from "./ArrowProperties";
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
@@ -48,10 +28,10 @@ export class Arrow {
         this.toY = toY;
 
         // Type
-        this.startType = EdgeEnd.NONE;
-        this.endType = EdgeEnd.ARROW;
-        this.lineColour = LineColour.BLACK;
-        this.LineType = LineType.SOLID;
+        this.startType = ArrowProps.EdgeEnd.NONE;
+        this.endType = ArrowProps.EdgeEnd.ARROW;
+        this.lineColour = ArrowProps.LineColour.BLACK;
+        this.LineType = ArrowProps.LineType.SOLID;
 
         this.sourceCardinality = new Cardinality(1, 1);
         this.destCardinality = new Cardinality(1, 1);
@@ -83,73 +63,19 @@ export class Arrow {
     }
 
     setStartType(startType) {
-        switch(startType) {
-            case "-No Icon":
-                this.startType = EdgeEnd.NONE;
-                break;
-            case "->":
-                this.startType = EdgeEnd.ARROW;
-                break;
-            case "-▷":
-                this.startType = EdgeEnd.TRIANGLE;
-                break;
-            case "-◆":
-                this.startType = EdgeEnd.DIAMOND;
-                break;
-            default:
-                break;
-        }
+        this.startType = ArrowProps.StringToEdgeEnd[startType];
     }
 
     setEndType(endType) {
-        switch(endType) {
-            case "-No Icon":
-                this.endType = EdgeEnd.NONE;
-                break;
-            case "->":
-                this.endType = EdgeEnd.ARROW;
-                break;
-            case "-▷":
-                this.endType = EdgeEnd.TRIANGLE;
-                break;
-            case "-◆":
-                this.endType = EdgeEnd.DIAMOND;
-                break;
-            default:
-                break;
-        }
+        this.endType = ArrowProps.StringToEdgeEnd[endType];
     }
 
     setLineColour(lineColour) {
-        switch(lineColour) {
-            case "Black":
-                this.lineColour = LineColour.BLACK;
-                break;
-            case "Red":
-                this.lineColour = LineColour.RED;
-                break;
-            case "Blue":
-                this.lineColour = LineColour.BLUE;
-                break;
-            case "Green":
-                this.lineColour = LineColour.GREEN;
-                break;
-            default:
-                break;
-        }
+        this.lineColour = ArrowProps.StringNameToLineColour[lineColour];
     }
 
     setLineType(lineType) {
-        switch(lineType) {
-            case "Solid":
-                this.lineType = LineType.SOLID;
-                break;
-            case "Dashed":
-                this.lineType = LineType.DASHED;
-                break;
-            default:
-                break;
-        }
+        this.lineType = ArrowProps.StringToLineType[lineType];
     }
 
     // Creates nodes for an algorithmn to path find around a vertex
@@ -181,10 +107,10 @@ export class Arrow {
         var dashLength = 5;
 
         switch (this.lineType) {
-            case LineType.SOLID:
+            case ArrowProps.LineType.SOLID:
                 canvasContext.setLineDash([]);
                 break;
-            case LineType.DASHED:
+            case ArrowProps.LineType.DASHED:
                 canvasContext.setLineDash([dashLength, dashLength]);
                 break;
             default:
@@ -217,7 +143,7 @@ export class Arrow {
         canvasContext.setLineDash([]);
 
         // Arrow types
-        if (this.endType === EdgeEnd.ARROW) {
+        if (this.endType === ArrowProps.EdgeEnd.ARROW) {
             // TODO arrow types
         }
 
