@@ -57,8 +57,9 @@ export class Vertex {
                     mergedContent = mergedContent.concat("\n");
                 }
             }
-
+            
             return mergedContent;
+
         } else {
             return "";
         }

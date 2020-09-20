@@ -53,7 +53,12 @@ export class Arrow {
         this.lineColour = LineColour.BLACK;
         this.LineType = LineType.SOLID;
 
-        this.cardinality = null;
+        this.sourceCardinality = new Cardinality(1, 1);
+        this.destCardinality = new Cardinality(1, 1);
+
+        this.startLabel = "";
+        this.endLabel = "";
+
         this.selected = false;
     }
 
@@ -61,8 +66,20 @@ export class Arrow {
         this.selected = selected;
     }
 
-    addCardinality(lowerBound, upperBound) {
-        this.cardinality = new Cardinality(lowerBound, upperBound);
+    updateSourceCardinality(lowerBound, upperBound, visibility) {
+        this.sourceCardinality = new Cardinality(lowerBound, upperBound, visibility);
+    }
+
+    updateDestCardinality(lowerBound, upperBound, visibility) {
+        this.destCardinality = new Cardinality(lowerBound, upperBound, visibility);
+    }
+
+    setStartLabel(label) {
+        this.startLabel = label;
+    }
+
+    setEndLabel(label) {
+        this.endLabel = label;
     }
 
     setStartType(startType) {
@@ -101,7 +118,6 @@ export class Arrow {
             default:
                 break;
         }
-        console.log(this.endType);
     }
 
     setLineColour(lineColour) {

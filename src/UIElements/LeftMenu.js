@@ -42,7 +42,7 @@ export class LeftMenu extends React.Component{
 
     //VERTEX SETTERS
     setTitle() {
-        var newTitle =  document.getElementsByClassName("LeftTitle")[0].value;
+        var newTitle = document.getElementsByClassName("LeftTitle")[0].value;
         this.state.selectedObject.setTitle(newTitle);
         canvasDraw.drawAll()
     }
@@ -83,6 +83,44 @@ export class LeftMenu extends React.Component{
         var newColour = document.getElementsByClassName("ArrowHeadColour")[0].value;
         this.state.selectedObject.setLineColour(newColour);
         canvasDraw.drawAll()
+    }
+
+    setStartLabel() {
+        var newLabel = document.getElementsByClassName("SourceLabel")[0].value;
+        this.state.selectedObject.setStartLabel(newLabel);
+        canvasDraw.drawAll();
+    }
+
+    setEndLabel() {
+        var newLabel = document.getElementsByClassName("DestLabel")[0].value;
+        this.state.selectedObject.setEndLabel(newLabel);
+        canvasDraw.drawAll();
+    }
+
+    updateCardinality() {
+        var sourceLowerBound = document.getElementById("sourceFromCardindality").value;
+        var sourceUpperBound = document.getElementById("sourceToCardindality").value;
+        var currentSourceVisibility = this.state.selectedObject.sourceCardinality.isVisible;
+        var destLowerBound = document.getElementById("destFromCardindality").value;
+        var destUpperBound = document.getElementById("destToCardindality").value;
+        var currentDestVisibility = this.state.selectedObject.destCardinality.isVisible;
+
+        this.state.selectedObject.updateSourceCardinality(sourceLowerBound, sourceUpperBound, currentSourceVisibility);
+        this.state.selectedObject.updateDestCardinality(destLowerBound, destUpperBound, currentDestVisibility);
+
+        canvasDraw.drawAll()
+    }
+
+    toggleSourceCardinalityVisibility() {
+        this.state.selectedObject.sourceCardinality.toggleVisibility();
+    }
+
+    toggleDestCardinalityVisibility() {
+        this.state.selectedObject.destCardinality.toggleVisibility();
+    }
+
+    removeSelectedObject() {
+        console.log("TEMP: Object removal button pressed");
     }
 
 // return the correct menu based on the selected item
@@ -166,29 +204,29 @@ export class LeftMenu extends React.Component{
 
                 {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Carindality</label>
-                    Visible: <input type="checkbox" id = "sourceCardinalityShown"/>
-                    <input type="number" id = "sourceFromCardindality" min="-1" max="25"/>
+                    Visible: <input type="checkbox" id = "sourceCardinalityShown" defaultChecked={this.state.selectedObject.sourceCardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
+                    <input type="number" id = "sourceFromCardindality" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
-                    <input type="number" id = "sourceToCardindality" min="-1" max="25"/>
+                    <input type="number" id = "sourceToCardindality" defaultValue={this.state.selectedObject.sourceCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Destination Carindality</label>
-                    Visible: <input type="checkbox" id = "destCardinalityShown"/>
-                    <input type="number" id = "destFromCardindality" min="-1" max="25"/>
+                    Visible: <input type="checkbox" id = "destCardinalityShown" defaultChecked={this.state.selectedObject.destCardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
+                    <input type="number" id = "destFromCardindality" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
-                    <input type="number" id = "destToCardindality" min="-1" max="25"/>
+                    <input type="number" id = "destToCardindality" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Source Label</label>
-                    <input id="SourceLabel" className="LeftTitle"/>
+                    <input id="SourceLabel" defaultValue={this.state.selectedObject.startLabel} className="SourceLabel" onKeyUp={() => this.setStartLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Destination Label</label>
-                    <input id="DestLabel" className="LeftTitle"/>
+                    <input id="DestLabel" defaultValue={this.state.selectedObject.endLabel} className="DestLabel" onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 // todo: to/from caridnality, comment, 1..n represented as a dot
                     // require ability to select arbitrary number or no number n or * for cardinality
                 }
-                <button className="RemoveButton">Remove</button>
+                <button className="RemoveButton" onClick={() => this.removeSelectedObject()}>Remove</button>
 
 
             </div>;
