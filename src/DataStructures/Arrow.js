@@ -5,6 +5,7 @@
 import {Cardinality} from "./Cardinality";
 import {getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
+import {pathFindTo} from "../Utils/PathFinder";
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
@@ -36,8 +37,8 @@ export class Arrow {
         this.sourceCardinality = new Cardinality(1, 1);
         this.destCardinality = new Cardinality(1, 1);
 
-        this.startLabel = "";
-        this.endLabel = "";
+        this.sourceLabel = "";
+        this.destLabel = "";
 
         this.selected = false;
     }
@@ -55,11 +56,11 @@ export class Arrow {
     }
 
     setStartLabel(label) {
-        this.startLabel = label;
+        this.sourceLabel = label;
     }
 
     setEndLabel(label) {
-        this.endLabel = label;
+        this.destLabel = label;
     }
 
     setStartType(startType) {
@@ -272,6 +273,121 @@ export class Arrow {
         }
     }
 
+    getTextOffset(canvasContext,text,source){
+        let textWidth = canvasContext.measureText(text).width;
+        let textHeight = 5;
+        // 'M' is the widest possible character
+        let charWidth = canvasContext.measureText("M").width;
+        let charHeight = 15;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        //left to right arrow
+        if(this.toX > this.fromX){
+            //left hand side
+            if(source) {
+                //if the text takes up less than half the space
+                if (this.toX - this.fromX > (textWidth * 2) + 15) {
+                    xOffset += charWidth;
+                }else{
+                    //todo: better solution
+                    xOffset -= textWidth + charWidth
+                }
+            //right hand side
+            }else{
+                //if the text takes up less than half the space
+                if (this.toX - this.fromX > (textWidth * 2) + 15){
+                    xOffset -= textWidth + charWidth
+                }else{
+                    //todo: better solution
+                    xOffset += charWidth;
+                }
+            }
+        //right to left arrow
+        }else {
+            //right hand side
+            if (!source) {
+                //if the text takes up less than half the space
+                if (this.toX - this.fromX > (textWidth * 2) + 15) {
+                    xOffset += charWidth;
+                }else{
+                    //todo: better solution
+                    xOffset -= textWidth + charWidth;
+                }
+                //left hand side
+            } else {
+                //if the text takes up less than half the space
+                if (this.toX - this.fromX > (textWidth * 2) + 15) {
+                    xOffset -= textWidth + charWidth
+                }else{
+                    //todo: better solution
+                    xOffset += charWidth;
+                }
+
+            }
+        }
+
+
+        //top to bottom arrow
+        if(this.toY > this.fromY){
+            //top side
+            if(source){
+                //if the text takes up less than half the space
+                if(this.toY > this.fromY + (textHeight*2) + 15){
+                    yOffset += textHeight + charHeight/2
+                }else{
+                    //todo: better solution
+                    yOffset -= textHeight
+                }
+            //bottom side
+            }else{
+                //if the text takes up less than half the space
+                if(this.toY > this.fromY + (textHeight*2) + 15) {
+                    yOffset -= textHeight
+                }else{
+                    //todo: better solution
+                    yOffset += textHeight + charHeight/2
+                }
+            }
+        //bottom to top arrow
+        }else{
+            //top side
+            if(!source){
+                //if the text takes up less than half the space
+                if(this.toY > this.fromY + (textHeight*2) + 15){
+                    yOffset += charHeight/2
+                }else{
+                    //todo: better solution
+                    yOffset -= textHeight
+                }
+                //bottom side
+            }else{
+                //if the text takes up less than half the space
+                if(this.toY > this.fromY + (textHeight*2) + 15) {
+                    yOffset -= textHeight
+                }else{
+                    //todo: better solution
+                    yOffset += charHeight/2
+                }
+            }
+        }
+
+
+        return [xOffset,yOffset]
+    }
+
+    drawLabels(canvasContext) {
+        let sourceOffset = this.getTextOffset(canvasContext,this.sourceLabel, 1);
+        let destOffset = this.getTextOffset(canvasContext,this.destLabel, 0);
+
+        //draw source text
+        canvasContext.fillText(this.sourceLabel, this.fromX + sourceOffset[0], this.fromY + sourceOffset[1]);
+
+        //draw destination text
+        canvasContext.fillText(this.destLabel, this.toX + destOffset[0], this.toY + destOffset[1]);
+    }
+
+
     draw(canvasContext) {
         var dashLength = 5;
 
@@ -313,6 +429,7 @@ export class Arrow {
 
         this.drawStartHead(canvasContext);
         this.drawEndHead(canvasContext);
+        this.drawLabels(canvasContext);
     }
 
     // Checks if it intersects with point

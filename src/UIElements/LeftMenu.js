@@ -218,11 +218,11 @@ export class LeftMenu extends React.Component{
                     <input type="number" id = "destToCardindality" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Source Label</label>
-                    <input id="SourceLabel" className="SourceLabel" defaultValue={this.state.selectedObject.startLabel} onKeyUp={() => this.setStartLabel()}/>
+                    <input id="SourceLabel" className="SourceLabel" defaultValue={this.state.selectedObject.sourceLabel} onKeyUp={() => this.setStartLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Destination Label</label>
-                    <input id="DestLabel" className="DestLabel" defaultValue={this.state.selectedObject.endLabel} onKeyUp={() => this.setEndLabel()}/>
+                    <input id="DestLabel" className="DestLabel" defaultValue={this.state.selectedObject.destLabel} onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 // todo: to/from caridnality, comment, 1..n represented as a dot
