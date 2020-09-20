@@ -14,7 +14,6 @@ import {LeftMenu} from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor"
 
-//todo: add other types of tools
 const leftMenuTypes = ["Tools", "Vertex", "Arrow"];
 
 // Simple incremental version
@@ -104,7 +103,6 @@ export class MainProgramClass extends React.Component {
                 canvasDraw.drawAll();
             }
 
-            //todo: do not remove this in the todo above, then remove this todo
             this.setState({
                 menu: "Tools",
                 selectedObject: null
