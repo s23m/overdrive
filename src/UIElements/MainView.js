@@ -5,14 +5,14 @@
 import React from 'react';
 import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
-import * as fileManager from '../Serialisation/FileManager'
+import * as fileManager from '../Serialisation/FileManager';
 
 import {Canvas} from './Canvas';
 import {LeftMenu} from './LeftMenu';
 
 // Semantic domain editor
 import SemanticDomainEditor from "./SemanticDomainEditor";
-import {resetRows} from "./SemanticDomainEditor"
+import {resetRows} from "./SemanticDomainEditor";
 
 const leftMenuTypes = ["Tools", "Vertex", "Arrow"];
 

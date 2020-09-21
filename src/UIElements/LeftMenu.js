@@ -175,7 +175,7 @@ export class LeftMenu extends React.Component{
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
-                    <option value = "Diamond">-◆</option>
+                    <option value = "FilledDiamond">-◆</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
@@ -184,7 +184,7 @@ export class LeftMenu extends React.Component{
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
-                    <option value = "Diamond">-◆</option>
+                    <option value = "FilledDiamond">-◆</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
