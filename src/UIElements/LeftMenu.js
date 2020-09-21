@@ -7,13 +7,13 @@ import * as canvasDraw from "./CanvasDraw";
 import {EdgeEndToString, LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
 
 // Icons
-import iconVertex from "../Resources/vertex.png";
-import iconArrow from "../Resources/arrow.png";
-import iconDiamond from "../Resources/diamond.png";
-import iconCircle from "../Resources/circle.png";
-import iconSpeech from "../Resources/speech.png";
-import iconSpecBox from "../Resources/specbox.png";
-import iconTriangle from "../Resources/triangle.png";
+import iconVertex from "../Resources/vertex.svg";
+import iconArrow from "../Resources/arrow.svg";
+import iconDiamond from "../Resources/diamond.svg";
+import iconCircle from "../Resources/circle.svg";
+import iconSpeech from "../Resources/speech.svg";
+import iconSpecBox from "../Resources/specbox.svg";
+import iconTriangle from "../Resources/triangle.svg";
 import {deleteElement} from "./CanvasDraw";
 
 // class to display the left hand menu, where we will be showing
