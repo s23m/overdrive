@@ -234,19 +234,19 @@ export class Arrow {
             case ArrowProps.EdgeEnd.NONE:
                 break;
             case ArrowProps.EdgeEnd.ARROW:
-                this.drawArrowEnd(canvasContext, this.toX, this.toY, lineAngle);
+                this.drawArrowEnd(canvasContext, this.fromX, this.fromY, lineAngle);
                 break;
             case ArrowProps.EdgeEnd.TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle);
+                this.drawTriangleEnd(canvasContext, this.fromX, this.fromY, lineAngle);
                 break;
             case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
+                this.drawTriangleEnd(canvasContext, this.fromX, this.fromY, lineAngle, this.lineColour);
                 break;
             case ArrowProps.EdgeEnd.DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle);
+                this.drawDiamondEnd(canvasContext, this.fromX, this.fromY, lineAngle);
                 break;
             case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
+                this.drawDiamondEnd(canvasContext, this.fromX, this.fromY, lineAngle, this.lineColour);
                 break;
             default:
                 console.log("Arrow had unexpected startType: %s", this.startType);
