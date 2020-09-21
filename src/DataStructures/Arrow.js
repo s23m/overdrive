@@ -234,13 +234,19 @@ export class Arrow {
             case ArrowProps.EdgeEnd.NONE:
                 break;
             case ArrowProps.EdgeEnd.ARROW:
-                this.drawArrowEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                this.drawArrowEnd(canvasContext, this.toX, this.toY, lineAngle);
                 break;
             case ArrowProps.EdgeEnd.TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle);
+                break;
+            case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
+                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
+                break;
+            case ArrowProps.EdgeEnd.DIAMOND:
+                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle);
                 break;
             case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.fromX, this.fromY, lineAngle, "#000");
+                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
                 break;
             default:
                 console.log("Arrow had unexpected startType: %s", this.startType);
@@ -259,8 +265,14 @@ export class Arrow {
             case ArrowProps.EdgeEnd.TRIANGLE:
                 this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle);
                 break;
+            case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
+                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
+                break;
+            case ArrowProps.EdgeEnd.DIAMOND:
+                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle);
+                break;
             case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle, "#000");
+                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
                 break;
             default:
                 console.log("Arrow had unexpected endType: %s", this.endType);
