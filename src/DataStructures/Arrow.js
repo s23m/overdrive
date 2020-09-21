@@ -9,12 +9,6 @@ import {pathFindTo} from "../Utils/PathFinder";
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
-    // if the UUID parameter is null:
-    //      x, y are treated as coordinates
-    // if the UUID is set:
-    //      are treated as vertex relative 0->1 percentages
-    //      0,0 represents top left, 0.5,0.5 represents middle etc
-
     constructor(UUID, objectsList, fromX, fromY, toX, toY) {
         //fromVertexUUID, fromX, fromY, toVertexUUID, toX, toY
         this.UUID = UUID;
