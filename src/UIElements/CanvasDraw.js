@@ -13,7 +13,7 @@ var canvasContext;
 var mouseStartX;
 var mouseStartY;
 
-//todo: make this selectable by the user
+// TODO make this selectable by the user
 const yRows = 35;
 
 export var mouseOriginX;
@@ -29,6 +29,10 @@ var zoom = 200.0;
 // Renderable objects
 export var currentObjects = [];
 
+// Arrow Path
+export var arrowPath = [];
+
+// Resize status
 var resizing = false;
 
 // Init
@@ -53,11 +57,11 @@ export function resetMouseOrigin() {
     drawAll()
 }
 
-function drawLine(x0,y0,x1,y1,color) {
+function drawLine(x0, y0, x1, y1, color) {
     canvasContext.beginPath();
     canvasContext.strokeStyle = color;
-    canvasContext.moveTo(x0,y0);
-    canvasContext.lineTo(x1,y1);
+    canvasContext.moveTo(x0, y0);
+    canvasContext.lineTo(x1, y1);
     canvasContext.stroke();
     canvasContext.strokeStyle = "#000000"
 }
@@ -178,8 +182,6 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         }
     });
 
-    console.log(nearest)
-
     if (nearest === null) {
         return [1, cursorX, cursorY];
     } else {
@@ -204,7 +206,7 @@ export function setCurrentObjects(newObjects) {
 }
 
 // Event based functions
-export function onMousePress(canvas, x, y) {
+export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
 
     if (canvas.tool === "Vertex") {
@@ -218,7 +220,6 @@ export function onMousePress(canvas, x, y) {
         }
     }
 
-
     mouseStartX = x;
     mouseStartY = y;
 
@@ -226,34 +227,52 @@ export function onMousePress(canvas, x, y) {
     canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
 }
 
-export function onMouseRelease(canvas, x, y) {
+export function onRightMouseRelease(canvas, x, y) {
+    if (canvas.tool === "Arrow") {
+        // Create
+        var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+        // Reset path
+        arrowPath = [];
 
+        addObject(newObject);
+
+        // Disable example draw
+        canvasElement.onmousemove = null;
+
+        drawAll(currentObjects);
+    }
+}
+
+export function onLeftMouseRelease(canvas, x, y) {
     if (resizing === true) {
         resizing = false;
         canvasElement.onmousemove = null;
         return
     }
 
-    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
-
-    addObject(newObject);
-
     // Disable example draw
     canvasElement.onmousemove = null;
+
+    if (canvas.tool === "Arrow") {
+        arrowPath.push(getConnectionDataForArrow(x, y));
+        canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
+    }
+
+    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+    addObject(newObject);
 
     drawAll(currentObjects);
 }
 
 function onMouseMove(e, canvas) {
-
     var position = getGraphXYFromMouseEvent(e);
-
-    var newObject = createObject(canvas, mouseStartX, mouseStartY, position[0], position[1]);
 
     // Redraw Existing Objects
     drawAll(currentObjects);
 
     // Draw the new object
+    var newObject = createObject(canvas, mouseStartX, mouseStartY, position[0], position[1]);
+
     canvasContext.globalAlpha = 0.75;
     if (newObject !== null) {
         newObject.draw(canvasContext);
@@ -309,29 +328,6 @@ export function setFillStyle(color) {
     canvasContext.fillStyle = color;
 }
 
-// returns the x,y coordinates of the supplied side for the supplied vertex
-export function getXYFromSide(vertex, side) {
-    var x;
-    var y;
-
-
-    if (side === "north") {
-        x = vertex.sx + (vertex.width/2)+(padding);
-        y = vertex.sy;
-    } else if (side === "east") {
-        x = vertex.sx + vertex.width;
-        y = vertex.sy + (vertex.height/2);
-    } else if (side === "south") {
-        x = vertex.sx + (vertex.width/2)+(padding);
-        y = vertex.sy + vertex.height;
-    } else if (side === "west") {
-        x = vertex.sx - (padding * 2);
-        y = vertex.sy + (vertex.height/2);
-    }
-
-    return [x,y]
-}
-
 // Gets the distance between x1, y1 and x2, y2
 export function getDistance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
@@ -359,10 +355,10 @@ function createObject(canvas, x1, y1, x2, y2) {
             let vy2 = findNearestGridY(pos[3],0);
             return new Vertex(createUUID(),"",[""], pos[0], y1, pos[2]-pos[0], vy2-vy1);
         case "Arrow":
-            var fromData = getConnectionDataForArrow(x1, y1);
-            var toData = getConnectionDataForArrow(x2, y2);
+            // Deep Copy
+            var newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
-            return new Arrow(createUUID(), currentObjects, [fromData, toData]);
+            return new Arrow(createUUID(), currentObjects, newPath);
         case "Diamond":
         case "Circle":
         case "Speech":

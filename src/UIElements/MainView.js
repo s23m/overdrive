@@ -80,8 +80,6 @@ export class MainProgramClass extends React.Component {
             this.state.selectedObject.setSelected(false);
         }
 
-        console.log(nearestObject);
-
         // check if the nearest object was too far away or didnt exist
         if (nearestObject === null) {
             this.setState({

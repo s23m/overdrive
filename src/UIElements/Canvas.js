@@ -32,12 +32,9 @@ export class Canvas extends React.Component {
 
         // If it was a left click
         if (e.button === 0) {
-            canvasDraw.onMousePress(canvas, x, y);
+            canvasDraw.onLeftMousePress(canvas, x, y);
         }
-        // if it was a right click
-        if (e.button === 2) {
-            this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-        }
+
         // If it was a middle click
         if (e.button === 1) {
             e.preventDefault();
@@ -51,7 +48,19 @@ export class Canvas extends React.Component {
 
         // If it was a left click
         if (e.button === 0) {
-            canvasDraw.onMouseRelease(canvas, x, y);
+            canvasDraw.onLeftMouseRelease(canvas, x, y);
+        }
+
+        // if it was a right click
+        if (e.button === 2) {
+            // Check if currently drawing an arrow
+            if (canvasDraw.arrowPath.length !== 0) {
+                canvasDraw.onRightMouseRelease(canvas, x, y)
+            } else {
+                // Normal right click behaviour
+                this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+            }
+
         }
 
         if (e.button === 1) {
