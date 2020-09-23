@@ -156,29 +156,35 @@ function checkResizeBounds(x, y) {
     return [vertex,side];
 }
 
-// Find connectable vertex if possible
+// Find connectable for arrow
 function getConnectionDataForArrow(cursorX, cursorY) {
-    // Find fromVertex & toVertex if possible
-    //                      dist, vert, posx, posy
-    var nearest = [cursorX, cursorY];
-    var nearestDistance =  -1;
+    var nearest = null;
+    var nearestDistance = 0;
 
     currentObjects.forEach((item) => {
-        if (item !== null && item.constructor.name === "Vertex") {
-            let sideData = item.getNearestSide(cursorX, cursorY);
+        if (item !== null) {
+            if (item.constructor.name === "Vertex") {
+                let sideData = item.getNearestSide(cursorX, cursorY);
 
-            // Only check if valid
-            if (sideData[0] !== -1) {
-                // Compare dist
-                if (nearestDistance === -1 || sideData[0] < nearestDistance) {
-                    nearest = [sideData[1], sideData[2]];
-                    nearestDistance = sideData[0];
+                // Only check if valid
+                if (sideData !== null) {
+                    // Compare dist
+                    if (nearest === null || sideData[0] < nearestDistance) {
+                        nearest = [0, item.UUID, sideData[1], sideData[2]];
+                        nearestDistance = sideData[0];
+                    }
                 }
             }
         }
     });
 
-    return nearest;
+    console.log(nearest)
+
+    if (nearest === null) {
+        return [1, cursorX, cursorY];
+    } else {
+        return nearest;
+    }
 }
 
 function resizeObjectOnMouseMove(e,resizeVars) {
@@ -337,7 +343,7 @@ export function findIntersected(x, y) {
     currentObjects.forEach((item) => {
         if (item !== null) {
             if (item.intersects(x, y)) {
-                console.log("Intersection detected with ",item.constructor.name);
+                console.log("Intersection detected with ", item.constructor.name);
                 selectedItem = item;
             }
         }
@@ -356,7 +362,7 @@ function createObject(canvas, x1, y1, x2, y2) {
             var fromData = getConnectionDataForArrow(x1, y1);
             var toData = getConnectionDataForArrow(x2, y2);
 
-            return new Arrow(createUUID(), currentObjects, fromData[0], fromData[1], toData[0], toData[1]);
+            return new Arrow(createUUID(), currentObjects, [fromData, toData]);
         case "Diamond":
         case "Circle":
         case "Speech":

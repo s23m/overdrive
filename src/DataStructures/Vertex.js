@@ -211,7 +211,7 @@ export class Vertex {
         dy += padding*2 + fontSize;
 
         // Draw text
-        for (var i = 0; i < this.content.length; i++) {
+        for (let i = 0; i < this.content.length; i++) {
             canvasContext.fillText(this.content[i], this.sx+padding, this.sy+dy);
             dy += fontSize + padding;
         }
@@ -244,48 +244,33 @@ export class Vertex {
         var topRightDist = getDistance(cursorX, cursorY, this.sx+this.width, this.sy);
         var botRightDist = getDistance(cursorX, cursorY, this.sx+this.width, this.sy+this.height);
 
-        // First, since it can either lock on to the vertex horizontally or vertically
-        // Find which one it is or if it's neither
-        if (cursorX > this.sx && cursorX < this.sx+this.width) { // X case
-            // Get threshold distance
-            var topDist = topLeftDist+topRightDist;
-            var botDist = botLeftDist+botRightDist;
-
-            // Get x percentage
-            var xPercentage = (cursorX-this.sx)/this.width;
-
-            // TODO this could be written more compactly
-            let x = xPercentage*this.width+this.sx;
-
-            // Decide between top or bot
-            if (topDist < botDist) { // top
-                let y = this.sy;
-                return [topDist, x, y];
-            } else { // bot
-                let y = this.height+this.sy;
-                return [botDist, x, y];
-            }
-        } else if (cursorY > this.sy && cursorY < this.sy+this.height) { // Y case
-            // Get threshold distance
-            var leftDist = topLeftDist+botLeftDist;
-            var rightDist = topRightDist+botRightDist;
-
-            // Get y percentage
-            var yPercentage = (cursorY-this.sy)/this.height;
-
-            // TODO this could be written more compactly
-            let y = yPercentage*this.height+this.sy;
-
-            // Decide between left or right
-            if (leftDist < rightDist) { // left
-                let x = this.sx;
-                return [leftDist, x, y];
-            } else { // right
-                let x = this.width+this.sx;
-                return [rightDist, x, y];
-            }
-        } else { // Cursor can't connect
-            return [-1, cursorX, cursorY];
+        // Check if it can connect at all
+        var canConnectX = (cursorX > this.sx && cursorX < this.sx+this.width);
+        var canConnectY = (cursorY > this.sy && cursorY < this.sy+this.height);
+        if (!canConnectX && !canConnectY) {
+            // Can't connect
+            return null;
         }
+
+        // Set percentages
+        var xPercentage = (cursorX-this.sx)/this.width;
+        var yPercentage = (cursorY-this.sy)/this.height;
+
+        // Create possibilities
+        var sides = []
+
+        sides.push([topLeftDist+topRightDist-this.width, xPercentage, 0]);
+        sides.push([botLeftDist+botRightDist-this.width, xPercentage, 1]);
+        sides.push([topLeftDist+botLeftDist-this.height, 0, yPercentage]);
+        sides.push([topRightDist+botRightDist-this.height, 1, yPercentage]);
+
+        // Return side with shortest distance
+        var shortest = sides[0];
+        for (let i = 1; i < sides.length; i++) {
+            if (sides[i][0] < shortest[0]) {
+                shortest = sides[i];
+            }
+        }
+        return shortest;
     }
 }

@@ -9,18 +9,23 @@ import {pathFindTo} from "../Utils/PathFinder";
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
-    constructor(UUID, objectsList, fromX, fromY, toX, toY) {
+    // pathData is an array of objects that can either be a:
+    //      0) Vertex Data
+    //         [0, UUID, xPercentage, yPercentage]
+    //         The Percentage data is the relative percentage
+    //              e.g. 0,0 represents top left, 1,1 bottom right etc
+    //      1) Array containing an x and y element
+    //         [1, x, y]
+    constructor(UUID, objectsList, pathData) {
         //fromVertexUUID, fromX, fromY, toVertexUUID, toX, toY
         this.UUID = UUID;
         this.name = "Arrow";
 
-        // From Connection
-        this.fromX = fromX;
-        this.fromY = fromY;
+        // Save pathData for later
+        this.pathData = pathData;
 
-        // To Connection
-        this.toX = toX;
-        this.toY = toY;
+        // Construct Path
+        this.rebuildPath(objectsList)
 
         // Type
         this.startType = ArrowProps.EdgeEnd.NONE;
@@ -35,6 +40,42 @@ export class Arrow {
         this.destLabel = "";
 
         this.selected = false;
+    }
+
+    // Rebuilds path from cached pathData
+    rebuildPath(objects) {
+        // X, Y data for path
+        this.path = []
+
+        for (let i = 0; i < this.pathData.length; i++) {
+            // Check if its case 0 or 1
+            let pathItem = this.pathData[i];
+
+            if (pathItem[0] === 0) {
+                this.path.push(this.getZerothCasePathItem(objects, pathItem));
+            }
+            else if (pathItem[0] === 1) {
+                this.path.push([pathItem[1], pathItem[2]]);
+            } else {
+                console.error("Invalid PathData case, full pathData", this.pathData);
+            }
+        }
+    }
+
+    // Gets pathItem from object (hopefully a vertex) based on UUID
+    getZerothCasePathItem(objects, pathItem) {
+        for (let i = 0; i < objects.length; i++) {
+            if (objects[i] !== null) {
+                if (objects[i].UUID === pathItem[1]) {
+                    var x = pathItem[2]*objects[i].width + objects[i].sx;
+                    var y = pathItem[3]*objects[i].height + objects[i].sy;
+                    return [x, y]
+                }
+            }
+        }
+
+        console.error("Could not find vertex to connect for pathItem", pathItem);
+        return null;
     }
 
     setSelected(selected){
@@ -425,10 +466,15 @@ export class Arrow {
             canvasContext.strokeStyle = gradient;
         }
 
-        canvasContext.beginPath();
-        canvasContext.moveTo(this.fromX, this.fromY);
-        canvasContext.lineTo(this.toX, this.toY);
-        canvasContext.stroke();
+        // Draw Lines
+        for (var i = 0; i < this.path.length-1; i++) {
+            let from = this.path[i];
+            let to = this.path[i+1];
+            canvasContext.beginPath();
+            canvasContext.moveTo(from[0], from[1]);
+            canvasContext.lineTo(to[0], to[1]);
+            canvasContext.stroke();
+        }
 
         canvasContext.strokeStyle = "#000000";
         canvasContext.setLineDash([]);

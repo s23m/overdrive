@@ -63,7 +63,7 @@ function getNodeByID(nodes, id) {
         console.error("The parameter id is null/undefined!");
     }
 
-    for (var i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
         if (nodes[i][0] === id) {
             return nodes[i];
         }
