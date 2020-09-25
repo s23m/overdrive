@@ -342,10 +342,20 @@ function moveObject(e, object) {
             var y = findNearestGridY(position[1], 0);
 
             object.x = x;
-
             object.y = (findNearestGridY(y, 1));
+
+            updateArrows();
         }
     }
+}
+function updateArrows() {
+    currentObjects.forEach((item) => {
+        if (item !== null) {
+            if (item.constructor.name === "Arrow") {
+                item.rebuildPath(currentObjects);
+            }
+        }
+    });
 }
 
 export function solidifyObject() {
