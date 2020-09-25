@@ -238,31 +238,31 @@ export class Vertex {
     // If threshold is -1, xRel and yRel are equal to cursorX, cursorY
     // This only happens when cursor shouldn't connect to vertex
     getNearestSide(cursorX, cursorY) {
-        // Get basic distances
-        var topLeftDist = getDistance(cursorX, cursorY, this.sx, this.sy);
-        var botLeftDist = getDistance(cursorX, cursorY, this.sx, this.sy+this.height);
-        var topRightDist = getDistance(cursorX, cursorY, this.sx+this.width, this.sy);
-        var botRightDist = getDistance(cursorX, cursorY, this.sx+this.width, this.sy+this.height);
-
-        // Check if it can connect at all
-        var canConnectX = (cursorX > this.sx && cursorX < this.sx+this.width);
-        var canConnectY = (cursorY > this.sy && cursorY < this.sy+this.height);
-        if (!canConnectX && !canConnectY) {
-            // Can't connect
-            return null;
-        }
-
-        // Set percentages
-        var xPercentage = (cursorX-this.sx)/this.width;
-        var yPercentage = (cursorY-this.sy)/this.height;
-
         // Create possibilities
         var sides = []
 
-        sides.push([topLeftDist+topRightDist-this.width, xPercentage, 0]);
-        sides.push([botLeftDist+botRightDist-this.width, xPercentage, 1]);
-        sides.push([topLeftDist+botLeftDist-this.height, 0, yPercentage]);
-        sides.push([topRightDist+botRightDist-this.height, 1, yPercentage]);
+        // If can connect to top/bottom
+        if (cursorX > this.sx && cursorX < this.sx+this.width) {
+            var xPercentage = (cursorX-this.sx)/this.width;
+
+            sides.push([Math.abs(cursorY-(this.sy)), xPercentage, 0]);
+            sides.push([Math.abs(cursorY-(this.sy+this.height)), xPercentage, 1]);
+
+
+        }
+
+        // If can connect to left/right
+        else if (cursorY > this.sy && cursorY < this.sy+this.height) {
+            var yPercentage = (cursorY-this.sy)/this.height;
+
+            sides.push([Math.abs(cursorX-(this.sx)), 0, yPercentage]);
+            sides.push([Math.abs(cursorX-(this.sx+this.width)), 1, yPercentage]);
+        }
+
+        // Can't connect
+        else {
+            return null;
+        }
 
         // Return side with shortest distance
         var shortest = sides[0];

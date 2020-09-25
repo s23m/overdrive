@@ -160,8 +160,10 @@ function checkResizeBounds(x, y) {
     return [vertex,side];
 }
 
-// Find connectable for arrow
+// Find connectable for arrow within a threshold distance
 function getConnectionDataForArrow(cursorX, cursorY) {
+    const threshold = 15;
+
     var nearest = null;
     var nearestDistance = 0;
 
@@ -170,8 +172,10 @@ function getConnectionDataForArrow(cursorX, cursorY) {
             if (item.constructor.name === "Vertex") {
                 let sideData = item.getNearestSide(cursorX, cursorY);
 
+                console.log(nearest, nearestDistance, sideData);
+
                 // Only check if valid
-                if (sideData !== null) {
+                if (sideData !== null && sideData[0] < threshold) {
                     // Compare dist
                     if (nearest === null || sideData[0] < nearestDistance) {
                         nearest = [0, item.UUID, sideData[1], sideData[2]];
