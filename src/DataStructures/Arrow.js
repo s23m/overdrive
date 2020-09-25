@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import {Cardinality} from "./Cardinality";
-import {getDistance} from "../UIElements/CanvasDraw";
+import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import {pathFindTo} from "../Utils/PathFinder";
 
@@ -17,15 +17,16 @@ export class Arrow {
     //      1) Array containing an x and y element
     //         [1, x, y]
     constructor(UUID, objectsList, pathData) {
-        //fromVertexUUID, fromX, fromY, toVertexUUID, toX, toY
         this.UUID = UUID;
         this.name = "Arrow";
 
+        // Ensure there are at least 2 points
+        if (pathData.length === 1) pathData.push(pathData[0]);
         // Save pathData for later
         this.pathData = pathData;
 
         // Construct Path
-        this.rebuildPath(objectsList)
+        this.rebuildPath(objectsList);
 
         // Type
         this.startType = ArrowProps.EdgeEnd.NONE;
@@ -67,8 +68,8 @@ export class Arrow {
         for (let i = 0; i < objects.length; i++) {
             if (objects[i] !== null) {
                 if (objects[i].UUID === pathItem[1]) {
-                    var x = pathItem[2]*objects[i].width + objects[i].sx;
-                    var y = pathItem[3]*objects[i].height + objects[i].sy;
+                    var x = pathItem[2]*objects[i].width + objects[i].x;
+                    var y = pathItem[3]*objects[i].height + objects[i].y;
                     return [x, y]
                 }
             }
@@ -148,14 +149,14 @@ export class Arrow {
 
         // Create nodes for: fromVertex
         var vertexNodes = [];
-        vertexNodes.push([topLeft,     vertex.sx-d,              vertex.sy+vertex.height+d, [left, top]]);               // Top    Left
-        vertexNodes.push([top,         vertex.sx+vertex.width/2, vertex.sy+vertex.height+d, [topLeft, topRight]]);       // Top
-        vertexNodes.push([topRight,    vertex.sx+vertex.width+d, vertex.sy+vertex.height+d, [top, right]]);              // Top    Right
-        vertexNodes.push([right,       vertex.sx+vertex.width+d, vertex.sy+vertex.height/2, [topRight, bottomRight]]);   //        Right
-        vertexNodes.push([bottomRight, vertex.sx+vertex.width+d, vertex.sy-d,               [right, bottom]]);           // Bottom Right
-        vertexNodes.push([bottom,      vertex.sx+vertex.width/2, vertex.sy-d,               [bottomRight, bottomLeft]]); // Bottom
-        vertexNodes.push([bottomLeft,  vertex.sx-d,              vertex.sy-d,               [bottomRight, left]]);       // Bottom Left
-        vertexNodes.push([left,        vertex.sx-d,              vertex.sy+vertex.height/2, [bottomLeft, topLeft]]);     //        Left
+        vertexNodes.push([topLeft,     vertex.x-d,              vertex.y+vertex.height+d, [left, top]]);               // Top    Left
+        vertexNodes.push([top,         vertex.x+vertex.width/2, vertex.y+vertex.height+d, [topLeft, topRight]]);       // Top
+        vertexNodes.push([topRight,    vertex.x+vertex.width+d, vertex.y+vertex.height+d, [top, right]]);              // Top    Right
+        vertexNodes.push([right,       vertex.x+vertex.width+d, vertex.y+vertex.height/2, [topRight, bottomRight]]);   //        Right
+        vertexNodes.push([bottomRight, vertex.x+vertex.width+d, vertex.y-d,               [right, bottom]]);           // Bottom Right
+        vertexNodes.push([bottom,      vertex.x+vertex.width/2, vertex.y-d,               [bottomRight, bottomLeft]]); // Bottom
+        vertexNodes.push([bottomLeft,  vertex.x-d,              vertex.y-d,               [bottomRight, left]]);       // Bottom Left
+        vertexNodes.push([left,        vertex.x-d,              vertex.y+vertex.height/2, [bottomLeft, topLeft]]);     //        Left
         return [nodeIndex, vertexNodes];
     }
 
@@ -269,25 +270,25 @@ export class Arrow {
     }
 
     drawStartHead(canvasContext) {
-        var lineAngle = Math.atan2(this.fromY - this.toY, this.fromX - this.toX);
+        var lineAngle = Math.atan2(this.getSY() - this.getNSY(), this.getSX() - this.getNSX());
 
         switch (this.startType) {
             case ArrowProps.EdgeEnd.NONE:
                 break;
             case ArrowProps.EdgeEnd.ARROW:
-                this.drawArrowEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                this.drawArrowEnd(canvasContext, this.getSX(), this.getSY(), lineAngle);
                 break;
             case ArrowProps.EdgeEnd.TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                this.drawTriangleEnd(canvasContext, this.getSX(), this.getSY(), lineAngle);
                 break;
             case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.fromX, this.fromY, lineAngle, this.lineColour);
+                this.drawTriangleEnd(canvasContext, this.getSX(), this.getSY(), lineAngle, this.lineColour);
                 break;
             case ArrowProps.EdgeEnd.DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.fromX, this.fromY, lineAngle);
+                this.drawDiamondEnd(canvasContext, this.getSX(), this.getSY(), lineAngle);
                 break;
             case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.fromX, this.fromY, lineAngle, this.lineColour);
+                this.drawDiamondEnd(canvasContext, this.getSX(), this.getSY(), lineAngle, this.lineColour);
                 break;
             default:
                 console.log("Arrow had unexpected startType: %s", this.startType);
@@ -295,25 +296,25 @@ export class Arrow {
     }
 
     drawEndHead(canvasContext) {
-        var lineAngle = Math.atan2(this.toY - this.fromY, this.toX - this.fromX);
+        var lineAngle = Math.atan2(this.getEY() - this.getNEY(), this.getEX() - this.getNEX());
 
         switch (this.endType) {
             case ArrowProps.EdgeEnd.NONE:
                 break;
             case ArrowProps.EdgeEnd.ARROW:
-                this.drawArrowEnd(canvasContext, this.toX, this.toY, lineAngle);
+                this.drawArrowEnd(canvasContext, this.getEX(), this.getEY(), lineAngle);
                 break;
             case ArrowProps.EdgeEnd.TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle);
+                this.drawTriangleEnd(canvasContext, this.getEX(), this.getEY(), lineAngle);
                 break;
             case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
+                this.drawTriangleEnd(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
                 break;
             case ArrowProps.EdgeEnd.DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle);
+                this.drawDiamondEnd(canvasContext, this.getEX(), this.getEY(), lineAngle);
                 break;
             case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.toX, this.toY, lineAngle, this.lineColour);
+                this.drawDiamondEnd(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
                 break;
             default:
                 console.log("Arrow had unexpected endType: %s", this.endType);
@@ -330,11 +331,11 @@ export class Arrow {
         let yOffset = 0;
 
         //left to right arrow
-        if(this.toX > this.fromX){
+        if(this.getEX() > this.getSX()){
             //left hand side
             if(source) {
                 //if the text takes up less than half the space
-                if (this.toX - this.fromX > (textWidth * 2) + 15) {
+                if (this.getEX() - this.getSX() > (textWidth * 2) + 15) {
                     xOffset += charWidth;
                 }else{
                     //todo: better solution
@@ -343,7 +344,7 @@ export class Arrow {
             //right hand side
             }else{
                 //if the text takes up less than half the space
-                if (this.toX - this.fromX > (textWidth * 2) + 15){
+                if (this.getEX() - this.getSX() > (textWidth * 2) + 15){
                     xOffset -= textWidth + charWidth
                 }else{
                     //todo: better solution
@@ -355,7 +356,7 @@ export class Arrow {
             //right hand side
             if (!source) {
                 //if the text takes up less than half the space
-                if (this.toX - this.fromX > (textWidth * 2) + 15) {
+                if (this.getEX() - this.getSX() > (textWidth * 2) + 15) {
                     xOffset += charWidth;
                 }else{
                     //todo: better solution
@@ -364,7 +365,7 @@ export class Arrow {
                 //left hand side
             } else {
                 //if the text takes up less than half the space
-                if (this.toX - this.fromX > (textWidth * 2) + 15) {
+                if (this.getEX() - this.getSX() > (textWidth * 2) + 15) {
                     xOffset -= textWidth + charWidth
                 }else{
                     //todo: better solution
@@ -376,11 +377,11 @@ export class Arrow {
 
 
         //top to bottom arrow
-        if(this.toY > this.fromY){
+        if(this.getEY() > this.getSY()){
             //top side
             if(source){
                 //if the text takes up less than half the space
-                if(this.toY > this.fromY + (textHeight*2) + 15){
+                if(this.getEY() > this.getSY() + (textHeight*2) + 15){
                     yOffset += textHeight + charHeight/2
                 }else{
                     //todo: better solution
@@ -389,7 +390,7 @@ export class Arrow {
             //bottom side
             }else{
                 //if the text takes up less than half the space
-                if(this.toY > this.fromY + (textHeight*2) + 15) {
+                if(this.getEY() > this.getSY() + (textHeight*2) + 15) {
                     yOffset -= textHeight
                 }else{
                     //todo: better solution
@@ -401,7 +402,7 @@ export class Arrow {
             //top side
             if(!source){
                 //if the text takes up less than half the space
-                if(this.toY > this.fromY + (textHeight*2) + 15){
+                if(this.getEY() > this.getSY() + (textHeight*2) + 15){
                     yOffset += charHeight/2
                 }else{
                     //todo: better solution
@@ -410,7 +411,7 @@ export class Arrow {
                 //bottom side
             }else{
                 //if the text takes up less than half the space
-                if(this.toY > this.fromY + (textHeight*2) + 15) {
+                if(this.getEY() > this.getSY() + (textHeight*2) + 15) {
                     yOffset -= textHeight
                 }else{
                     //todo: better solution
@@ -428,10 +429,10 @@ export class Arrow {
         let destOffset = this.getTextOffset(canvasContext,this.destLabel, 0);
 
         //draw source text
-        canvasContext.fillText(this.sourceLabel, this.fromX + sourceOffset[0], this.fromY + sourceOffset[1]);
+        canvasContext.fillText(this.sourceLabel, this.getSX() + sourceOffset[0], this.getSY() + sourceOffset[1]);
 
         //draw destination text
-        canvasContext.fillText(this.destLabel, this.toX + destOffset[0], this.toY + destOffset[1]);
+        canvasContext.fillText(this.destLabel, this.getEX() + destOffset[0], this.getEY() + destOffset[1]);
     }
 
 
@@ -452,28 +453,21 @@ export class Arrow {
         // Draw
         canvasContext.strokeStyle = this.lineColour;
 
-        if(this.selected){
-            let r = Math.hypot(this.toX-this.fromX, this.toY-this.fromY);
-            let midX = (this.fromX+this.toX)/2;
-            let midY = (this.fromY+this.toY)/2;
-            //canvasContext.setLineDash([1,dashLength]);
-            let gradient = canvasContext.createRadialGradient(midX,midY,0,midX,midY,r);
-            gradient.addColorStop(0,this.lineColour);
-            gradient.addColorStop(0.4,"orange");
-            gradient.addColorStop(0.5,"yellow");
-            gradient.addColorStop(0.6,"orange");
-            gradient.addColorStop(1,this.lineColour);
-            canvasContext.strokeStyle = gradient;
-        }
-
         // Draw Lines
-        for (var i = 0; i < this.path.length-1; i++) {
+        for (let i = 0; i < this.path.length-1; i++) {
             let from = this.path[i];
             let to = this.path[i+1];
             canvasContext.beginPath();
             canvasContext.moveTo(from[0], from[1]);
             canvasContext.lineTo(to[0], to[1]);
             canvasContext.stroke();
+        }
+
+        if (this.selected) {
+            for (let i = 0; i < this.path.length; i++) {
+                let pos = this.path[i];
+                drawMarker(pos[0], pos[1]);
+            }
         }
 
         canvasContext.strokeStyle = "#000000";
@@ -484,14 +478,60 @@ export class Arrow {
         this.drawLabels(canvasContext);
     }
 
-    // Checks if it intersects with point
     intersects(cx, cy) {
-        var m = getDistance(cx, cy, this.fromX, this.fromY);
-        var n = getDistance(cx, cy, this.toX, this.toY);
-        var l = getDistance(this.fromX, this.fromY, this.toX, this.toY);
+        for (let i = 0; i < this.path.length-1; i++) {
+            let from = this.path[i];
+            let to = this.path[i+1];
+
+            if (this.intersectsSegment(cx, cy, from, to)) return true;
+        }
+        return false;
+    }
+
+    // Checks if it intersects with one of the line segments
+    intersectsSegment(cx, cy, from, to) {
+        var m = getDistance(cx, cy, from[0], from[1]);
+        var n = getDistance(cx, cy, to[0], to[1]);
+        var l = getDistance(from[0], from[1], to[0], to[1]);
 
         var threshold = 1;
 
         return (m+n-threshold < l);
+    }
+
+    // Get first x/y
+    getSX() {
+        return this.path[0][0];
+    }
+    getSY() {
+        return this.path[0][1];
+    }
+
+    // Get second x/y
+    getNSX() {
+        return this.path[1][0];
+    }
+    getNSY() {
+        return this.path[1][1];
+    }
+
+    // Get second last x/y
+    getNEX() {
+        var index = this.path.length-2;
+        if (index < 0) index = 0;
+        return this.path[index][0];
+    }
+    getNEY() {
+        var index = this.path.length-2;
+        if (index < 0) index = 0;
+        return this.path[index][1];
+    }
+
+    // Get last x/y
+    getEX() {
+        return this.path[this.path.length-1][0];
+    }
+    getEY() {
+        return this.path[this.path.length-1][1];
     }
 }

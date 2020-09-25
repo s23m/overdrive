@@ -7,17 +7,16 @@ import { getDistance } from "../UIElements/CanvasDraw";
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
 
-// TODO change sx, sy to x, y
 export class Vertex {
 
-    constructor(UUID, title, content, sx, sy, width, height) {
+    constructor(UUID, title, content, x, y, width, height) {
         this.UUID = UUID;
         this.name = "Vertex";
 
         this.title = title;
         this.content = content;
-        this.sx = sx;
-        this.sy = sy;
+        this.x = x;
+        this.y = y;
         this.icon = "-No Icon";
         this.children = [];
         this.colour = defaultColour;
@@ -70,82 +69,76 @@ export class Vertex {
         this.icon = name;
     }
 
-    setSX(x) {
-        this.sx = x
-    }
-
-    setSY(y) {
-        this.sy = y
-    }
-
     getBounds() {
-        return [this.sx,this.sy,this.sx+this.width,this.sy+this.height];
+        return [this.x,this.y,this.x+this.width,this.y+this.height];
     }
 
     expandSide(side, x, y) {
         var ex = 0;
         var ey = 0;
-        switch (side) {
 
+        switch (side) {
             case "topLeft":
-                ey = this.sy + this.height;
-                this.sy = y;
-                this.height = ey-this.sy;
-                ex = this.sx + this.width;
-                this.sx = x;
-                this.width = ex-this.sx;
+                ey = this.y + this.height;
+                this.y = y;
+                this.height = ey-this.y;
+                ex = this.x + this.width;
+                this.x = x;
+                this.width = ex-this.x;
                 break;
 
             case "topRight":
-                ey = this.sy + this.height;
-                this.sy = y;
-                this.height = ey-this.sy;
-                this.width = x-this.sx;
+                ey = this.y + this.height;
+                this.y = y;
+                this.height = ey-this.y;
+                this.width = x-this.x;
                 break;
 
             case "bottomLeft":
-                this.height = y-this.sy;
-                ex = this.sx + this.width;
-                this.sx = x;
-                this.width = ex-this.sx;
+                this.height = y-this.y;
+                ex = this.x + this.width;
+                this.x = x;
+                this.width = ex-this.x;
                 break;
 
             case "bottomRight":
-                this.height = y-this.sy;
-                this.width = x-this.sx;
+                this.height = y-this.y;
+                this.width = x-this.x;
                 break;
 
             case "left":
-                ex = this.sx + this.width;
-                this.sx = x;
-                this.width = ex-this.sx;
-
+                ex = this.x + this.width;
+                this.x = x;
+                this.width = ex-this.x;
                 break;
+
             case "right":
-                this.width = x-this.sx;
+                this.width = x-this.x;
                 break;
 
             case "top":
-                ey = this.sy + this.height;
-                this.sy = y;
-                this.height = ey-this.sy;
+                ey = this.y + this.height;
+                this.y = y;
+                this.height = ey-this.y;
                 break;
 
             case "bottom":
-                this.height = y-this.sy;
+                this.height = y-this.y;
                 break;
 
-            default:break;
+            default:
+                break;
         }
     }
 
     draw(canvasContext) {
-        //todo: fix automatically increasing width when text is too long
+        // TODO fix automatically increasing width when text is too long
+        // to do that the width / height value will have to be changed, which is fine and the program can already handle that
 
         if(this.selected){
-            let r = Math.hypot(this.sx +this.width-this.sx,this.sy + this.height-this.sy);
+            let r = Math.hypot(this.x +this.width-this.x,this.y + this.height-this.y);
             //canvasContext.setLineDash([1,dashLength]);
-            let gradient = canvasContext.createRadialGradient(this.sx+(this.width/2),this.sy+(this.height/2),0,this.sx + (this.width/2),this.sy + (this.height/2),r);
+            let gradient = canvasContext.createRadialGradient(this.x+(this.width/2),this.y+(this.height/2),0,this.x + (this.width/2),this.y + (this.height/2),r);
             gradient.addColorStop(0.5,"black");
             gradient.addColorStop(0.6,"orange");
             gradient.addColorStop(0,"yellow");
@@ -186,16 +179,11 @@ export class Vertex {
         var rectWidth = this.width;
         var rectHeight = Math.max(this.height, textHeight);
 
-        // Setup gradient fill
-        //var grd = canvasContext.createLinearGradient(this.sx, this.sy, this.sx+rectWidth, this.sy+rectHeight);
-        //grd.addColorStop(0, "#e3895f");
-        //grd.addColorStop(1, "#e66229");
-
         // Draw rect
         canvasContext.fillStyle = this.colour;
-        canvasContext.fillRect(this.sx, this.sy, rectWidth, rectHeight);
-        canvasContext.strokeRect(this.sx, this.sy, rectWidth, fontSize+padding+padding);
-        canvasContext.strokeRect(this.sx, this.sy, rectWidth, rectHeight);
+        canvasContext.fillRect(this.x, this.y, rectWidth, rectHeight);
+        canvasContext.strokeRect(this.x, this.y, rectWidth, fontSize+padding+padding);
+        canvasContext.strokeRect(this.x, this.y, rectWidth, rectHeight);
 
         // Reset color for text
         canvasContext.fillStyle = "#000000";
@@ -207,12 +195,12 @@ export class Vertex {
         canvasContext.shadowOffsetX = 0.0; canvasContext.shadowOffsetY = 0.0;
 
         // Draw name
-        canvasContext.fillText(this.title, this.sx+padding, this.sy+dy);
+        canvasContext.fillText(this.title, this.x+padding, this.y+dy);
         dy += padding*2 + fontSize;
 
         // Draw text
         for (let i = 0; i < this.content.length; i++) {
-            canvasContext.fillText(this.content[i], this.sx+padding, this.sy+dy);
+            canvasContext.fillText(this.content[i], this.x+padding, this.y+dy);
             dy += fontSize + padding;
         }
 
@@ -222,10 +210,10 @@ export class Vertex {
 
     // Checks if it intersects with point
     intersects(x, y) {
-        if (x < this.sx) return false;
-        if (y < this.sy) return false;
-        if (x > this.sx+this.width) return false;
-        if (y > this.sy+this.height) return false;
+        if (x < this.x) return false;
+        if (y < this.y) return false;
+        if (x > this.x+this.width) return false;
+        if (y > this.y+this.height) return false;
         return true;
     }
 
@@ -242,19 +230,19 @@ export class Vertex {
         var sides = []
 
         // If can connect to top/bottom
-        if (cursorX > this.sx && cursorX < this.sx+this.width) {
-            var xPercentage = (cursorX-this.sx)/this.width;
+        if (cursorX > this.x && cursorX < this.x+this.width) {
+            var xPercentage = (cursorX-this.x)/this.width;
 
-            sides.push([Math.abs(cursorY-(this.sy)), xPercentage, 0]);
-            sides.push([Math.abs(cursorY-(this.sy+this.height)), xPercentage, 1]);
+            sides.push([Math.abs(cursorY-(this.y)), xPercentage, 0]);
+            sides.push([Math.abs(cursorY-(this.y+this.height)), xPercentage, 1]);
         }
 
         // If can connect to left/right
-        else if (cursorY > this.sy && cursorY < this.sy+this.height) {
-            var yPercentage = (cursorY-this.sy)/this.height;
+        else if (cursorY > this.y && cursorY < this.y+this.height) {
+            var yPercentage = (cursorY-this.y)/this.height;
 
-            sides.push([Math.abs(cursorX-(this.sx)), 0, yPercentage]);
-            sides.push([Math.abs(cursorX-(this.sx+this.width)), 1, yPercentage]);
+            sides.push([Math.abs(cursorX-(this.x)), 0, yPercentage]);
+            sides.push([Math.abs(cursorX-(this.x+this.width)), 1, yPercentage]);
         }
 
         // Can't connect

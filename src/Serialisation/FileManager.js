@@ -68,7 +68,7 @@ export function open(jsonString) {
             if (item !== null) {
                 switch (item.name) {
                     case "Vertex":
-                        var newVertex = new Vertex(item.UUID, item.title, item.content, item.sx, item.sy, item.width, item.height);
+                        var newVertex = new Vertex(item.UUID, item.title, item.content, item.x, item.y, item.width, item.height);
                         newObjects.push(newVertex);
                         break;
                     default:

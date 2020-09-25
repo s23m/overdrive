@@ -341,9 +341,9 @@ function moveObject(e, object) {
             var x = position[0];
             var y = findNearestGridY(position[1], 0);
 
-            object.setSX(x);
+            object.x = x;
 
-            object.setSY(findNearestGridY(y, 1))
+            object.y = (findNearestGridY(y, 1));
         }
     }
 }
@@ -404,6 +404,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         case "Arrow":
             // Deep Copy
             var newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
+            console.log("Created path of size", newPath.length)
 
             return new Arrow(createUUID(), currentObjects, newPath);
         case "Diamond":
