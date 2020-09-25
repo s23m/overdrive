@@ -64,7 +64,6 @@ export class Vertex {
         }
     }
 
-    //TODO: Check if there's a better way to store icon
     setIcon(name) {
         this.icon = name;
     }
