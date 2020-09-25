@@ -162,11 +162,13 @@ function checkResizeBounds(x, y) {
 
 // Find connectable for arrow within a threshold distance
 function getConnectionDataForArrow(cursorX, cursorY) {
-    const threshold = 15;
+    const distanceThreshold = 15;
+    const angleThreshold = 10;
 
     var nearest = null;
     var nearestDistance = 0;
 
+    // Find nearest connectable
     currentObjects.forEach((item) => {
         if (item !== null) {
             if (item.constructor.name === "Vertex") {
@@ -175,7 +177,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
                 console.log(nearest, nearestDistance, sideData);
 
                 // Only check if valid
-                if (sideData !== null && sideData[0] < threshold) {
+                if (sideData !== null && sideData[0] < distanceThreshold) {
                     // Compare dist
                     if (nearest === null || sideData[0] < nearestDistance) {
                         nearest = [0, item.UUID, sideData[1], sideData[2]];
@@ -186,11 +188,52 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         }
     });
 
+    // Set coordinates
+    var coordinate = nearest;
     if (nearest === null) {
-        return [1, cursorX, cursorY];
-    } else {
-        return nearest;
+        coordinate = [1, cursorX, cursorY];
     }
+
+    // If can't snap to right angles
+    if (arrowPath.length < 1 || coordinate[0] === 0) return coordinate;
+
+    // Get angle
+    var lx = arrowPath[arrowPath.length-1][1];
+    var ly = arrowPath[arrowPath.length-1][2];
+    var x = coordinate[1]-lx;
+    var y = coordinate[2]-ly;
+
+    // must be y,x check documentation if you dont believe me
+    var angle = Math.atan2(y, x) * (180/Math.PI);
+    // Make positive
+    angle = (angle + 360) % 360;
+    // Get relative
+    var relAngle = angle % 90;
+
+    // Check if it should snap to right angles
+    if (relAngle > 90-angleThreshold || relAngle < angleThreshold) {
+        // Get length
+        var l = getDistance(0, 0, x, y);
+
+        // Choose angle
+        var angles = [0, 90, 180, 270, 360];
+        var nearestAngle = angles[0];
+        for (let i = 1; i < angles.length; i++) {
+            if (Math.abs(angles[i]-angle) < Math.abs(nearestAngle-angle)) {
+                nearestAngle = angles[i];
+            }
+        }
+        var nearestRad = nearestAngle * (Math.PI/180)
+
+        // Create vector
+        var xv = l * Math.cos(nearestRad);
+        var yv = l * Math.sin(nearestRad);
+
+        // Create point (not vector sitting on 0,0)
+        coordinate = [coordinate[0], lx+xv, ly+yv];
+    }
+
+    return coordinate;
 }
 
 function resizeObjectOnMouseMove(e,resizeVars) {

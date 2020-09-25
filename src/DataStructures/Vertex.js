@@ -247,8 +247,6 @@ export class Vertex {
 
             sides.push([Math.abs(cursorY-(this.sy)), xPercentage, 0]);
             sides.push([Math.abs(cursorY-(this.sy+this.height)), xPercentage, 1]);
-
-
         }
 
         // If can connect to left/right
