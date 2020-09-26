@@ -73,7 +73,7 @@ export function drawAll() {
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
 
-    for (let i = 0; i < canvasHeight; i+= canvasHeight/yRows/2) {
+    for (let i = 0; i < canvasHeight; i+= 25*zoom/100 * 200/zoom) {
         let y1 = findNearestGridY(i,1);
         let y2 = findNearestGridY(i,0);
         drawLine(0,y1,canvasWidth,y1,"#D0D0D0");
@@ -344,10 +344,10 @@ function moveObject(e, object) {
 
             var position = getGraphXYFromMouseEvent(e);
             var x = position[0];
-            var y = findNearestGridY(position[1], 0);
+            var y = position[1];
 
             object.x = x;
-            object.y = (findNearestGridY(y, 1));
+            object.y = y;
 
             updateArrows();
         }
@@ -415,8 +415,9 @@ function createObject(canvas, x1, y1, x2, y2) {
             var pos = orderCoordinates(x1, y1, x2, y2);
             let vy1 = findNearestGridY(pos[1],0);
             let vy2 = findNearestGridY(pos[3],0);
-            return new Vertex(createUUID(),"",[""], pos[0], y1, pos[2]-pos[0], vy2-vy1);
+            return new Vertex(createUUID(),"",[""], pos[0], findNearestGridY(y1,1) , pos[2]-pos[0], vy2-vy1);
         case "Arrow":
+            // Deep Copy
             // Deep Copy
             var newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
