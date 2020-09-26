@@ -29,11 +29,10 @@ export class MainProgramClass extends React.Component {
             zoomLevel: 200,
             drawMode: "Vertex",
             menu: "Tools",
-            selectedObject: null
+            selectedObject: null,
         };
 
         this.setMode = this.setMode.bind(this);
-
         this.setLeftMenu = this.setLeftMenu.bind(this);
         this.semanticTableEnabled = false;
     }
@@ -41,6 +40,23 @@ export class MainProgramClass extends React.Component {
     componentDidMount() {
         this.setMode("Vertex");
         console.log("Mounted")
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.state.menu === "Tools") {
+
+            let div = document.getElementById(prevState.drawMode);
+
+            if (div !== null) {
+                div.style.backgroundColor = "#FFFFFF";
+            }
+
+            div = document.getElementById(this.state.drawMode);
+
+            div.style.backgroundColor = "#CFFFFF";
+
+            console.log("Mode set to: " + this.state.drawMode);
+        }
     }
 
     zoom = (type) => {
@@ -63,15 +79,8 @@ export class MainProgramClass extends React.Component {
 
     setMode(mode) {
 
-        let div = document.getElementById(this.state.drawMode);
-        div.style.backgroundColor = "#FFFFFF";
-
         this.setState({drawMode: mode});
-        div = document.getElementById(mode);
 
-        div.style.backgroundColor = "#CFFFFF";
-
-        console.log("Mode set to: " + mode);
     };
 
     // chooses which left hand menu to display, based on the selected item
@@ -85,7 +94,7 @@ export class MainProgramClass extends React.Component {
         if (nearestObject === null) {
             this.setState({
                 menu: "Tools",
-                selectedObject: null
+                selectedObject: null,
             });
 
         }

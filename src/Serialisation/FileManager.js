@@ -44,13 +44,13 @@ export function getSaveData() {
 export function save() {
 
     let JSONdata = getSaveData();
-    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSONdata));
+    let dataStr = JSON.stringify(JSONdata);
 
     let DLelement = document.createElement("a");
-    let dataFile = new Blob([dataStr], {type: 'text/plain'});
+    let dataFile = new Blob([dataStr], {type: 'text/json'});
 
     DLelement.href = URL.createObjectURL(dataFile);
-    DLelement.download = "export.json";
+    DLelement.download = "Export.json";
     document.body.appendChild(DLelement);
     DLelement.click();
 
@@ -67,7 +67,6 @@ export function open(jsonString) {
 
         // Loaded objects with variables and functions
         var newObjects = [];
-
 
         // Copy behaviour over (vertexs first)
         loadedObjects.forEach((item) => {

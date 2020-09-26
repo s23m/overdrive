@@ -39,7 +39,10 @@ export class LeftMenu extends React.Component{
 
     componentDidMount() {
         this.menu = this.props.mainState.menu;
-        this.selectedItem = this.props.mainState.selectedItem;
+        this.selectedItem = this.props.mainState.drawMode;
+        if(this.menu === "Tools") {
+            this.props.setMode(this.selectedItem)
+        }
     }
 
     componentWillReceiveProps(nextProps) {

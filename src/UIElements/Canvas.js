@@ -59,6 +59,7 @@ export class Canvas extends React.Component {
             } else {
                 // Normal right click behaviour
                 this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+                canvasDraw.drawAll()
             }
 
         }

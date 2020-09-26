@@ -443,9 +443,6 @@ export class Arrow {
         let destCardText = this.getCardinalityText(0);
         let Offsets = this.getTextOffsets(canvasContext,this.sourceLabel,this.destLabel,sourceCardText,destCardText);
 
-
-        console.log(sourceCardText + destCardText);
-
         //draw source text
         canvasContext.fillText(this.sourceLabel, this.getSX() + Offsets[0], this.getSY() + Offsets[1]);
 
