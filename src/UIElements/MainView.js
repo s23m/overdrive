@@ -160,7 +160,7 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarFile"> &nbsp;File </div>
 
                     <div className="TopBar">
-                        <button id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</button>
+                        <a id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
                     </div>
 
                     <div className="TopBar">
