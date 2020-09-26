@@ -306,6 +306,8 @@ export function onLeftMouseRelease(canvas, x, y) {
     var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
     addObject(newObject);
 
+    canvas.props.setLeftMenu(newObject);
+
     drawAll(currentObjects);
 }
 
