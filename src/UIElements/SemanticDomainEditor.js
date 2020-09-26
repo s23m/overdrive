@@ -205,17 +205,21 @@ export function resetRows() {
     for (let i = 0; i < currentObjects.length; i++) {
         const row = {};
 
+        // Constants
         row['id'] = currentObjects[i].UUID; // Just going to be based on UUID since it's easy and unique
         row['UUID'] = currentObjects[i].UUID;
         row['type'] = currentObjects[i].constructor.name;
-        row['name'] = "";
-        row['description'] = "";
-        row['abbreviation'] = "";
-        row['shortAbbreviation'] = "";
 
+        row['abbreviation'] = currentObjects[i].abbreviation;
+        row['shortAbbreviation'] = currentObjects[i].shortAbbreviation;
+
+        // Exceptions
         if (currentObjects[i].constructor.name === "Vertex") {
             row['name'] = currentObjects[i].title;
             row['description'] = currentObjects[i].content;
+        } else {
+            row['name'] = currentObjects[i].name;
+            row['description'] = currentObjects[i].description;
         }
 
         newRows.push(row);
@@ -239,10 +243,19 @@ function updateChangedObject(rows) {
         for (let o = 0; o < currentObjects.length; o++) {
             var object = currentObjects[i];
 
+            // If should update
             if (row['UUID'] === object.UUID) {
-                // Update
+                // Constants
+                object.abbreviation = row['abbreviation'];
+                object.shortAbbreviation = row['shortAbbreviation'];
+
+                // Exceptions
                 if (object.constructor.name === "Vertex") {
                     object.title = row['name'];
+                    object.content = row['description'];
+                } else {
+                    object.name = row['name'];
+                    object.description = row['description'];
                 }
             }
         }
