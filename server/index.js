@@ -41,12 +41,45 @@ app.post('/serialisation/save', (req,res) => {
             res.status(200);
             res.send(JSON.stringify({success:true}));
         }else{
-            res.status(500);
+            res.status(400);
             res.send(JSON.stringify({success:false}));
         }
 
 
     })
+
+});
+
+app.get('/icons/list', (req,res) =>{
+
+    let dirPath = __dirname.substring(0,__dirname.length-7) + '/public/S23M_Icons/';
+    let iconList = [];
+    let error = false;
+
+    fs.readdir(dirPath, (err,files) => {
+        if(err !== null){
+            error = true;
+        }
+
+        console.log(files[0].substring(files[0].length-4,files[0].length))
+
+        files.forEach((file) =>{
+            if(file.substring(file.length-4,file.length) === ".png"){
+
+                iconList.push(file.substring(0,file.length-4))
+            }
+        })
+
+
+        if(error){
+            res.status(500);
+            res.send(JSON.stringify({error:true,icons:iconList}))
+        }else{
+            res.status(200);
+            res.send(JSON.stringify({error:false,icons:iconList}))
+        }
+
+    });
 
 });
 
