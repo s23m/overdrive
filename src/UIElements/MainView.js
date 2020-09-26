@@ -159,7 +159,7 @@ export class MainProgramClass extends React.Component {
 
                 <div className= "TopMenus">
 
-                    <DropdownButton variant = "Primary" className = "TopBar" id = "File-Menu" title = "File" size = "lg">
+                    <DropdownButton variant = "Primary" id = "File-Menu" title = "File" size = "lg">
 
                         <Dropdown.Item>
                             <div className="TopBar">
@@ -167,11 +167,11 @@ export class MainProgramClass extends React.Component {
                             </div>
                         </Dropdown.Item>
 
-                        <Dropdown.Item>
-                            <div className="TopBar">
-                                <input type="file" id="File-Select" onChange={this.showFile} />
-                            </div>
-                        </Dropdown.Item>
+
+                        <div className="TopBar">
+                            <input type="file" id="File-Select" onChange={this.showFile} />
+                        </div>
+
 
                         <Dropdown.Item>
                             <div className="TopBar">
