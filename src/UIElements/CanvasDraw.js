@@ -14,7 +14,7 @@ var mouseStartX;
 var mouseStartY;
 
 // TODO make this selectable by the user
-const yRows = 35;
+var yRows = 70;
 
 export var mouseOriginX;
 export var mouseOriginY;
@@ -73,7 +73,7 @@ export function drawAll() {
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
 
-    for (let i = 0; i < canvasHeight; i+= 25*zoom/100 * 200/zoom) {
+    for (let i = 0; i < canvasHeight; i+= (canvasHeight/yRows*zoom/100 * 200/zoom)/2){
         let y1 = findNearestGridY(i,1);
         let y2 = findNearestGridY(i,0);
         drawLine(0,y1,canvasWidth,y1,"#D0D0D0");
@@ -98,11 +98,17 @@ export function deleteElement(element){
     drawAll()
 }
 
+export function updateRows() {
+    console.log("You called")
+    yRows = document.getElementById("canvasRows").value;
+    drawAll()
+}
+
 // Format co-ordinate so that the value aligns with a row
 function findNearestGridY(y,top) {
 
     // distance to topmost top rowLine
-    let slotHeight = 25*zoom/100 * 200/zoom;
+    let slotHeight = canvasHeight/yRows*zoom/100 * 200/zoom;
 
     // which row to put it in
     let slot = Math.floor(y/slotHeight);

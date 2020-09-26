@@ -21,7 +21,7 @@
     display: flex;
     width: 100vw;
     height: 5vh;
-    border: 2px solid black;
+    border: 2px groove #666666;
     flex-direction: row;
 }
 
@@ -72,6 +72,27 @@ a,#json-downloader{
     border: 2px groove #666666;
     height: 5vh;
     width: 10vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.TopBarIdentifier{
+    display: block;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 5vh;
+    width: 10vw;
+    line-height: 4.5vh;
+    text-align: end;
+    border-right: 0;
+}
+
+.TopBarSelector{
+    display: flex;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 4.55vh;
+    width: 5vw;
     align-items: center;
     justify-content: center;
 }

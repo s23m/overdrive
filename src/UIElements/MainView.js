@@ -200,6 +200,9 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarLabel"> {this.state.zoomLevel}% </div>
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
 
+                    <div className="TopBarIdentifier">Rows:&nbsp;</div>
+                    <input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>
+
                 </div>
 
                 <div className="LowerPanel">
