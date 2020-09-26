@@ -25,6 +25,9 @@ export class Vertex {
         // Note these values often change in runtime
         this.width = width;
         this.height = height;
+
+        // Translations
+        this.translations = new Map();
     }
 
     setSelected(selected){

@@ -41,6 +41,9 @@ export class Arrow {
         this.destLabel = "";
 
         this.selected = false;
+
+        // Translations
+        this.translations = new Map();
     }
 
     // Rebuilds path from cached pathData

@@ -14,6 +14,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
 import { EditingState } from '@devexpress/dx-react-grid';
+
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
+
 import {
     Grid,
     Table,
@@ -39,6 +44,8 @@ import {currentObjects} from "./CanvasDraw";
 // Globals
 var rows;
 var setRows = null;
+var textInput = React.createRef();
+var translationColumns = [];
 
 const getRowId = row => row.id;
 
@@ -127,14 +134,8 @@ const FocusableCell = ({ onClick, ...restProps }) => (
 );
 
 export default () => {
-    const [columns] = useState([
-        { name: 'UUID', title: 'UUID' },
-        { name: 'type', title: 'Type' },
-        { name: 'name', title: 'Name' },
-        { name: 'description', title: 'Description' },
-        { name: 'abbreviation', title: 'Abbreviation' },
-        { name: 'shortAbbreviation', title: 'Short abbreviation' },
-    ]);
+    var columns = createColumns();
+
     const [generatedRows, setRowsRet] = useState(generateRows({
         columnValues: { id: ({ index }) => index, ...defaultColumnValues },
         length: 8,
@@ -171,6 +172,18 @@ export default () => {
 
     return (
         <Paper>
+            <InputGroup>
+                <FormControl
+                    ref={textInput}
+                    placeholder="Column name"
+                    aria-label="Column name"
+                    aria-describedby="basic-addon2"
+                />
+                <InputGroup.Append>
+                    <Button variant="outline-secondary" onClick={() => addColumn()}>Add</Button>
+                    <Button variant="outline-secondary" onClick={() => removeColumn()}>Remove</Button>
+                </InputGroup.Append>
+            </InputGroup>
             <Grid
                 rows={rows}
                 columns={columns}
@@ -195,7 +208,13 @@ export default () => {
     );
 };
 
-export function onSwitch() {
+function addColumn() {
+    const value = textInput.current.value
+    console.log("Adding column to semantic domain editor", value);
+    translationColumns.push(value);
+}
+
+function removeColumn() {
 
 }
 
@@ -233,6 +252,25 @@ export function resetRows() {
     setRows(newRows);
 
     console.log("Updating rows?")
+}
+
+function createColumns() {
+    // Create default columns
+    var columnNames = [
+        { name: 'UUID', title: 'UUID' },
+        { name: 'type', title: 'Type' },
+        { name: 'name', title: 'Name' },
+        { name: 'description', title: 'Description' },
+        { name: 'abbreviation', title: 'Abbreviation' },
+        { name: 'shortAbbreviation', title: 'Short abbreviation' },
+    ];
+
+    // Add translation columns
+    for (var translation of translationColumns) {
+        columnNames.push({name: translation, title: translation});
+    }
+
+    return columnNames;
 }
 
 function updateChangedObject(rows) {
