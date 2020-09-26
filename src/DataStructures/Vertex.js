@@ -134,8 +134,6 @@ export class Vertex {
     }
 
     draw(canvasContext) {
-        // TODO fix automatically increasing width when text is too long
-        // to do that the width / height value will have to be changed, which is fine and the program can already handle that
 
         if(this.selected){
             let r = Math.hypot(this.x +this.width-this.x,this.y + this.height-this.y);

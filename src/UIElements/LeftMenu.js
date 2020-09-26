@@ -229,8 +229,6 @@ export class LeftMenu extends React.Component{
                     <input id="DestLabel" className="DestLabel" defaultValue={this.state.selectedObject.destLabel} onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
                 {
-                // todo: to/from caridnality, comment, 1..n represented as a dot
-                    // require ability to select arbitrary number or no number n or * for cardinality
                 }
                 <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
 
