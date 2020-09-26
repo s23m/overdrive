@@ -437,8 +437,13 @@ export function getGraphXYFromMouseEvent(e) {
 }
 
 export function getDownload() {
-    document.getElementById("downloader").download = "image.png";
-    document.getElementById("downloader").href = canvasElement.toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+
+    let DLelement = document.createElement("a");
+    DLelement.href = canvasElement.toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream')
+    DLelement.download = "Graph.png";
+    document.body.appendChild(DLelement);
+    DLelement.click();
+
 }
 
 function orderCoordinates(sx, sy, ex, ey) {

@@ -46,9 +46,14 @@ export function save() {
     let JSONdata = getSaveData();
     let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSONdata));
 
-    var downloadElem = document.getElementById('json-downloader');
-    downloadElem.setAttribute("href",     dataStr     );
-    downloadElem.setAttribute("download", "export.json");
+    let DLelement = document.createElement("a");
+    let dataFile = new Blob([dataStr], {type: 'text/plain'});
+
+    DLelement.href = URL.createObjectURL(dataFile);
+    DLelement.download = "Export.json";
+    document.body.appendChild(DLelement);
+    DLelement.click();
+
 }
 
 export function open(jsonString) {
