@@ -174,8 +174,6 @@ function getConnectionDataForArrow(cursorX, cursorY) {
             if (item.constructor.name === "Vertex") {
                 let sideData = item.getNearestSide(cursorX, cursorY);
 
-                console.log(nearest, nearestDistance, sideData);
-
                 // Only check if valid
                 if (sideData !== null && sideData[0] < distanceThreshold) {
                     // Compare dist
@@ -414,7 +412,6 @@ function createObject(canvas, x1, y1, x2, y2) {
         case "Arrow":
             // Deep Copy
             var newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
-            console.log("Created path of size", newPath.length)
 
             return new Arrow(createUUID(), currentObjects, newPath);
         case "Diamond":

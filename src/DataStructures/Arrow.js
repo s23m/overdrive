@@ -321,120 +321,167 @@ export class Arrow {
         }
     }
 
-    getTextOffset(canvasContext,text,source){
-        let textWidth = canvasContext.measureText(text).width;
-        let textHeight = 5;
+    getTextOffsets(canvasContext, sourceText, destText, sourceCtext, destCtext){
+        let sourceTextWidth = canvasContext.measureText(sourceText).width;
+        let destTextWidth = canvasContext.measureText(destText).width;
+        let sourceCtextWidth = canvasContext.measureText(sourceCtext).width;
+        let destCtextWidth = canvasContext.measureText(destCtext).width;
+        let textHeight = 15;
         // 'M' is the widest possible character
         let charWidth = canvasContext.measureText("M").width;
         let charHeight = 15;
-        let xOffset = 0;
-        let yOffset = 0;
+        let sxOffset = 0;
+        let syOffset = 0;
+        let exOffset = 0;
+        let eyOffset = 0;
 
-        //left to right arrow
-        if(this.getEX() > this.getSX()){
-            //left hand side
-            if(source) {
-                //if the text takes up less than half the space
-                if (this.getEX() - this.getSX() > (textWidth * 2) + 15) {
-                    xOffset += charWidth;
-                }else{
-                    //todo: better solution
-                    xOffset -= textWidth + charWidth
-                }
-            //right hand side
-            }else{
-                //if the text takes up less than half the space
-                if (this.getEX() - this.getSX() > (textWidth * 2) + 15){
-                    xOffset -= textWidth + charWidth
-                }else{
-                    //todo: better solution
-                    xOffset += charWidth;
-                }
+        let sxOffsetc = 0;
+        let syOffsetc = 0;
+        let exOffsetc = 0;
+        let eyOffsetc = 0;
+
+        let xFlip = true;
+        let yFlip = true;
+
+        // true if arrow is landscape, false if arrow is portrait;
+        let LRArrow = Math.abs(this.getSX()-this.getEX()) > Math.abs(this.getSY()-this.getEY())
+
+        if(LRArrow){
+            if(this.getSX() > this.getEX()) {
+                xFlip = !xFlip;
             }
-        //right to left arrow
-        }else {
-            //right hand side
-            if (!source) {
-                //if the text takes up less than half the space
-                if (this.getEX() - this.getSX() > (textWidth * 2) + 15) {
-                    xOffset += charWidth;
-                }else{
-                    //todo: better solution
-                    xOffset -= textWidth + charWidth;
-                }
-                //left hand side
-            } else {
-                //if the text takes up less than half the space
-                if (this.getEX() - this.getSX() > (textWidth * 2) + 15) {
-                    xOffset -= textWidth + charWidth
-                }else{
-                    //todo: better solution
-                    xOffset += charWidth;
-                }
-
-            }
-        }
-
-
-        //top to bottom arrow
-        if(this.getEY() > this.getSY()){
-            //top side
-            if(source){
-                //if the text takes up less than half the space
-                if(this.getEY() > this.getSY() + (textHeight*2) + 15){
-                    yOffset += textHeight + charHeight/2
-                }else{
-                    //todo: better solution
-                    yOffset -= textHeight
-                }
-            //bottom side
-            }else{
-                //if the text takes up less than half the space
-                if(this.getEY() > this.getSY() + (textHeight*2) + 15) {
-                    yOffset -= textHeight
-                }else{
-                    //todo: better solution
-                    yOffset += textHeight + charHeight/2
-                }
-            }
-        //bottom to top arrow
         }else{
-            //top side
-            if(!source){
-                //if the text takes up less than half the space
-                if(this.getEY() > this.getSY() + (textHeight*2) + 15){
-                    yOffset += charHeight/2
-                }else{
-                    //todo: better solution
-                    yOffset -= textHeight
-                }
-                //bottom side
-            }else{
-                //if the text takes up less than half the space
-                if(this.getEY() > this.getSY() + (textHeight*2) + 15) {
-                    yOffset -= textHeight
-                }else{
-                    //todo: better solution
-                    yOffset += charHeight/2
-                }
+            if(this.getSY() > this.getEY()) {
+                yFlip = !yFlip;
             }
         }
 
 
-        return [xOffset,yOffset]
+        if(xFlip){
+            sxOffset = charWidth/2;
+            if(LRArrow){
+                sxOffsetc = charWidth/2;
+            }else{
+                sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
+            }
+        }else{
+            sxOffset = -1*(sourceTextWidth+charWidth/2)
+            if(LRArrow){
+                sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
+            }else{
+                sxOffsetc = charWidth/2;
+            }
+        }
+
+
+
+        if(yFlip){
+            syOffset = textHeight;
+            if(LRArrow){
+                syOffsetc = -1*(textHeight/2)
+            }else{
+                syOffsetc = syOffset = textHeight;
+            }
+        }else{
+            syOffset = -1*(textHeight/2);
+            if(LRArrow){
+                syOffsetc = syOffset = textHeight;
+            }else{
+                syOffsetc = -1*(textHeight/2)
+            }
+        }
+
+
+        //if true arrow moves more in x than in y
+        xFlip = !xFlip;
+        yFlip = !yFlip;
+
+        if(xFlip){
+            exOffset = charWidth/2;
+            if(LRArrow){
+                exOffsetc = charWidth/2;
+            }else{
+                exOffsetc = -1*(destCtextWidth+charWidth/2)
+            }
+        }else{
+            exOffset = -1*(destTextWidth+charWidth/2)
+            if(LRArrow){
+                exOffsetc = -1*(destCtextWidth+charWidth/2)
+            }else{
+                exOffsetc = charWidth/2;
+            }
+        }
+
+
+        if(yFlip){
+            eyOffset = textHeight
+            if(LRArrow){
+                eyOffsetc = -1*(textHeight/2)
+            }else{
+                eyOffsetc = eyOffset = textHeight;
+            }
+        }else{
+            eyOffset = -1*(textHeight/2)
+            if(LRArrow){
+                eyOffsetc = eyOffset = textHeight;
+            }else{
+                eyOffsetc = -1*(textHeight/2)
+            }
+        }
+
+
+        return [sxOffset,syOffset,exOffset,eyOffset,sxOffsetc,syOffsetc,exOffsetc,eyOffsetc]
     }
 
-    drawLabels(canvasContext) {
-        let sourceOffset = this.getTextOffset(canvasContext,this.sourceLabel, 1);
-        let destOffset = this.getTextOffset(canvasContext,this.destLabel, 0);
+
+
+    drawLabelsAndCardinalities(canvasContext) {
+        let sourceCardText = this.getCardinalityText(1);
+        let destCardText = this.getCardinalityText(0);
+        let Offsets = this.getTextOffsets(canvasContext,this.sourceLabel,this.destLabel,sourceCardText,destCardText);
+
+
+        console.log(sourceCardText + destCardText);
 
         //draw source text
-        canvasContext.fillText(this.sourceLabel, this.getSX() + sourceOffset[0], this.getSY() + sourceOffset[1]);
+        canvasContext.fillText(this.sourceLabel, this.getSX() + Offsets[0], this.getSY() + Offsets[1]);
 
         //draw destination text
-        canvasContext.fillText(this.destLabel, this.getEX() + destOffset[0], this.getEY() + destOffset[1]);
+        canvasContext.fillText(this.destLabel, this.getEX() + Offsets[2], this.getEY() + Offsets[3]);
+
+        //draw source cardinality
+        if(this.sourceCardinality.isVisible)
+            canvasContext.fillText(sourceCardText, this.getSX() + Offsets[4], this.getSY() + Offsets[5]);
+
+        //draw destination cardinality
+        if(this.destCardinality.isVisible)
+            canvasContext.fillText(destCardText, this.getEX() + Offsets[6], this.getEY() + Offsets[7]);
+
+
     }
 
+    getCardinalityText(source){
+
+        let Lower = 0;
+        let Upper = 0;
+
+        if(source) {
+            Lower = this.sourceCardinality.lowerBound;
+            Upper = this.sourceCardinality.upperBound;
+        }else{
+            Lower = this.destCardinality.lowerBound;
+            Upper = this.destCardinality.upperBound;
+        }
+
+        if(Lower === '-1') {
+            Lower = 'n'
+        }
+        if(Upper === '-1'){
+            Upper = 'n'
+        }
+
+        return Lower + " .. " + Upper
+    }
 
     draw(canvasContext) {
         var dashLength = 5;
@@ -475,7 +522,8 @@ export class Arrow {
 
         this.drawStartHead(canvasContext);
         this.drawEndHead(canvasContext);
-        this.drawLabels(canvasContext);
+        //store which labels were flipped and in which direction (x/y)
+        this.drawLabelsAndCardinalities(canvasContext);
     }
 
     intersects(cx, cy) {

@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+import {drawAll} from "../UIElements/CanvasDraw";
+
 export class Cardinality {
     constructor(lowerBound, upperBound, isVisible = false) {
         this.lowerBound = lowerBound;
@@ -11,5 +13,6 @@ export class Cardinality {
 
     toggleVisibility() {
         this.isVisible = !this.isVisible;
+        drawAll()
     }
 }
