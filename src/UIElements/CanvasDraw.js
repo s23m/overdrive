@@ -333,6 +333,11 @@ export function onMiddleClick(canvas, x, y) {
     canvasElement.onmousemove = function(e) {moveObject(e, selectedObject)}
 }
 
+export function onMouseLeave(){
+    canvasElement.onmousemove = {}
+    drawAll()
+}
+
 function moveObject(e, object) {
     if (object != null) {
         if (object.constructor.name === "Vertex") {

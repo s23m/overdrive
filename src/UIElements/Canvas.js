@@ -70,8 +70,12 @@ export class Canvas extends React.Component {
 
     };
 
+    mouseLeave(e, canvas){
+        canvasDraw.onMouseLeave()
+    }
+
     render() {
-        return <canvas ref={this.canvasRef} id="drawCanvas" onContextMenu={(e) => this.ocm(e)} onMouseDown={(e) => this.mouseDown(e, this)} onMouseUp={(e) => this.mouseUp(e, this)}>
+        return <canvas ref={this.canvasRef} id="drawCanvas" onContextMenu={(e) => this.ocm(e)} onMouseDown={(e) => this.mouseDown(e, this)} onMouseUp={(e) => this.mouseUp(e, this)} onMouseLeave={(e) => this.mouseLeave(e,this)}>
                 <p> Canvas's are not supported by your browser</p>
             </canvas>
     }
