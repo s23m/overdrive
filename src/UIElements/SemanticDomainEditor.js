@@ -33,17 +33,13 @@ import {
     TemplatePlaceholder,
 } from '@devexpress/dx-react-core';
 
-import {
-    generateRows,
-    defaultColumnValues,
-} from './demo-data/generator';
-
 // In program imports
 import {currentObjects} from "./CanvasDraw";
 
 // Globals
 var rows;
 var setRows = null;
+var setColumns = null;
 var textInput = React.createRef();
 var translationColumns = [];
 
@@ -113,7 +109,7 @@ const SelectTextCheckerBase = (props) => {
                 />
             )}
             classes={{ label: classes.label }}
-            label="Select Text On Focus"
+            label="Select Text On Focus"S
         />
     );
 };
@@ -134,12 +130,10 @@ const FocusableCell = ({ onClick, ...restProps }) => (
 );
 
 export default () => {
-    var columns = createColumns();
+    var [columns, setColumnsRet] = useState(createColumns());
+    setColumns = setColumnsRet;
 
-    const [generatedRows, setRowsRet] = useState(generateRows({
-        columnValues: { id: ({ index }) => index, ...defaultColumnValues },
-        length: 8,
-    }));
+    const [generatedRows, setRowsRet] = useState([]);
     rows = generatedRows;
     setRows = setRowsRet;
 
@@ -211,11 +205,24 @@ export default () => {
 function addColumn() {
     const value = textInput.current.value
     console.log("Adding column to semantic domain editor", value);
+
+    // Add column
     translationColumns.push(value);
+    setColumns(createColumns());
 }
 
 function removeColumn() {
+    const value = textInput.current.value
+    console.log("Removing column to semantic domain editor", value);
 
+    // Delete from currentObjects
+    for (let object of currentObjects) {
+        object.translations.delete(value);
+    }
+
+    // Delete column
+    translationColumns.splice(translationColumns.indexOf(value), 1);
+    setColumns(createColumns());
 }
 
 export function resetRows() {
@@ -223,22 +230,28 @@ export function resetRows() {
 
     for (let i = 0; i < currentObjects.length; i++) {
         const row = {};
+        let object = currentObjects[i];
 
         // Constants
-        row['id'] = currentObjects[i].UUID; // Just going to be based on UUID since it's easy and unique
-        row['UUID'] = currentObjects[i].UUID;
-        row['type'] = currentObjects[i].constructor.name;
+        row['id'] = object.UUID; // Just going to be based on UUID since it's easy and unique
+        row['UUID'] = object.UUID;
+        row['type'] = object.constructor.name;
 
-        row['abbreviation'] = currentObjects[i].abbreviation;
-        row['shortAbbreviation'] = currentObjects[i].shortAbbreviation;
+        row['abbreviation'] = object.abbreviation;
+        row['shortAbbreviation'] = object.shortAbbreviation;
 
         // Exceptions
-        if (currentObjects[i].constructor.name === "Vertex") {
-            row['name'] = currentObjects[i].title;
-            row['description'] = currentObjects[i].content;
+        if (object.constructor.name === "Vertex") {
+            row['name'] = object.title;
+            row['description'] = object.content;
         } else {
-            row['name'] = currentObjects[i].name;
-            row['description'] = currentObjects[i].description;
+            row['name'] = object.name;
+            row['description'] = object.description;
+        }
+
+        // Translations
+        for (let [key, value] of object.translations.entries()) {
+            row[key] = value;
         }
 
         newRows.push(row);
@@ -266,7 +279,7 @@ function createColumns() {
     ];
 
     // Add translation columns
-    for (var translation of translationColumns) {
+    for (let translation of translationColumns) {
         columnNames.push({name: translation, title: translation});
     }
 
@@ -294,6 +307,11 @@ function updateChangedObject(rows) {
                 } else {
                     object.name = row['name'];
                     object.description = row['description'];
+                }
+
+                // Translations
+                for (let translation of translationColumns) {
+                    object.translations.set(translation, row[translation]);
                 }
             }
         }

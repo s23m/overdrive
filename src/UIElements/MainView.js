@@ -146,17 +146,14 @@ export class MainProgramClass extends React.Component {
         if (this.semanticTableEnabled) {
             this.semanticTableEnabled = false;
             canvasDraw.drawAll();
+            this.setState(this.state);
             console.log("Semantic Domain disabled");
         } else {
             this.semanticTableEnabled = true;
             resetRows();
+            this.setState(this.state);
             console.log("Semantic Domain enabled");
-            this.redraw();
         }
-    }
-
-    redraw() {
-        this.setState(this.state);
     }
 
     render() {
