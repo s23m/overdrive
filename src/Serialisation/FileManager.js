@@ -50,7 +50,7 @@ export function save() {
     let dataFile = new Blob([dataStr], {type: 'text/plain'});
 
     DLelement.href = URL.createObjectURL(dataFile);
-    DLelement.download = "Export.json";
+    DLelement.download = "export.json";
     document.body.appendChild(DLelement);
     DLelement.click();
 
@@ -67,6 +67,7 @@ export function open(jsonString) {
 
         // Loaded objects with variables and functions
         var newObjects = [];
+
 
         // Copy behaviour over (vertexs first)
         loadedObjects.forEach((item) => {

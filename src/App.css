@@ -25,6 +25,21 @@
     flex-direction: row;
 }
 
+#File-Menu{
+    display: flex;
+    border: 2px solid black;
+    height: 5vh;
+    width: 20vw;
+    align-items: center;
+    justify-content: left;
+}
+
+#File-Select{
+    word-wrap: break-word;
+    white-space: normal;
+    width: 100px;
+}
+
 
 .LowerPanel {
     display: flex;
@@ -38,19 +53,19 @@
     display: flex;
     border: 2px solid black;
     height: 5vh;
-    width: 10vw;
+    width: 20vw;
     align-items: center;
     justify-content: center;
+    background-color: white;
  }
 
-.TopBarFile {
-    display: flex;
-    border: 2px solid black;
-    height: 5vh;
-    width: 10vw;
-    align-items: center;
-    justify-content: left;
+a,button,input{
+    color: black;
+    text-decoration: none;
+    border: none;
+    background-color: white;
 }
+
 
 .TopBarLabel {
     display: flex;
