@@ -332,7 +332,7 @@ export class Arrow {
         let textHeight = 15;
         // 'M' is the widest possible character
         let charWidth = canvasContext.measureText("M").width;
-        let charHeight = 15;
+
         let sxOffset = 0;
         let syOffset = 0;
         let exOffset = 0;

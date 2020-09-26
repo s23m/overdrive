@@ -6,6 +6,7 @@ import React from 'react';
 import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
 import * as fileManager from '../Serialisation/FileManager';
+import {DropdownButton,Dropdown} from "react-bootstrap";
 
 import {Canvas} from './Canvas';
 import {LeftMenu} from './LeftMenu';
@@ -157,23 +158,33 @@ export class MainProgramClass extends React.Component {
                 </div>
 
                 <div className= "TopMenus">
-                    <div className="TopBarFile"> &nbsp;File </div>
 
-                    <div className="TopBar">
-                        <a id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
-                    </div>
+                    <DropdownButton variant = "Primary" className = "TopBar" id = "File-Menu" title = "File" size = "lg">
 
-                    <div className="TopBar">
-                        <input type="file" onChange={this.showFile} />
-                    </div>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <a id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
+                            </div>
+                        </Dropdown.Item>
 
-                    <div className="TopBar">
-                        <button id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</button>
-                    </div>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <input type="file" id="File-Select" onChange={this.showFile} />
+                            </div>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</button>
+                            </div>
+                        </Dropdown.Item>
+
+                    </DropdownButton>
 
                     <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>
                         Semantic Editor
                     </div>
+
                     <input className="TopBarSearch" type = "text" name = "search" placeholder = "Search Here" onChange={(e) => this.searchFor(e)}/>
 
                     <div className="TopBarIcon">&nbsp;</div>
@@ -182,6 +193,7 @@ export class MainProgramClass extends React.Component {
 
                     <div className="TopBarLabel"> {this.state.zoomLevel}% </div>
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
+
                 </div>
 
                 <div className="LowerPanel">
