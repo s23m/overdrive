@@ -44,6 +44,7 @@ import {currentObjects} from "./CanvasDraw";
 // Globals
 var rows;
 var setRows = null;
+var setColumns = null;
 var textInput = React.createRef();
 var translationColumns = [];
 
@@ -134,7 +135,8 @@ const FocusableCell = ({ onClick, ...restProps }) => (
 );
 
 export default () => {
-    var columns = createColumns();
+    var [columns, setColumnsRet] = useState(createColumns());
+    setColumns = setColumnsRet;
 
     const [generatedRows, setRowsRet] = useState(generateRows({
         columnValues: { id: ({ index }) => index, ...defaultColumnValues },
@@ -212,6 +214,7 @@ function addColumn() {
     const value = textInput.current.value
     console.log("Adding column to semantic domain editor", value);
     translationColumns.push(value);
+    setColumns(createColumns());
 }
 
 function removeColumn() {

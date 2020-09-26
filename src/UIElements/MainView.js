@@ -139,7 +139,7 @@ export class MainProgramClass extends React.Component {
             console.log("Semantic Domain disabled");
         } else {
             this.semanticTableEnabled = true;
-            resetRows();
+            //resetRows();
             console.log("Semantic Domain enabled");
             this.redraw();
         }
