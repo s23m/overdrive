@@ -205,12 +205,24 @@ export default () => {
 function addColumn() {
     const value = textInput.current.value
     console.log("Adding column to semantic domain editor", value);
+
+    // Add column
     translationColumns.push(value);
     setColumns(createColumns());
 }
 
 function removeColumn() {
+    const value = textInput.current.value
+    console.log("Removing column to semantic domain editor", value);
 
+    // Delete from currentObjects
+    for (let object of currentObjects) {
+        object.translations.delete(value);
+    }
+
+    // Delete column
+    translationColumns.splice(translationColumns.indexOf(value), 1);
+    setColumns(createColumns());
 }
 
 export function resetRows() {
