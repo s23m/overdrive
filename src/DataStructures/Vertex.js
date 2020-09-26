@@ -157,14 +157,14 @@ export class Vertex {
         canvasContext.fontSize = fontSize;
 
         // Find the maximum width of text and size the class accordingly
-        var measuredNameText = canvasContext.measureText(this.title)*2;
-        var maxWidth = Math.max(measuredNameText.width, this.width);
+        var measuredNameText = canvasContext.measureText(this.title).width;
+        var maxWidth = Math.max(measuredNameText + padding*2, this.width);
         var textHeight = padding*2+fontSize*2;
 
         // Iterate over all content text lines
         for (let i = 0; i < this.content.length; i++) {
             var measuredText = canvasContext.measureText(this.content[i]);
-            maxWidth = Math.max(maxWidth, measuredText.width);
+            maxWidth = Math.max(maxWidth, measuredText.width, measuredNameText);
             textHeight += fontSize+padding;
         }
 
@@ -183,9 +183,16 @@ export class Vertex {
 
         // Draw rect
         canvasContext.fillStyle = this.colour;
-        canvasContext.fillRect(this.x, this.y, rectWidth, rectHeight);
+        canvasContext.fillRect(this.x, this.y, rectWidth, fontSize+padding+padding);
         canvasContext.strokeRect(this.x, this.y, rectWidth, fontSize+padding+padding);
-        canvasContext.strokeRect(this.x, this.y, rectWidth, rectHeight);
+
+
+        if(this.content[0] !== "") {
+            console.log("I ran")
+            canvasContext.fillRect(this.x, this.y, rectWidth, rectHeight);
+            canvasContext.strokeRect(this.x, this.y, rectWidth, fontSize+padding+padding);
+            canvasContext.strokeRect(this.x, this.y, rectWidth, rectHeight);
+        }
 
         // Reset color for text
         canvasContext.fillStyle = "#000000";
