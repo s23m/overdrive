@@ -63,20 +63,20 @@ app.get('/icons/list', (req,res) =>{
 
         console.log(files[0].substring(files[0].length-4,files[0].length))
 
-        files.forEach((file) =>{
+        files.forEach((file) => {
             if(file.substring(file.length-4,file.length) === ".png"){
 
-                iconList.push(file.substring(0,file.length-4))
+                iconList.push(file.substring(0,file.length))
             }
-        })
+        });
 
 
         if(error){
             res.status(500);
-            res.send(JSON.stringify({error:true,icons:iconList}))
+            res.json({error:true,icons:iconList})
         }else{
             res.status(200);
-            res.send(JSON.stringify({error:false,icons:iconList}))
+            res.json({error:false,icons:iconList})
         }
 
     });

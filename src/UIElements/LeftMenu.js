@@ -24,7 +24,8 @@ export class LeftMenu extends React.Component{
         super();
         this.state = {
             menu: "Tools",
-            selectedObject: null
+            selectedObject: null,
+            fileNames: []
         };
         this.setTitle = this.setTitle.bind(this);
         this.setContent = this.setContent.bind(this);
@@ -33,7 +34,9 @@ export class LeftMenu extends React.Component{
 
         this.setFormRef = element =>{
             this.formRef = element;
-        }
+        };
+
+        this.setIcons();
 
     }
 
@@ -49,6 +52,23 @@ export class LeftMenu extends React.Component{
         this.setState({menu:nextProps.mainState.menu});
         this.setState({selectedObject:nextProps.mainState.selectedObject});
 
+    }
+
+    setIcons() {
+        fetch('http://localhost:8080/icons/list',{
+            method:'GET',
+            headers: {
+                'Accept': '*/*',
+            },
+        })
+            .then((res) => {return res.json()})
+            .then((data) => {
+                let fileNames = [];
+                data.icons.forEach((icon) => {
+                    fileNames.push(icon)
+                });
+                this.setState({fileNames:fileNames})
+            })
     }
 
     //VERTEX SETTERS
@@ -249,25 +269,23 @@ export class LeftMenu extends React.Component{
 
 }
 
+
 function getS23MIconsSelector(leftMenu) {
-    var dropdownOptions = [<option value = "-No Icon">-No Icon</option>];
-    var fileNames = ['Activity.png', 'Agent.png', 'BioSphere.png', 'Critical.png', 'Designed.png', 'Ecosystem.png', 'Error.png', 'Event.png', 'Grow_n.png', 'Human.png', 'listFileNames.py', 'Make_n.png', 'Move_n.png', 'Organic.png', 'Organisation.png', 'Play_n.png', 'Resource.png', 'SaaS_n.png', 'Social.png', 'Software.png', 'Sustain_n.png', 'Symbolic.png', 'Tacit Knowledge.png', 'Team.png', 'Trust.png', 'UI Device.png'];
+    let dropdownOptions = [<option value = "-No Icon">-No Icon</option>];
+
     let name = "";
-    fileNames.forEach(fileName => {
+    leftMenu.state.fileNames.forEach(fileName => {
+         if (fileName.slice(-6, -4) === "_n") {
+             name = fileName.slice(0, -6);
+             dropdownOptions.push(<option value={name}>{name}</option>)
+         } else {
+             name = fileName.slice(0, -4);
+             dropdownOptions.push(<option value={name}>{name}</option>)
+         }
+    })
 
-        if (fileName.slice(-6,-4) === "_n") {
-            name = fileName.slice(0,-6);
-                dropdownOptions.push(<option value = {name}>{name}</option>)
-            } else {
-            name = fileName.slice(0,-4);
-                dropdownOptions.push(<option value = {name}>{name}</option>)
-            }
-
-    });
-
-    return <select name="Icons" id="IconSelector" className="IconSelector" defaultValue={leftMenu.state.selectedObject.icon} onChange={() => leftMenu.setIcon()}> 
-        {dropdownOptions}
-    </select>;
-
-
-}
+    return <select name="Icons" id="IconSelector" className="IconSelector"
+                   defaultValue={leftMenu.state.selectedObject.icon} onChange={() => leftMenu.setIcon()}>
+            {dropdownOptions}
+        </select>;
+    }
