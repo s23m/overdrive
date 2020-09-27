@@ -4,6 +4,7 @@
 
 import { getDistance } from "../UIElements/CanvasDraw";
 import {Icon} from "@material-ui/core";
+import React from "react";
 
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
@@ -268,6 +269,8 @@ export class Vertex {
 
         for(let i = 0; i < this.icons[0].length; i++) {
 
+            if(this.icons[1][i] === true){
+
             let element = this.imageElements[this.icons[0][i]];
 
             if (element === undefined) {
@@ -294,6 +297,9 @@ export class Vertex {
                 canvasContext.drawImage(element, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
                 yPos += iconHeight + (iconPadding * 2);
             }
+            }else{
+                yPos += iconHeight + (iconPadding * 2);
+            }
 
         }
 
@@ -308,6 +314,23 @@ export class Vertex {
         canvasContext.shadowOffsetX = 0.0; canvasContext.shadowOffsetY = 0.0;
 
         //todo draw text for icons
+
+        let tyPos = this.y + iconHeight;
+        let txPos = this.x + iconPadding;
+
+        for(let i = 0; i < this.icons[0].length; i++) {
+            if(this.icons[2][i] === true) {
+                let name;
+                if (this.icons[0][i].slice(-6, -4) === "_n") {
+                    name = "";
+                } else {
+                    name = "<< " + this.icons[0][i].slice(0, -4) + " >>";
+                }
+
+                canvasContext.fillText(name, txPos, tyPos);
+            }
+            tyPos += iconHeight + (iconPadding * 2);
+        }
 
         // Draw name
         canvasContext.fillText(this.title, this.x+padding, this.y+dy+iconAreaHeight);
