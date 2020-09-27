@@ -22,6 +22,7 @@ export class Vertex {
         this.children = [];
         this.colour = defaultColour;
         this.selected = false;
+        this.imageElements = {};
 
         // Note these values often change in runtime
         this.width = width;
@@ -72,6 +73,8 @@ export class Vertex {
         let fileNames = this.icons[0];
         let Icons = this.icons[1];
         let Text = this.icons[2];
+        let Elements = this.icons[3];
+
         let index = fileNames.indexOf(fileName);
 
         //icon not part of this vertex yet
@@ -79,6 +82,7 @@ export class Vertex {
             fileNames.push(fileName);
             Icons.push(true);
             Text.push(false);
+
         }else{
             Icons[index] = !Icons[index]
         }
@@ -95,6 +99,8 @@ export class Vertex {
         let fileNames = this.icons[0];
         let Icons = this.icons[1];
         let Text = this.icons[2];
+        let Elements = this.icons[3];
+
         let index = fileNames.indexOf(fileName);
 
         //icon not part of this vertex yet
@@ -102,6 +108,7 @@ export class Vertex {
             fileNames.push(fileName);
             Icons.push(false);
             Text.push(true);
+
         }else{
             Text[index] = !Text[index]
         }
@@ -126,11 +133,6 @@ export class Vertex {
             if(index === -1)
                 return false;
             return this.icons[2][index];
-    }
-
-    setIcons(names,displayIcon,displayText) {
-
-        this.icons = [names,displayIcon,displayText];
     }
 
     getBounds() {
@@ -241,18 +243,60 @@ export class Vertex {
         var rectWidth = this.width;
         var rectHeight = Math.max(this.height, textHeight);
 
+        //icon height in px
+        let iconHeight = 20;
+        let iconPadding = 2;
+        let iconListLen = this.icons[0].length;
+
+        let iconAreaHeight = (iconHeight + (iconPadding * 2)) * iconListLen;
+
         // Draw rect
         canvasContext.fillStyle = this.colour;
-        canvasContext.fillRect(this.x, this.y, rectWidth, fontSize+padding+padding);
-        canvasContext.strokeRect(this.x, this.y, rectWidth, fontSize+padding+padding);
+        canvasContext.fillRect(this.x, this.y, rectWidth, fontSize+padding+padding+iconAreaHeight);
+        canvasContext.strokeRect(this.x, this.y, rectWidth, fontSize+padding+padding+iconAreaHeight);
 
 
         if(this.content[0] !== "") {
-            console.log("I ran")
-            canvasContext.fillRect(this.x, this.y, rectWidth, rectHeight);
-            canvasContext.strokeRect(this.x, this.y, rectWidth, fontSize+padding+padding);
-            canvasContext.strokeRect(this.x, this.y, rectWidth, rectHeight);
+            canvasContext.fillRect(this.x, this.y, rectWidth, rectHeight+iconAreaHeight);
+            canvasContext.strokeRect(this.x, this.y, rectWidth, fontSize+padding+padding+iconAreaHeight);
+            canvasContext.strokeRect(this.x, this.y, rectWidth, rectHeight+iconAreaHeight);
         }
+
+        //draw Icons by filename
+        let yPos = this.y + iconPadding;
+        let xPos = this.x + this.width + iconPadding;
+
+        for(let i = 0; i < this.icons[0].length; i++) {
+
+            let element = this.imageElements[this.icons[0][i]];
+
+            if (element === undefined) {
+
+                let imageElement = new Image();
+                imageElement.src = "http://localhost:8080/icons/" + this.icons[0][i];
+
+                imageElement.onload = () => {
+                    let sh = this.height;
+                    let sw = this.width;
+                    let scale = iconHeight / sh;
+                    console.log(sw, sh);
+                    console.log(sw * scale, sh * scale);
+                    canvasContext.drawImage(imageElement, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
+                    yPos += iconHeight + (iconPadding * 2);
+                    this.imageElements[this.icons[0][i]] = imageElement
+                };
+            }else{
+                let sh = this.height;
+                let sw = this.width;
+                let scale = iconHeight / sh;
+                console.log(sw, sh);
+                console.log(sw * scale, sh * scale);
+                canvasContext.drawImage(element, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
+                yPos += iconHeight + (iconPadding * 2);
+            }
+
+        }
+
 
         // Reset color for text
         canvasContext.fillStyle = "#000000";
@@ -263,13 +307,15 @@ export class Vertex {
         // Disable shadows for text
         canvasContext.shadowOffsetX = 0.0; canvasContext.shadowOffsetY = 0.0;
 
+        //todo draw text for icons
+
         // Draw name
-        canvasContext.fillText(this.title, this.x+padding, this.y+dy);
+        canvasContext.fillText(this.title, this.x+padding, this.y+dy+iconAreaHeight);
         dy += padding*2 + fontSize;
 
         // Draw text
         for (let i = 0; i < this.content.length; i++) {
-            canvasContext.fillText(this.content[i], this.x+padding, this.y+dy);
+            canvasContext.fillText(this.content[i], this.x+padding, this.y+dy+iconAreaHeight);
             dy += fontSize + padding;
         }
 

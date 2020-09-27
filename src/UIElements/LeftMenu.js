@@ -181,11 +181,13 @@ export class LeftMenu extends React.Component{
     }
 
     setText(fileName) {
-        this.state.selectedObject.setText(fileName)
+        this.state.selectedObject.setText(fileName);
+        canvasDraw.drawAll();
     }
 
     setIcon(fileName) {
-        this.state.selectedObject.setIcon(fileName)
+        this.state.selectedObject.setIcon(fileName);
+        canvasDraw.drawAll();
     }
 
 
