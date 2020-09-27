@@ -39,7 +39,7 @@ export class MainProgramClass extends React.Component {
 
     componentDidMount() {
         this.setMode("Vertex");
-        console.log("Mounted")
+        console.log("Mounted");
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -58,6 +58,7 @@ export class MainProgramClass extends React.Component {
             console.log("Mode set to: " + this.state.drawMode);
         }
     }
+
 
     zoom = (type) => {
         var cZoom = this.state.zoomLevel;

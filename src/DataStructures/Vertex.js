@@ -17,7 +17,7 @@ export class Vertex {
         this.content = content;
         this.x = x;
         this.y = y;
-        this.icon = "-No Icon";
+        this.icons = [[],[],[]];
         this.children = [];
         this.colour = defaultColour;
         this.selected = false;
@@ -67,8 +67,57 @@ export class Vertex {
         }
     }
 
-    setIcon(name) {
-        this.icon = name;
+    setIcon(fileName){
+        let fileNames = this.icons[0];
+        let Icons = this.icons[1];
+        let Text = this.icons[2];
+        let index = fileNames.indexOf(fileName);
+
+        //icon not part of this vertex yet
+        if(index === -1){
+            fileNames.push(fileName);
+            Icons.push(true);
+            Text.push(false);
+        }else{
+            Icons[index] = !Icons[index]
+        }
+
+    }
+
+    setText(fileName){
+        let fileNames = this.icons[0];
+        let Icons = this.icons[1];
+        let Text = this.icons[2];
+        let index = fileNames.indexOf(fileName);
+
+        //icon not part of this vertex yet
+        if(index === -1){
+            fileNames.push(fileName);
+            Icons.push(false);
+            Text.push(true);
+        }else{
+            Text[index] = !Text[index]
+        }
+
+    }
+
+    isIconSet(fileName) {
+        let index = this.icons[0].indexOf(fileName)
+        if (index === -1)
+            return false;
+        return this.icons[1][index];
+    }
+
+    isTextSet(fileName){
+            let index = this.icons[0].indexOf(fileName)
+            if(index === -1)
+                return false;
+            return this.icons[2][index];
+    }
+
+    setIcons(names,displayIcon,displayText) {
+
+        this.icons = [names,displayIcon,displayText];
     }
 
     getBounds() {

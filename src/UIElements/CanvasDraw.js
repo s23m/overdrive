@@ -4,6 +4,7 @@
 
 import {Vertex, padding} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
+import {useState} from "react";
 
 // Core variables
 var canvasElement;
@@ -84,7 +85,8 @@ export function drawAll() {
         if (item !== null) {
             item.draw(canvasContext);
         }
-    })
+    });
+
 }
 
 export function deleteElement(element){

@@ -15,6 +15,7 @@ import iconSpeech from "../Resources/speech.svg";
 import iconSpecBox from "../Resources/specbox.svg";
 import iconTriangle from "../Resources/triangle.svg";
 import {deleteElement} from "./CanvasDraw";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 // class to display the left hand menu, where we will be showing
 // object editing tools for now
@@ -85,12 +86,13 @@ export class LeftMenu extends React.Component{
         canvasDraw.drawAll()
     }
 
-    setIcon() {
+    /*setIcon() {
         var iconName = document.getElementById("IconSelector").value;
-        this.state.selectedObject.setIcon(iconName);
+        this.state.selectedObject.setIcons([iconName],[true],[true]);
         console.log(iconName);
         canvasDraw.drawAll()
     }
+    */
 
     //ARROW SETTERS
     setFromNodeHead() {
@@ -151,6 +153,33 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.destCardinality.toggleVisibility();
     }
 
+    getS23MIconsSelector() {
+        let dropdownOptions = [<div className="DropdownItem"><div className="dropdownLabel">Name</div><div className="checkBoxContainer">Text</div><div className="checkBoxContainer">Icon</div></div>];
+
+        let name = "";
+        this.state.fileNames.forEach(fileName => {
+            if (fileName.slice(-6, -4) === "_n") {
+                name = fileName.slice(0, -6);
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' id="Text" disabled="disabled" /> </div>  <div className="checkBoxContainer"><input type='checkbox' id="Icon" onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+            } else {
+                name = fileName.slice(0, -4);
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' id="Text" onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' id="Icon" onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+            }
+        });
+
+        return <DropdownButton title="Icon selector" name="Icons" id="IconSelector" className="IconSelector">
+            {dropdownOptions}
+        </DropdownButton>;
+    }
+
+    setText(fileName) {
+        this.state.selectedObject.setText(fileName)
+    }
+
+    setIcon(fileName) {
+        this.state.selectedObject.setIcon(fileName)
+    }
+
 
 // return the correct menu based on the selected item
     getMenu = () =>{
@@ -181,8 +210,7 @@ export class LeftMenu extends React.Component{
                 <textarea id="LeftContent" className ="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <label className="LeftLabel">Icon</label>
-                {getS23MIconsSelector(this)}
+                {this.getS23MIconsSelector()}
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
@@ -268,24 +296,3 @@ export class LeftMenu extends React.Component{
 
 
 }
-
-
-function getS23MIconsSelector(leftMenu) {
-    let dropdownOptions = [<option value = "-No Icon">-No Icon</option>];
-
-    let name = "";
-    leftMenu.state.fileNames.forEach(fileName => {
-         if (fileName.slice(-6, -4) === "_n") {
-             name = fileName.slice(0, -6);
-             dropdownOptions.push(<option value={name}>{name}</option>)
-         } else {
-             name = fileName.slice(0, -4);
-             dropdownOptions.push(<option value={name}>{name}</option>)
-         }
-    })
-
-    return <select name="Icons" id="IconSelector" className="IconSelector"
-                   defaultValue={leftMenu.state.selectedObject.icon} onChange={() => leftMenu.setIcon()}>
-            {dropdownOptions}
-        </select>;
-    }
