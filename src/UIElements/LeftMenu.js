@@ -160,16 +160,24 @@ export class LeftMenu extends React.Component{
         this.state.fileNames.forEach(fileName => {
             if (fileName.slice(-6, -4) === "_n") {
                 name = fileName.slice(0, -6);
-                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' id="Text" disabled="disabled" /> </div>  <div className="checkBoxContainer"><input type='checkbox' id="Icon" onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' disabled="disabled" /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
             } else {
                 name = fileName.slice(0, -4);
-                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' id="Text" onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' id="Icon" onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldTextBeSelected(fileName)} onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
             }
         });
 
         return <DropdownButton title="Icon selector" name="Icons" id="IconSelector" className="IconSelector">
             {dropdownOptions}
         </DropdownButton>;
+    }
+
+    shouldTextBeSelected(fileName){
+        return this.state.selectedObject.isTextSet(fileName)
+    }
+
+    shouldIconBeSelected(fileName){
+        return this.state.selectedObject.isIconSet(fileName)
     }
 
     setText(fileName) {
