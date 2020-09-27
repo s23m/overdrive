@@ -4,6 +4,8 @@ const pino = require('express-pino-logger')();
 const app = express();
 const cors = require('cors');
 const fs = require('fs');
+const path = require('path');
+
 app.use(cors());
 app.use(require("body-parser").json());
 app.use(pino);
@@ -83,6 +85,12 @@ app.get('/icons/list', (req,res) =>{
 
 });
 
-app.listen(8080, () =>
-    console.log('Express server is running on localhost:8080')
+
+app.use('/icons/', express.static(path.join(__dirname,'..','public','S23M_Icons') +'/'));
+
+
+//change server port here
+app.listen(8080, () => {
+        console.log('Express server is running on localhost:8080');
+    }
 );
