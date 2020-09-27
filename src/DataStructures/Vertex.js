@@ -3,6 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { getDistance } from "../UIElements/CanvasDraw";
+import {Icon} from "@material-ui/core";
 
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
@@ -82,6 +83,12 @@ export class Vertex {
             Icons[index] = !Icons[index]
         }
 
+        if(Text[index] === false && Icons[index] === false){
+            Icons.splice(index,1);
+            Text.splice(index,1);
+            fileNames.splice(index,1);
+        }
+
     }
 
     setText(fileName){
@@ -97,6 +104,12 @@ export class Vertex {
             Text.push(true);
         }else{
             Text[index] = !Text[index]
+        }
+
+        if(Text[index] === false && Icons[index] === false){
+            Icons.splice(index,1);
+            Text.splice(index,1);
+            fileNames.splice(index,1);
         }
 
     }
