@@ -198,6 +198,14 @@ export class Vertex {
         }
     }
 
+    increaseWidthIfNecessary(canvasContext, possibleWidth){
+        if(possibleWidth > this.width){
+            this.width = possibleWidth;
+             setTimeout(() => {this.draw(canvasContext)},50)
+        }
+
+    }
+
     draw(canvasContext) {
 
         if(this.selected){
@@ -270,7 +278,9 @@ export class Vertex {
         for(let i = 0; i < this.icons[0].length; i++) {
 
             if(this.icons[1][i] === true){
-
+                if(this.icons[2][i] === true) {
+                    this.increaseWidthIfNecessary(canvasContext, iconHeight / 2 + canvasContext.measureText("<< " + this.icons[0][i] + " >>").width);
+                }
             let element = this.imageElements[this.icons[0][i]];
 
             if (element === undefined) {
@@ -279,8 +289,8 @@ export class Vertex {
                 imageElement.src = "http://localhost:8080/icons/" + this.icons[0][i];
 
                 imageElement.onload = () => {
-                    let sh = this.height;
-                    let sw = this.width;
+                    let sh = imageElement.height;
+                    let sw = imageElement.width;
                     let scale = iconHeight / sh;
                     console.log(sw, sh);
                     console.log(sw * scale, sh * scale);
@@ -289,8 +299,8 @@ export class Vertex {
                     this.imageElements[this.icons[0][i]] = imageElement
                 };
             }else{
-                let sh = this.height;
-                let sw = this.width;
+                let sh = element.height;
+                let sw = element.width;
                 let scale = iconHeight / sh;
                 console.log(sw, sh);
                 console.log(sw * scale, sh * scale);
@@ -320,6 +330,9 @@ export class Vertex {
 
         for(let i = 0; i < this.icons[0].length; i++) {
             if(this.icons[2][i] === true) {
+                if(this.icons[1][i] !== true) {
+                    this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText("<< " + this.icons[0][i] + " >>").width);
+                }
                 let name;
                 if (this.icons[0][i].slice(-6, -4) === "_n") {
                     name = "";
@@ -333,11 +346,13 @@ export class Vertex {
         }
 
         // Draw name
+        this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title).width);
         canvasContext.fillText(this.title, this.x+padding, this.y+dy+iconAreaHeight);
         dy += padding*2 + fontSize;
 
         // Draw text
-        for (let i = 0; i < this.content.length; i++) {
+        for (let i = 0; i < this.content.length; i++){
+            this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.content[i]).width + padding*2);
             canvasContext.fillText(this.content[i], this.x+padding, this.y+dy+iconAreaHeight);
             dy += fontSize + padding;
         }
