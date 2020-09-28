@@ -4,6 +4,7 @@
 
 import {currentObjects, setCurrentObjects} from "../UIElements/CanvasDraw"
 import {version} from "../UIElements/MainView"
+import {translationColumns, setTranslationColumns} from "../UIElements/SemanticDomainEditor"
 
 import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
@@ -11,21 +12,6 @@ import {Arrow} from "../DataStructures/Arrow";
 export function getSaveData() {
 
     let objectsToSave = currentObjects;
-    // Process objects to save
-    objectsToSave.forEach((item) => {
-        if (item !== null) {
-            switch (item.name) {
-                case "Arrow":
-                    // Prevent cyclic loop
-                    item.fromVertex = null;
-                    item.toVertex = null;
-                    break;
-                default:
-                    // Do nothing
-                    break;
-            }
-        }
-    });
 
     // Combine into save data
     let saveData = {
@@ -34,15 +20,19 @@ export function getSaveData() {
         // They can upgrade the the file to one compatibile with the newer version
         version: version,
 
+        // Translations for semantic domain editor
+        translationColumns: translationColumns,
+
         // The data here should all have uuids and should be convertible back into their objects.
         currentObjects: objectsToSave,
     };
+
+    console.log(saveData);
 
     return saveData;
 }
 
 export function save() {
-
     let JSONdata = getSaveData();
     let dataStr = JSON.stringify(JSONdata);
 
@@ -53,17 +43,24 @@ export function save() {
     DLelement.download = "Export.json";
     document.body.appendChild(DLelement);
     DLelement.click();
-
 }
 
 export function open(jsonString) {
+    console.log("Loading jsonString")
+
     if (jsonString == null) return;
     try {
         // TODO Add check to see if there is unsaved progress
         var loadedJSON = JSON.parse(jsonString);
+        console.log(loadedJSON)
+
+        // Loaded objects ONLY with variables
+        setTranslationColumns(loadedJSON.translationColumns);
+        console.log("Loaded translation columns");
 
         // Loaded objects ONLY with variables
         var loadedObjects = loadedJSON.currentObjects;
+        console.log("Loaded current objects");
 
         // Loaded objects with variables and functions
         var newObjects = [];
@@ -74,6 +71,7 @@ export function open(jsonString) {
                 switch (item.name) {
                     case "Vertex":
                         var newVertex = new Vertex(item.UUID, item.title, item.content, item.x, item.y, item.width, item.height);
+                        newVertex.translations = item.translations;
                         newObjects.push(newVertex);
                         break;
                     default:
@@ -89,7 +87,8 @@ export function open(jsonString) {
                     case "Vertex":
                         break;
                     case "Arrow":
-                        var newArrow = new Arrow(item.UUID, newObjects, item.fromVertexUUID, item.fromVertexNode, item.toVertexUUID, item.toVertexNode);
+                        var newArrow = new Arrow(item.UUID, newObjects, item.pathData);
+                        newArrow.translations = item.translations;
                         newObjects.push(newArrow);
                         break;
                     default:

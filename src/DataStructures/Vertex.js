@@ -30,7 +30,7 @@ export class Vertex {
         this.height = height;
 
         // Translations
-        this.translations = new Map();
+        this.translations = [];
     }
 
     setSelected(selected){

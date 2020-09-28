@@ -40,10 +40,13 @@ export class Arrow {
         this.sourceLabel = "";
         this.destLabel = "";
 
-        this.selected = false;
+        this.selected = false
+
+        console.log("Created arrow with path size " + this.path.length)
+        console.log(this.path)
 
         // Translations
-        this.translations = new Map();
+        this.translations = [];
     }
 
     // Rebuilds path from cached pathData

@@ -41,7 +41,7 @@ var rows;
 var setRows = null;
 var setColumns = null;
 var textInput = React.createRef();
-var translationColumns = [];
+export var translationColumns = [];
 
 const getRowId = row => row.id;
 
@@ -109,7 +109,7 @@ const SelectTextCheckerBase = (props) => {
                 />
             )}
             classes={{ label: classes.label }}
-            label="Select Text On Focus"S
+            label="Select Text On Focus"
         />
     );
 };
@@ -208,7 +208,7 @@ function addColumn() {
 
     // Add column
     translationColumns.push(value);
-    setColumns(createColumns());
+    updateColumns();
 }
 
 function removeColumn() {
@@ -222,6 +222,10 @@ function removeColumn() {
 
     // Delete column
     translationColumns.splice(translationColumns.indexOf(value), 1);
+    updateColumns();
+}
+
+function updateColumns() {
     setColumns(createColumns());
 }
 
@@ -250,8 +254,13 @@ export function resetRows() {
         }
 
         // Translations
-        for (let [key, value] of object.translations.entries()) {
-            row[key] = value;
+        console.log("Loading with ", translationColumns, " ", object.translations.length);
+        for (let o = 0; o < object.translations.length; o++) {
+            let translation = object.translations[o];
+
+            console.log(translation[0], "to", translation[1])
+            row[translation[0]] = translation[1];
+            console.log(row[translation]);
         }
 
         newRows.push(row);
@@ -263,8 +272,6 @@ export function resetRows() {
     }
 
     setRows(newRows);
-
-    console.log("Updating rows?")
 }
 
 function createColumns() {
@@ -292,28 +299,44 @@ function updateChangedObject(rows) {
 
         // Find object
         for (let o = 0; o < currentObjects.length; o++) {
-            var object = currentObjects[i];
-
             // If should update
-            if (row['UUID'] === object.UUID) {
+            if (row['UUID'] === currentObjects[i].UUID) {
                 // Constants
-                object.abbreviation = row['abbreviation'];
-                object.shortAbbreviation = row['shortAbbreviation'];
+                currentObjects[i].abbreviation = row['abbreviation'];
+                currentObjects[i].shortAbbreviation = row['shortAbbreviation'];
 
                 // Exceptions
-                if (object.constructor.name === "Vertex") {
-                    object.title = row['name'];
-                    object.content = row['description'];
+                if (currentObjects[i].constructor.name === "Vertex") {
+                    currentObjects[i].title = row['name'];
+                    currentObjects[i].content = row['description'];
                 } else {
-                    object.name = row['name'];
-                    object.description = row['description'];
+                    currentObjects[i].name = row['name'];
+                    currentObjects[i].description = row['description'];
                 }
 
                 // Translations
+                console.log("Setting");
                 for (let translation of translationColumns) {
-                    object.translations.set(translation, row[translation]);
+                    // Find translation in list
+                    var set = false;
+                    for (let o = 0; o < currentObjects[i].translations.length; i++) {
+                        if (currentObjects[i].translations[o][0] === translation) {
+                            currentObjects[i].translations[o][1] = row[translation];
+                            set = true;
+                            break;
+                        }
+                    }
+
+                    if (!set) {
+                        currentObjects[i].translations.push([translation, row[translation]]);
+                    }
                 }
             }
         }
     }
+}
+
+export function setTranslationColumns(newColumns) {
+    translationColumns = newColumns;
+    updateColumns();
 }
