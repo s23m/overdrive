@@ -32,6 +32,8 @@ export var currentObjects = [];
 
 // Arrow Path
 export var arrowPath = [];
+var lastX = 0;
+var lastY = 0;
 
 // Resize status
 var resizing = false;
@@ -101,7 +103,6 @@ export function deleteElement(element){
 }
 
 export function updateRows() {
-    console.log("You called")
     yRows = document.getElementById("canvasRows").value;
     drawAll()
 }
@@ -180,7 +181,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     currentObjects.forEach((item) => {
         if (item !== null) {
             if (item.constructor.name === "Vertex") {
-                let sideData = item.getNearestSide(cursorX, cursorY);
+                let sideData = item.getNearestSideFrom(cursorX, cursorY, lastX, lastY);
 
                 // Only check if valid
                 if (sideData !== null && sideData[0] < distanceThreshold) {
@@ -307,6 +308,8 @@ export function onLeftMouseRelease(canvas, x, y) {
     canvasElement.onmousemove = null;
 
     if (canvas.tool === "Arrow") {
+        lastX = x;
+        lastY = y;
         arrowPath.push(getConnectionDataForArrow(x, y));
         canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
     }
@@ -336,7 +339,6 @@ function onMouseMove(e, canvas) {
 }
 
 export function onMiddleClick(canvas, x, y) {
-    console.log("Moving Object");
     let selectedObject = findIntersected(x,y);
     canvasElement.onmousemove = function(e) {moveObject(e, selectedObject)}
 }
@@ -425,8 +427,6 @@ function createObject(canvas, x1, y1, x2, y2) {
             let vy2 = findNearestGridY(pos[3],0);
             return new Vertex(createUUID(),"",[""], pos[0], findNearestGridY(y1,1) , pos[2]-pos[0], vy2-vy1);
         case "Arrow":
-            // Deep Copy
-            // Deep Copy
             var newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
             return new Arrow(createUUID(), currentObjects, newPath);

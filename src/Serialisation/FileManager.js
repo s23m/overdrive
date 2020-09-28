@@ -27,8 +27,6 @@ export function getSaveData() {
         currentObjects: objectsToSave,
     };
 
-    console.log(saveData);
-
     return saveData;
 }
 
@@ -52,15 +50,12 @@ export function open(jsonString) {
     try {
         // TODO Add check to see if there is unsaved progress
         var loadedJSON = JSON.parse(jsonString);
-        console.log(loadedJSON)
 
         // Loaded objects ONLY with variables
         setTranslationColumns(loadedJSON.translationColumns);
-        console.log("Loaded translation columns");
 
         // Loaded objects ONLY with variables
         var loadedObjects = loadedJSON.currentObjects;
-        console.log("Loaded current objects");
 
         // Loaded objects with variables and functions
         var newObjects = [];
@@ -97,8 +92,7 @@ export function open(jsonString) {
                 }
             }
         });
-        
-        console.log("Deserialised with value of ", newObjects);
+
         setCurrentObjects(newObjects);
     } catch (e) {
         alert(e);

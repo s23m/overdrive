@@ -228,7 +228,6 @@ export class LeftMenu extends React.Component{
 
         } else if (this.state.menu === "Arrow") {
             console.log("Arrow Selected");
-            console.log(this.state.selectedObject)
             return <form ref={this.setFormRef} className={this.props.className}>
                 <div className="LeftBar">Arrow Properties</div>
 

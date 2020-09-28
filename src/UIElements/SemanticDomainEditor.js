@@ -204,7 +204,6 @@ export default () => {
 
 function addColumn() {
     const value = textInput.current.value
-    console.log("Adding column to semantic domain editor", value);
 
     // Add column
     translationColumns.push(value);
@@ -213,7 +212,6 @@ function addColumn() {
 
 function removeColumn() {
     const value = textInput.current.value
-    console.log("Removing column to semantic domain editor", value);
 
     // Delete from currentObjects
     for (let object of currentObjects) {
@@ -254,13 +252,10 @@ export function resetRows() {
         }
 
         // Translations
-        console.log("Loading with ", translationColumns, " ", object.translations.length);
         for (let o = 0; o < object.translations.length; o++) {
             let translation = object.translations[o];
 
-            console.log(translation[0], "to", translation[1])
             row[translation[0]] = translation[1];
-            console.log(row[translation]);
         }
 
         newRows.push(row);
@@ -315,7 +310,6 @@ function updateChangedObject(rows) {
                 }
 
                 // Translations
-                console.log("Setting");
                 for (let translation of translationColumns) {
                     // Find translation in list
                     var set = false;

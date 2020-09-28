@@ -40,10 +40,7 @@ export class Arrow {
         this.sourceLabel = "";
         this.destLabel = "";
 
-        this.selected = false
-
-        console.log("Created arrow with path size " + this.path.length)
-        console.log(this.path)
+        this.selected = false;
 
         // Translations
         this.translations = [];
@@ -525,10 +522,10 @@ export class Arrow {
         canvasContext.strokeStyle = "#000000";
         canvasContext.setLineDash([]);
 
-        //this.drawStartHead(canvasContext);
-        //this.drawEndHead(canvasContext);
+        this.drawStartHead(canvasContext);
+        this.drawEndHead(canvasContext);
         //store which labels were flipped and in which direction (x/y)
-        //this.drawLabelsAndCardinalities(canvasContext);
+        this.drawLabelsAndCardinalities(canvasContext);
     }
 
     intersects(cx, cy) {
