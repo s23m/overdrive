@@ -279,7 +279,7 @@ export class Vertex {
 
             if(this.icons[1][i] === true){
                 if(this.icons[2][i] === true) {
-                    this.increaseWidthIfNecessary(canvasContext, iconHeight / 2 + canvasContext.measureText("<< " + this.icons[0][i] + " >>").width);
+                    this.increaseWidthIfNecessary(canvasContext, iconHeight + canvasContext.measureText("<< " + this.icons[0][i] + " >>").width);
                 }
             let element = this.imageElements[this.icons[0][i]];
 
