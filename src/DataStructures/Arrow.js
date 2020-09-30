@@ -43,7 +43,7 @@ export class Arrow {
         this.selected = false;
 
         // Translations
-        this.translations = new Map();
+        this.translations = [];
     }
 
     // Rebuilds path from cached pathData
@@ -450,14 +450,14 @@ export class Arrow {
         canvasContext.fillText(this.destLabel, this.getEX() + Offsets[2], this.getEY() + Offsets[3]);
 
         //draw source cardinality
-        if(this.sourceCardinality.isVisible)
+        if (this.sourceCardinality.isVisible) {
             canvasContext.fillText(sourceCardText, this.getSX() + Offsets[4], this.getSY() + Offsets[5]);
+        }
 
         //draw destination cardinality
-        if(this.destCardinality.isVisible)
+        if (this.destCardinality.isVisible) {
             canvasContext.fillText(destCardText, this.getEX() + Offsets[6], this.getEY() + Offsets[7]);
-
-
+        }
     }
 
     getCardinalityText(source){
@@ -504,9 +504,11 @@ export class Arrow {
         for (let i = 0; i < this.path.length-1; i++) {
             let from = this.path[i];
             let to = this.path[i+1];
+
             canvasContext.beginPath();
             canvasContext.moveTo(from[0], from[1]);
             canvasContext.lineTo(to[0], to[1]);
+            canvasContext.closePath();
             canvasContext.stroke();
         }
 

@@ -30,7 +30,7 @@ export class Vertex {
         this.height = height;
 
         // Translations
-        this.translations = new Map();
+        this.translations = [];
     }
 
     setSelected(selected){
@@ -292,8 +292,6 @@ export class Vertex {
                     let sh = imageElement.height;
                     let sw = imageElement.width;
                     let scale = iconHeight / sh;
-                    console.log(sw, sh);
-                    console.log(sw * scale, sh * scale);
                     canvasContext.drawImage(imageElement, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
                     yPos += iconHeight + (iconPadding * 2);
                     this.imageElements[this.icons[0][i]] = imageElement
@@ -302,8 +300,6 @@ export class Vertex {
                 let sh = element.height;
                 let sw = element.width;
                 let scale = iconHeight / sh;
-                console.log(sw, sh);
-                console.log(sw * scale, sh * scale);
                 canvasContext.drawImage(element, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
                 yPos += iconHeight + (iconPadding * 2);
             }
@@ -378,6 +374,23 @@ export class Vertex {
     //
     // If threshold is -1, xRel and yRel are equal to cursorX, cursorY
     // This only happens when cursor shouldn't connect to vertex
+    getNearestSideFrom(cursorX, cursorY, lastX, lastY) {
+        // If can connect to top/bottom
+        if (lastX > this.x && lastX < this.x+this.width) {
+            console.log("Using lastX");
+            return this.getNearestSide(lastX, cursorY);
+        }
+
+        // If can connect to left/right
+        else if (lastY > this.y && lastY < this.y+this.height) {
+            console.log("Using lastY");
+            return this.getNearestSide(cursorX, lastY);
+        }
+
+        // Else
+        return this.getNearestSide(cursorX, cursorY);
+    }
+
     getNearestSide(cursorX, cursorY) {
         // Create possibilities
         var sides = []
