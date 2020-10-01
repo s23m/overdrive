@@ -480,7 +480,11 @@ export class Arrow {
             Upper = 'n'
         }
 
-        return Lower + " .. " + Upper
+        if (Lower === Upper){
+            return Lower;
+        } else {
+            return Lower + " .. " + Upper
+        }
     }
 
     draw(canvasContext) {
