@@ -14,7 +14,6 @@ var canvasContext;
 var mouseStartX;
 var mouseStartY;
 
-// TODO make this selectable by the user
 var yRows = 70;
 
 export var mouseOriginX;
@@ -76,7 +75,7 @@ export function drawAll() {
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
 
-    for (let i = 0; i < canvasHeight; i+= (canvasHeight/yRows*zoom/100 * 200/zoom)/2){
+    for (let i = 0; i < canvasHeight; i+= (canvasHeight/yRows*zoom/100 * 200/zoom)/2) {
         let y1 = findNearestGridY(i,1);
         let y2 = findNearestGridY(i,0);
         drawLine(0,y1,canvasWidth,y1,"#D0D0D0");
@@ -91,10 +90,10 @@ export function drawAll() {
 
 }
 
-export function deleteElement(element){
+export function deleteElement(element) {
     currentObjects.forEach((item,index,object) => {
         if (item !== null) {
-            if(item.UUID === element.UUID){
+            if (item.UUID === element.UUID) {
                 object.splice(index,1)
             }
         }
@@ -120,12 +119,15 @@ function findNearestGridY(y,top) {
     return slotHeight * slot + (slotHeight/2 * + top)
 }
 
-// TODO comment this function
+// Checks to see which side it should resize on
 function checkResizeBounds(x, y) {
-    let vertex = null;
-    let side = null;
+    // Iterate through all objects and only check vertex's
     currentObjects.forEach((item) => {
         if (item.constructor.name === "Vertex") {
+            // Get vertex bounds
+            // x1 y1 are the lower coordinates
+            // x2 y2 are the upper coordinates
+            // Note: x2 y2 are not width/height values
             let bounds = item.getBounds();
             let x1 = bounds[0];
             let y1 = bounds[1];
@@ -140,39 +142,33 @@ function checkResizeBounds(x, y) {
             let inXbounds = x > x1 && x < x2;
 
             if (top && left) {
-                vertex = item;
-                side = "topLeft"
+                return [item, "topLeft"];
             } else if (top && right) {
-                vertex = item;
-                side = "topRight";
+                return [item, "topRight"];
             } else if (bottom && left) {
-                vertex = item;
-                side = "bottomLeft"
+                return [item, "bottomLeft"];
             } else if (bottom && right) {
-                vertex = item;
-                side = "bottomRight"
+                return [item, "bottomRight"];
             } else if (left && inYbounds) {
-                vertex = item;
-                side = "left"
+                return [item, "left"];
             } else if (right && inYbounds) {
-                vertex = item;
-                side = "right"
+                return [item, "right"];
             } else if (top && inXbounds) {
-                vertex = item;
-                side = "top"
+                return [item, "top"];
             } else if (bottom && inXbounds) {
-                vertex = item;
-                side = "bottom"
+                return [item, "bottom"];
             }
         }
     });
-    return [vertex,side];
+
+    // All else fails
+    return [null, null];
 }
 
 // Find connectable for arrow within a threshold distance
 function getConnectionDataForArrow(cursorX, cursorY) {
     const distanceThreshold = 15;
-    const angleThreshold = 10;
+    const angleThreshold = 8;
 
     var nearest = null;
     var nearestDistance = 0;
@@ -205,10 +201,10 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     if (arrowPath.length < 1 || coordinate[0] === 0) return coordinate;
 
     // Get angle
-    var lx = arrowPath[arrowPath.length-1][1];
-    var ly = arrowPath[arrowPath.length-1][2];
-    var x = coordinate[1]-lx;
-    var y = coordinate[2]-ly;
+    var lastPathX = arrowPath[arrowPath.length-1][1];
+    var lastPathY = arrowPath[arrowPath.length-1][2];
+    var x = coordinate[1]-lastPathX;
+    var y = coordinate[2]-lastPathY;
 
     // must be y,x check documentation if you dont believe me
     var angle = Math.atan2(y, x) * (180/Math.PI);
@@ -237,7 +233,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         var yv = l * Math.sin(nearestRad);
 
         // Create point (not vector sitting on 0,0)
-        coordinate = [coordinate[0], lx+xv, ly+yv];
+        coordinate = [coordinate[0], lastPathX+xv, lastPathY+yv];
     }
 
     return coordinate;
@@ -343,7 +339,7 @@ export function onMiddleClick(canvas, x, y) {
     canvasElement.onmousemove = function(e) {moveObject(e, selectedObject)}
 }
 
-export function onMouseLeave(){
+export function onMouseLeave() {
     canvasElement.onmousemove = {}
     drawAll()
 }

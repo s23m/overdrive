@@ -82,7 +82,7 @@ export class Arrow {
         return null;
     }
 
-    setSelected(selected){
+    setSelected(selected) {
         this.selected = selected;
     }
 
@@ -324,7 +324,7 @@ export class Arrow {
         }
     }
 
-    getTextOffsets(canvasContext, sourceText, destText, sourceCtext, destCtext){
+    getTextOffsets(canvasContext, sourceText, destText, sourceCtext, destCtext) {
         let sourceTextWidth = canvasContext.measureText(sourceText).width;
         let destTextWidth = canvasContext.measureText(destText).width;
         let sourceCtextWidth = canvasContext.measureText(sourceCtext).width;
@@ -349,47 +349,47 @@ export class Arrow {
         // true if arrow is landscape, false if arrow is portrait;
         let LRArrow = Math.abs(this.getSX()-this.getEX()) > Math.abs(this.getSY()-this.getEY())
 
-        if(LRArrow){
-            if(this.getSX() > this.getEX()) {
+        if (LRArrow) {
+            if (this.getSX() > this.getEX()) {
                 xFlip = !xFlip;
             }
-        }else{
-            if(this.getSY() > this.getEY()) {
+        } else {
+            if (this.getSY() > this.getEY()) {
                 yFlip = !yFlip;
             }
         }
 
 
-        if(xFlip){
+        if (xFlip) {
             sxOffset = charWidth/2;
-            if(LRArrow){
+            if (LRArrow) {
                 sxOffsetc = charWidth/2;
-            }else{
+            } else {
                 sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
             }
-        }else{
+        } else {
             sxOffset = -1*(sourceTextWidth+charWidth/2)
-            if(LRArrow){
+            if (LRArrow) {
                 sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
-            }else{
+            } else {
                 sxOffsetc = charWidth/2;
             }
         }
 
 
 
-        if(yFlip){
+        if (yFlip) {
             syOffset = textHeight;
-            if(LRArrow){
+            if (LRArrow) {
                 syOffsetc = -1*(textHeight/2)
-            }else{
+            } else {
                 syOffsetc = syOffset = textHeight;
             }
-        }else{
+        } else {
             syOffset = -1*(textHeight/2);
-            if(LRArrow){
+            if (LRArrow) {
                 syOffsetc = syOffset = textHeight;
-            }else{
+            } else {
                 syOffsetc = -1*(textHeight/2)
             }
         }
@@ -399,35 +399,35 @@ export class Arrow {
         xFlip = !xFlip;
         yFlip = !yFlip;
 
-        if(xFlip){
+        if (xFlip) {
             exOffset = charWidth/2;
-            if(LRArrow){
+            if (LRArrow) {
                 exOffsetc = charWidth/2;
-            }else{
+            } else {
                 exOffsetc = -1*(destCtextWidth+charWidth/2)
             }
-        }else{
+        } else {
             exOffset = -1*(destTextWidth+charWidth/2)
-            if(LRArrow){
+            if (LRArrow) {
                 exOffsetc = -1*(destCtextWidth+charWidth/2)
-            }else{
+            } else {
                 exOffsetc = charWidth/2;
             }
         }
 
 
-        if(yFlip){
+        if (yFlip) {
             eyOffset = textHeight
-            if(LRArrow){
+            if (LRArrow) {
                 eyOffsetc = -1*(textHeight/2)
-            }else{
+            } else {
                 eyOffsetc = eyOffset = textHeight;
             }
-        }else{
+        } else {
             eyOffset = -1*(textHeight/2)
-            if(LRArrow){
+            if (LRArrow) {
                 eyOffsetc = eyOffset = textHeight;
-            }else{
+            } else {
                 eyOffsetc = -1*(textHeight/2)
             }
         }
@@ -460,27 +460,27 @@ export class Arrow {
         }
     }
 
-    getCardinalityText(source){
+    getCardinalityText(source) {
 
         let Lower = 0;
         let Upper = 0;
 
-        if(source) {
+        if (source) {
             Lower = this.sourceCardinality.lowerBound;
             Upper = this.sourceCardinality.upperBound;
-        }else{
+        } else {
             Lower = this.destCardinality.lowerBound;
             Upper = this.destCardinality.upperBound;
         }
 
-        if(Lower === '-1') {
+        if (Lower === '-1') {
             Lower = 'n'
         }
-        if(Upper === '-1'){
+        if (Upper === '-1') {
             Upper = 'n'
         }
 
-        if (Lower === Upper){
+        if (Lower === Upper) {
             return Lower;
         } else {
             return Lower + " .. " + Upper

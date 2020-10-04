@@ -44,7 +44,7 @@ export class LeftMenu extends React.Component{
     componentDidMount() {
         this.menu = this.props.mainState.menu;
         this.selectedItem = this.props.mainState.drawMode;
-        if(this.menu === "Tools") {
+        if (this.menu === "Tools") {
             this.props.setMode(this.selectedItem)
         }
     }
@@ -172,11 +172,11 @@ export class LeftMenu extends React.Component{
         </DropdownButton>;
     }
 
-    shouldTextBeSelected(fileName){
+    shouldTextBeSelected(fileName) {
         return this.state.selectedObject.isTextSet(fileName)
     }
 
-    shouldIconBeSelected(fileName){
+    shouldIconBeSelected(fileName) {
         return this.state.selectedObject.isIconSet(fileName)
     }
 
@@ -297,7 +297,7 @@ export class LeftMenu extends React.Component{
 
     render() {
         let menu = this.getMenu();
-        if(this.formRef !== null) {
+        if (this.formRef !== null) {
             this.formRef.reset();
         }
         return menu;
