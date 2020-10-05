@@ -39,6 +39,8 @@ var resizing = false;
 
 var nextArrowType = 0;
 
+var cancelDraw = false;
+
 // Init
 export function assignElement(elementID) {
     canvasElement = document.getElementById(elementID);
@@ -262,6 +264,13 @@ export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
 
     if (canvas.tool === "Vertex") {
+        let intersection = findIntersected(x,y);
+        if(canvas.tool === "Vertex" && intersection !== null){
+            console.log("Selecting intersected Vertex");
+            canvas.props.setLeftMenu(intersection);
+            cancelDraw = true;
+            return;
+        }
 
         if (resizeVars[0] !== null) {
             resizing = true;
@@ -299,6 +308,12 @@ export function onRightMouseRelease(canvas, x, y) {
 }
 
 export function onLeftMouseRelease(canvas, x, y) {
+
+    if(cancelDraw){
+        cancelDraw = false;
+        return;
+    }
+
     if (resizing === true) {
         resizing = false;
         canvasElement.onmousemove = null;
