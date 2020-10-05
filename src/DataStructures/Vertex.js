@@ -274,7 +274,6 @@ export class Vertex {
         canvasContext.fillRect(this.x, this.y, this.width, this.height);
         canvasContext.strokeRect(this.x, this.y, this.width, this.height);
 
-        console.log(this.content[0]);
         if (this.content[0] !== "") {
             canvasContext.fillRect(this.x, this.y, this.width, this.height);
             canvasContext.strokeRect(this.x, this.y, this.width, this.height);

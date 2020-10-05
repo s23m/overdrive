@@ -16,7 +16,7 @@ export class Arrow {
     //              e.g. 0,0 represents top left, 1,1 bottom right etc
     //      1) Array containing an x and y element
     //         [1, x, y]
-    constructor(UUID, objectsList, pathData, containment) {
+    constructor(UUID, objectsList, pathData, type) {
         this.UUID = UUID;
         this.name = "Arrow";
 
@@ -30,12 +30,17 @@ export class Arrow {
 
         // Type
 
-        if (!containment) {
+        if (type === 0 || type === 3) {
             this.startType = ArrowProps.EdgeEnd.NONE;
-        } else {
-            this.startType = ArrowProps.EdgeEnd.FILLED_DIAMOND
+            this.endType = ArrowProps.EdgeEnd.NONE;
+        } else if (type === 1) {
+            this.startType = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+            this.endType = ArrowProps.EdgeEnd.NONE;
+        } else if (type === 2) {
+            this.startType = ArrowProps.EdgeEnd.NONE;
+            this.endType = ArrowProps.EdgeEnd.ARROW;
         }
-        this.endType = ArrowProps.EdgeEnd.ARROW;
+
 
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
