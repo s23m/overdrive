@@ -170,7 +170,7 @@ a,#json-downloader{
     flex-wrap: nowrap;
     flex-direction: column;
     border: 2px groove #666666;
-    height: calc(91.3vh/7);
+    height: calc(93vh/3);
     justify-content: center;
     width:14.7vw;;
 }

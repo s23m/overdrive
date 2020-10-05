@@ -38,6 +38,8 @@ var lastY = 0;
 // Resize status
 var resizing = false;
 
+var firstArrowJoint = true;
+
 // Init
 export function assignElement(elementID) {
     canvasElement = document.getElementById(elementID);
@@ -282,7 +284,7 @@ export function onLeftMousePress(canvas, x, y) {
 }
 
 export function onRightMouseRelease(canvas, x, y) {
-    if (canvas.tool === "Arrow") {
+    if (canvas.tool === "Arrow" || canvas.tool === "Containment") {
         // Create
         var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
         // Reset path
@@ -294,6 +296,8 @@ export function onRightMouseRelease(canvas, x, y) {
         canvasElement.onmousemove = null;
 
         drawAll(currentObjects);
+
+        firstArrowJoint = true;
     }
 }
 
@@ -307,18 +311,23 @@ export function onLeftMouseRelease(canvas, x, y) {
     // Disable example draw
     canvasElement.onmousemove = null;
 
-    if (canvas.tool === "Arrow") {
+
+    if (canvas.tool === "Arrow" || canvas.tool === "Containment") {
+        arrowPath.push(getConnectionDataForArrow(x, y));
         lastX = x;
         lastY = y;
-        arrowPath.push(getConnectionDataForArrow(x, y));
-        canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
+        canvasElement.onmousemove = function (e) {
+            onMouseMove(e, canvas)
+        };
+
     }
 
-    var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
-    addObject(newObject);
+    if ((!firstArrowJoint && (canvas.tool === "Arrow" || canvas.tool === "Containment")) || (canvas.tool !== "Arrow" && canvas.tool !== "Containment")) {
+        var newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+        addObject(newObject);
 
-    canvas.props.setLeftMenu(newObject);
-
+        canvas.props.setLeftMenu(newObject);
+    }
     drawAll(currentObjects);
 }
 
@@ -420,6 +429,7 @@ export function findIntersected(x, y) {
 }
 
 function createObject(canvas, x1, y1, x2, y2) {
+    let newPath;
     switch(canvas.tool) {
         case "Vertex":
             var pos = orderCoordinates(x1, y1, x2, y2);
@@ -427,14 +437,14 @@ function createObject(canvas, x1, y1, x2, y2) {
             let vy2 = findNearestGridY(pos[3],0);
             return new Vertex(createUUID(),"",[""], pos[0], findNearestGridY(y1,1) , pos[2]-pos[0], vy2-vy1);
         case "Arrow":
-            var newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
+            newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
-            return new Arrow(createUUID(), currentObjects, newPath);
-        case "Diamond":
-        case "Circle":
-        case "Speech":
-        case "SpecBox":
-        case "Triangle":
+            return new Arrow(createUUID(), currentObjects, newPath,0);
+        case "Containment":
+            newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
+
+            return  new Arrow(createUUID(),currentObjects,newPath,1);
+
         default:
     }
     return null;
