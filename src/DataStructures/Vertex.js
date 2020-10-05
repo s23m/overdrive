@@ -263,18 +263,22 @@ export class Vertex {
 
         // Update rect height
         // Use this to force text to fit
-        this.height = Math.max(padding*2+fontSize+iconAreaHeight, textHeight);
+        if (this.content[0] !== "") {
+            this.height = padding * 4 + fontSize + iconAreaHeight + textHeight;
+        }else{
+            this.height = padding * 2 + fontSize + iconAreaHeight
+        }
 
         // Draw rect
         canvasContext.fillStyle = this.colour;
         canvasContext.fillRect(this.x, this.y, this.width, this.height);
         canvasContext.strokeRect(this.x, this.y, this.width, this.height);
 
-
+        console.log(this.content[0]);
         if (this.content[0] !== "") {
-            canvasContext.fillRect(this.x, this.y, this.width, this.height+iconAreaHeight);
+            canvasContext.fillRect(this.x, this.y, this.width, this.height);
             canvasContext.strokeRect(this.x, this.y, this.width, this.height);
-            canvasContext.strokeRect(this.x, this.y, this.width, this.height+iconAreaHeight);
+            canvasContext.strokeRect(this.x, this.y, this.width, this.height-textHeight-padding*2);
         }
 
         // Draw Icons by filename
