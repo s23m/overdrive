@@ -68,7 +68,7 @@ export class Canvas extends React.Component {
 
     };
 
-    mouseLeave(e, canvas){
+    mouseLeave(e, canvas) {
         canvasDraw.onMouseLeave()
     }
 

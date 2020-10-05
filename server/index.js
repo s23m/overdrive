@@ -38,11 +38,11 @@ app.post('/serialisation/save', (req,res) => {
 
         //return in the response whether saving was successful
         res.setHeader('Content-Type', 'application/json');
-        if(!error) {
+        if (!error) {
             console.log("File write successful");
             res.status(200);
             res.send(JSON.stringify({success:true}));
-        }else{
+        } else {
             res.status(400);
             res.send(JSON.stringify({success:false}));
         }
@@ -59,24 +59,24 @@ app.get('/icons/list', (req,res) =>{
     let error = false;
 
     fs.readdir(dirPath, (err,files) => {
-        if(err !== null){
+        if (err !== null) {
             error = true;
         }
 
         console.log(files[0].substring(files[0].length-4,files[0].length))
 
         files.forEach((file) => {
-            if(file.substring(file.length-4,file.length) === ".png"){
+            if (file.substring(file.length-4,file.length) === ".png") {
 
                 iconList.push(file.substring(0,file.length))
             }
         });
 
 
-        if(error){
+        if (error) {
             res.status(500);
             res.json({error:true,icons:iconList})
-        }else{
+        } else {
             res.status(200);
             res.json({error:false,icons:iconList})
         }

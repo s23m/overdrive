@@ -43,7 +43,7 @@ export class MainProgramClass extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(this.state.menu === "Tools") {
+        if (this.state.menu === "Tools") {
 
             let div = document.getElementById(prevState.drawMode);
 
@@ -87,7 +87,7 @@ export class MainProgramClass extends React.Component {
     // chooses which left hand menu to display, based on the selected item
     setLeftMenu(nearestObject) {
 
-        if(this.state.selectedObject !== null) {
+        if (this.state.selectedObject !== null) {
             this.state.selectedObject.setSelected(false);
         }
 
