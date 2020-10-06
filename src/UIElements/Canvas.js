@@ -1,12 +1,12 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 
+var movingAllowed = false;
+
 export class Canvas extends React.Component {
     constructor(props) {
         super(props);
         this.canvasRef = React.createRef();
-
-        this.eventListenerHolder = null;
 
         this.state = {}
     }
@@ -48,26 +48,29 @@ export class Canvas extends React.Component {
             canvasDraw.onMiddleClick(canvas, x, y)
         }
 
-        function rightClickDrag(e) {
+        function rightClickDrag (e){
             let newCoords = canvasDraw.getGraphXYFromMouseEvent(e);
             let x2 = newCoords[0];
             let y2 = newCoords[1];
 
-            let dist = Math.hypot(x,y,x2,y2);
+            let dist = Math.hypot(x, y, x2, y2);
 
-            if(dist > 7){
-                canvasDraw.onMiddleClick(canvas,x,y);
-                document.removeEventListener("mousemove",rightClickDrag)
+            if (dist > 10 && movingAllowed) {
+                console.log("it did");
+                canvasDraw.onMiddleClick(canvas, x, y);
             }
         }
 
         //If it was a right click
         if (e.button === 2){
-            this.eventListenerHolder = document.addEventListener("mousemove", rightClickDrag)
+            movingAllowed = true;
+            document.addEventListener("mousemove", rightClickDrag,{once:true})
         }
     };
 
     mouseUp = (e, canvas) =>{
+
+        canvasDraw.solidifyObject();
 
         let position = canvasDraw.getGraphXYFromMouseEvent(e);
         let x = position[0]; var y = position[1];
@@ -80,8 +83,10 @@ export class Canvas extends React.Component {
         // if it was a right click
         if (e.button === 2) {
 
-            if(this.eventListenerHolder !== null){
+            if(movingAllowed) {
+                console.log("solidified")
                 canvasDraw.solidifyObject();
+                movingAllowed = false;
             }
 
             // Check if currently drawing an arrow
@@ -96,7 +101,8 @@ export class Canvas extends React.Component {
         }
 
         if (e.button === 1) {
-            canvasDraw.solidifyObject()
+            window.setTimeout(() => {canvasDraw.solidifyObject()},200)
+
         }
 
     };
@@ -107,7 +113,7 @@ export class Canvas extends React.Component {
 
     render() {
         return <canvas ref={this.canvasRef} id="drawCanvas" onContextMenu={(e) => this.ocm(e)} onMouseDown={(e) => this.mouseDown(e, this)} onMouseUp={(e) => this.mouseUp(e, this)} onMouseLeave={(e) => this.mouseLeave(e,this)}>
-                <p> Canvas's are not supported by your browser</p>
+                <p> HTML5 Canvas elements are not supported by your browser</p>
             </canvas>
     }
 

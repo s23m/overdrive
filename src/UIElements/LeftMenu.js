@@ -6,14 +6,12 @@ import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import {EdgeEndToString, LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
 
+import { SketchPicker } from 'react-color';
+
 // Icons
 import iconVertex from "../Resources/vertex.svg";
 import iconArrow from "../Resources/arrow.svg";
 import iconDiamond from "../Resources/diamond.svg";
-import iconCircle from "../Resources/circle.svg";
-import iconSpeech from "../Resources/speech.svg";
-import iconSpecBox from "../Resources/specbox.svg";
-import iconTriangle from "../Resources/triangle.svg";
 import {deleteElement} from "./CanvasDraw";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
@@ -167,9 +165,28 @@ export class LeftMenu extends React.Component{
             }
         });
 
-        return <DropdownButton title="Icon selector" name="Icons" id="IconSelector" className="IconSelector">
+        return <DropdownButton title="Icon Selector" name="Icons" id="IconSelector" className="IconSelector">
             {dropdownOptions}
         </DropdownButton>;
+    }
+
+    getVertexColour = () => {
+        return this.state.selectedObject.getColour()
+    };
+
+    setVertexColour = (colour) =>{
+        this.state.selectedObject.setColour(colour.hex)
+        canvasDraw.drawAll()
+    };
+
+    getColourPicker() {
+        let reference = this;
+        return <DropdownButton title = "Colour Selector" id = "ColourSelector">
+        <SketchPicker
+            color={this.getVertexColour}
+            onChangeComplete={this.setVertexColour}
+            presetColors = {["#FFD5A9","#F5B942","#FFFFFF"]}
+        /></DropdownButton>
     }
 
     shouldTextBeSelected(fileName) {
@@ -218,6 +235,8 @@ export class LeftMenu extends React.Component{
 
                 {this.getS23MIconsSelector()}
                 <label className="LeftSpacer">&nbsp;</label>
+
+                {this.getColourPicker()}
 
                 <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
             </form>;

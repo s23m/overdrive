@@ -339,38 +339,24 @@ export function onLeftMouseRelease(canvas, x, y) {
     // Disable example draw
     canvasElement.onmousemove = null;
 
+    if(nextArrowType === 1){
+        arrowPath.push(getConnectionDataForArrow(x, y));
+        lastX = x;
+        lastY = y;
+        canvasElement.onmousemove = function (e) {
+            onMouseMove(e, canvas)
+        };
+        let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+        addObject(newObject);
+        nextArrowType = 3;
+        return;
+    }
 
     if (canvas.tool === "Arrow" || canvas.tool === "Containment") {
 
-        if(nextArrowType === -1){
-            if(canvas.tool === "Arrow")
-                nextArrowType = 0;
-            if(canvas.tool === "Containment")
-                nextArrowType = 1;
-            arrowPath.push(getConnectionDataForArrow(x, y));
-            lastX = x;
-            lastY = y;
-            canvasElement.onmousemove = function (e) {
-                onMouseMove(e, canvas)
-            };
-            return
-        }
-
-        if(nextArrowType === 1){
-            arrowPath.push(getConnectionDataForArrow(x, y));
-            lastX = x;
-            lastY = y;
-            canvasElement.onmousemove = function (e) {
-                onMouseMove(e, canvas)
-            };
-            let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
-            addObject(newObject);
-            nextArrowType = 3;
-            return;
-        }
 
         console.log(findIntersected(x,y) + nextArrowType);
-        if(findIntersected(x,y) !== null && nextArrowType === 3){
+        if(findIntersected(x,y) !== null && nextArrowType != -1){
             // Create
             nextArrowType = 2;
             let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
@@ -385,6 +371,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             drawAll(currentObjects);
 
             nextArrowType = -1;
+            return;
 
         } else {
             nextArrowType = 3;
@@ -395,6 +382,20 @@ export function onLeftMouseRelease(canvas, x, y) {
                 onMouseMove(e, canvas)
             };
         }
+
+        if(nextArrowType === -1){
+            if(canvas.tool === "Arrow")
+                nextArrowType = 0;
+            if(canvas.tool === "Containment")
+                nextArrowType = 1;
+            arrowPath.push(getConnectionDataForArrow(x, y));
+            lastX = x;
+            lastY = y;
+            canvasElement.onmousemove = function (e) {
+                onMouseMove(e, canvas)
+            };
+        }
+
     }
 
     if (nextArrowType === 3 || canvas.tool === "Vertex") {

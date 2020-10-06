@@ -44,6 +44,14 @@ export class Vertex {
         this.selected = selected;
     }
 
+    getColour(){
+        return this.colour
+    }
+
+    setColour(colour){
+        this.colour = colour;
+    }
+
     addChild(child) {
         this.children.push(child)
         if (this.width < this.children.length * 60) {
