@@ -30,6 +30,8 @@ export class Vertex {
         this.width = width;
         this.height = height;
 
+        this.realHeight = height;
+
         // Make sure width and height meet a reasonable minimum
         this.width = Math.min(width, defaultMinimumSize)
         this.height = Math.min(height, defaultMinimumSize)
@@ -145,7 +147,7 @@ export class Vertex {
     }
 
     getBounds() {
-        return [this.x, this.y, this.x+this.width, this.y+this.height];
+        return [this.x, this.y, this.x+this.width, this.y+this.realHeight];
     }
 
     expandSide(side, x, y) {
@@ -273,11 +275,11 @@ export class Vertex {
         canvasContext.fillStyle = this.colour;
         canvasContext.fillRect(this.x, this.y, this.width, this.height);
         canvasContext.strokeRect(this.x, this.y, this.width, this.height);
+        this.realHeight = this.height;
 
         if (this.content[0] !== "") {
-            canvasContext.fillRect(this.x, this.y, this.width, this.height);
-            canvasContext.strokeRect(this.x, this.y, this.width, this.height);
-            canvasContext.strokeRect(this.x, this.y, this.width, this.height-textHeight-padding*2);
+            this.realHeight = this.height-textHeight-padding*2;
+            canvasContext.strokeRect(this.x, this.y, this.width, this.realHeight);
         }
 
         // Draw Icons by filename

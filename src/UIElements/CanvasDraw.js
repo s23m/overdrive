@@ -125,25 +125,39 @@ function findNearestGridY(y,top) {
 
 // Checks to see which side it should resize on
 function checkResizeBounds(x, y) {
-    // Iterate through all objects and only check vertex's
-    currentObjects.forEach((item) => {
+    // Iterate through all objects and only check vertices
+    for(let i = 0; i < currentObjects.length; i++){
+        let item = currentObjects[i];
+
         if (item.constructor.name === "Vertex") {
             // Get vertex bounds
             // x1 y1 are the lower coordinates
             // x2 y2 are the upper coordinates
             // Note: x2 y2 are not width/height values
+
+            //tolerance in px
+            let tolerance = 10;
+
             let bounds = item.getBounds();
             let x1 = bounds[0];
             let y1 = bounds[1];
             let x2 = bounds[2];
             let y2 = bounds[3];
 
-            let top = Math.abs(y1-y) < 10;
-            let bottom = Math.abs(y2-y) < 10;
-            let left = Math.abs(x1-x) < 10;
-            let right = Math.abs(x2-x) < 10;
+            let top = Math.abs(y1-y) < tolerance;
+            let bottom = Math.abs(y2-y) <tolerance;
+            let left = Math.abs(x1-x) < tolerance;
+            console.log(Math.abs(x2-x))
+            let right = Math.abs(x2-x) < tolerance;
+            console.log(y + " between " + y1 + " and " + y2)
             let inYbounds = y > y1 && y < y2;
             let inXbounds = x > x1 && x < x2;
+
+            if (right && inYbounds){
+                console.log("it happened ok")
+                return [item, "right"];
+            }
+            console.log(right, inYbounds)
 
             if (top && left) {
                 return [item, "topLeft"];
@@ -155,7 +169,7 @@ function checkResizeBounds(x, y) {
                 return [item, "bottomRight"];
             } else if (left && inYbounds) {
                 return [item, "left"];
-            } else if (right && inYbounds) {
+            } if (right && inYbounds) {
                 return [item, "right"];
             } else if (top && inXbounds) {
                 return [item, "top"];
@@ -163,7 +177,7 @@ function checkResizeBounds(x, y) {
                 return [item, "bottom"];
             }
         }
-    });
+    }
 
     // All else fails
     return [null, null];
@@ -262,21 +276,23 @@ export function setCurrentObjects(newObjects) {
 // Event based functions
 export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
+    console.log(resizeVars);
 
     if (canvas.tool === "Vertex") {
-        let intersection = findIntersected(x,y);
-        if(canvas.tool === "Vertex" && intersection !== null){
-            console.log("Selecting intersected Vertex");
-            canvas.props.setLeftMenu(intersection);
-            cancelDraw = true;
-            return;
-        }
 
         if (resizeVars[0] !== null) {
             resizing = true;
             canvasElement.onmousemove = function (e) {
                 resizeObjectOnMouseMove(e, resizeVars);
             };
+            return;
+        }
+
+        let intersection = findIntersected(x,y);
+        if(canvas.tool === "Vertex" && intersection !== null){
+            console.log("Selecting intersected Vertex");
+            canvas.props.setLeftMenu(intersection);
+            cancelDraw = true;
             return;
         }
     }
