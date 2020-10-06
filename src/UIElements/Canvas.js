@@ -5,6 +5,10 @@ export class Canvas extends React.Component {
     constructor(props) {
         super(props);
         this.canvasRef = React.createRef();
+
+        this.eventListenerHolder = null;
+
+        this.state = {}
     }
 
     componentWillReceiveProps(nextProps) {
@@ -25,8 +29,13 @@ export class Canvas extends React.Component {
     };
 
     mouseDown = (e, canvas) => {
-        var position = canvasDraw.getGraphXYFromMouseEvent(e);
+        let position = canvasDraw.getGraphXYFromMouseEvent(e);
         var x = position[0]; var y = position[1];
+        let eventListenerHolder;
+        this.setState({
+            startX: x,
+            startY: y
+        });
 
         // If it was a left click
         if (e.button === 0) {
@@ -38,11 +47,30 @@ export class Canvas extends React.Component {
             e.preventDefault();
             canvasDraw.onMiddleClick(canvas, x, y)
         }
+
+        function rightClickDrag(e) {
+            let newCoords = canvasDraw.getGraphXYFromMouseEvent(e);
+            let x2 = newCoords[0];
+            let y2 = newCoords[1];
+
+            let dist = Math.hypot(x,y,x2,y2);
+
+            if(dist > 7){
+                canvasDraw.onMiddleClick(canvas,x,y);
+                document.removeEventListener("mousemove",rightClickDrag)
+            }
+        }
+
+        //If it was a right click
+        if (e.button === 2){
+            this.eventListenerHolder = document.addEventListener("mousemove", rightClickDrag)
+        }
     };
 
     mouseUp = (e, canvas) =>{
-        var position = canvasDraw.getGraphXYFromMouseEvent(e);
-        var x = position[0]; var y = position[1];
+
+        let position = canvasDraw.getGraphXYFromMouseEvent(e);
+        let x = position[0]; var y = position[1];
 
         // If it was a left click
         if (e.button === 0) {
@@ -51,6 +79,11 @@ export class Canvas extends React.Component {
 
         // if it was a right click
         if (e.button === 2) {
+
+            if(this.eventListenerHolder !== null){
+                canvasDraw.solidifyObject();
+            }
+
             // Check if currently drawing an arrow
             if (canvasDraw.arrowPath.length !== 0) {
                 canvasDraw.onRightMouseRelease(canvas, x, y)
