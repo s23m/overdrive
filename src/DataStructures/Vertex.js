@@ -3,6 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { drawMarker, getDistance } from "../UIElements/CanvasDraw";
+import { SemanticIdentity } from "./SemanticIdentity";
 import {Icon} from "@material-ui/core";
 import React from "react";
 
@@ -12,9 +13,14 @@ export var defaultMinimumSize = 30;
 
 export class Vertex {
 
-    constructor(UUID, title, content, x, y, width, height) {
-        this.UUID = UUID;
-        this.name = "Vertex";
+    constructor(title, content, x, y, width, height, semanticIdentity) {
+        this.typeName = "Vertex";
+
+        if (semanticIdentity !== null){
+            this.semanticIdentity = semanticIdentity;
+        } else {
+            this.semanticIdentity = new SemanticIdentity(title);
+        }
 
         this.title = title;
         this.content = content;
@@ -35,9 +41,6 @@ export class Vertex {
         // Make sure width and height meet a reasonable minimum
         this.width = Math.min(width, defaultMinimumSize)
         this.height = Math.min(height, defaultMinimumSize)
-
-        // Translations
-        this.translations = [];
     }
 
     setSelected(selected) {
@@ -61,10 +64,12 @@ export class Vertex {
 
     setTitle(title) {
         this.title = title;
+        this.semanticIdentity.name = title;
     }
 
     setContent(content) {
         this.content = content;
+        this.semanticIdentity.description = content;
     }
 
     getContentAsString() {

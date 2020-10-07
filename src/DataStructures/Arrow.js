@@ -3,6 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import {Cardinality} from "./Cardinality";
+import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import {pathFindTo} from "../Utils/PathFinder";
@@ -16,9 +17,14 @@ export class Arrow {
     //              e.g. 0,0 represents top left, 1,1 bottom right etc
     //      1) Array containing an x and y element
     //         [1, x, y]
-    constructor(UUID, objectsList, pathData, type) {
-        this.UUID = UUID;
-        this.name = "Arrow";
+    constructor(objectsList, pathData, type, semanticIdentity) {
+        this.typeName = "Arrow";
+
+        if (semanticIdentity !== null){
+            this.semanticIdentity = semanticIdentity;
+        } else {
+            this.semanticIdentity = new SemanticIdentity(this.typeName);
+        }
 
         // Ensure there are at least 2 points
         if (pathData.length === 1) pathData.push(pathData[0]);
@@ -29,7 +35,6 @@ export class Arrow {
         this.rebuildPath(objectsList);
 
         // Type
-
         if (type === 0 || type === 3) {
             this.startType = ArrowProps.EdgeEnd.NONE;
             this.endType = ArrowProps.EdgeEnd.NONE;
@@ -45,16 +50,13 @@ export class Arrow {
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
 
-        this.sourceCardinality = new Cardinality(1, 1);
-        this.destCardinality = new Cardinality(1, 1);
+        this.sourceCardinality = new Cardinality(1, 1, false, this.semanticIdentity.UUID);
+        this.destCardinality = new Cardinality(1, 1, false, this.semanticIdentity.UUID);
 
         this.sourceLabel = "";
         this.destLabel = "";
 
         this.selected = false;
-
-        // Translations
-        this.translations = [];
     }
 
     // Rebuilds path from cached pathData
@@ -81,7 +83,7 @@ export class Arrow {
     getZerothCasePathItem(objects, pathItem) {
         for (let i = 0; i < objects.length; i++) {
             if (objects[i] !== null) {
-                if (objects[i].UUID === pathItem[1]) {
+                if (objects[i].semanticIdentity.UUID === pathItem[1]) {
                     var x = pathItem[2]*objects[i].width + objects[i].x;
                     var y = pathItem[3]*objects[i].height + objects[i].y;
                     return [x, y]
@@ -98,11 +100,11 @@ export class Arrow {
     }
 
     updateSourceCardinality(lowerBound, upperBound, visibility) {
-        this.sourceCardinality = new Cardinality(lowerBound, upperBound, visibility);
+        this.sourceCardinality = new Cardinality(lowerBound, upperBound, visibility, this.semanticIdentity.UUID);
     }
 
     updateDestCardinality(lowerBound, upperBound, visibility) {
-        this.destCardinality = new Cardinality(lowerBound, upperBound, visibility);
+        this.destCardinality = new Cardinality(lowerBound, upperBound, visibility, this.semanticIdentity.UUID);
     }
 
     setStartLabel(label) {
@@ -386,8 +388,7 @@ export class Arrow {
                 sxOffsetc = charWidth/2;
             }
         }
-
-
+        
 
         if (yFlip) {
             syOffset = textHeight;
@@ -450,8 +451,8 @@ export class Arrow {
 
 
     drawLabelsAndCardinalities(canvasContext) {
-        let sourceCardText = this.getCardinalityText(1);
-        let destCardText = this.getCardinalityText(0);
+        let sourceCardText = this.sourceCardinality.toString();
+        let destCardText = this.destCardinality.toString();
         let Offsets = this.getTextOffsets(canvasContext,this.sourceLabel,this.destLabel,sourceCardText,destCardText);
 
         //draw source text
@@ -468,33 +469,6 @@ export class Arrow {
         //draw destination cardinality
         if (this.destCardinality.isVisible) {
             canvasContext.fillText(destCardText, this.getEX() + Offsets[6], this.getEY() + Offsets[7]);
-        }
-    }
-
-    getCardinalityText(source) {
-
-        let Lower = 0;
-        let Upper = 0;
-
-        if (source) {
-            Lower = this.sourceCardinality.lowerBound;
-            Upper = this.sourceCardinality.upperBound;
-        } else {
-            Lower = this.destCardinality.lowerBound;
-            Upper = this.destCardinality.upperBound;
-        }
-
-        if (Lower === '-1') {
-            Lower = 'n'
-        }
-        if (Upper === '-1') {
-            Upper = 'n'
-        }
-
-        if (Lower === Upper) {
-            return Lower;
-        } else {
-            return Lower + " .. " + Upper
         }
     }
 
