@@ -4,7 +4,6 @@
 
 import {Vertex, padding} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
-import { createUUID } from "../DataStructures/SemanticDomain";
 import {useState} from "react";
 
 // Core variables
@@ -513,17 +512,17 @@ function createObject(canvas, x1, y1, x2, y2) {
             let pos = orderCoordinates(x1, y1, x2, y2);
             let vy1 = findNearestGridY(pos[1], 0);
             let vy2 = findNearestGridY(pos[3], 0);
-            return new Vertex(createUUID(), "", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+            return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
         case "Arrow":
             newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
-            return new Arrow(createUUID(), currentObjects, newPath, nextArrowType);
+            return new Arrow(currentObjects, newPath, nextArrowType);
 
 
         case "Containment":
             newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
-            return new Arrow(createUUID(), currentObjects, newPath, nextArrowType);
+            return new Arrow(currentObjects, newPath, nextArrowType);
 
         default:
     }
