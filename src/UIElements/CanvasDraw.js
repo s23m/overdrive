@@ -97,7 +97,7 @@ export function drawAll() {
 export function deleteElement(element) {
     currentObjects.forEach((item,index,object) => {
         if (item !== null) {
-            if (item.UUID === element.UUID) {
+            if (item.semanticIdentity.UUID === element.semanticIdentity.UUID) {
                 object.splice(index,1)
             }
         }
@@ -201,7 +201,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
                 if (sideData !== null && sideData[0] < distanceThreshold) {
                     // Compare dist
                     if (nearest === null || sideData[0] < nearestDistance) {
-                        nearest = [0, item.UUID, sideData[1], sideData[2]];
+                        nearest = [0, item.semanticIdentity.UUID, sideData[1], sideData[2]];
                         nearestDistance = sideData[0];
                     }
                 }
