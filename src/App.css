@@ -179,6 +179,16 @@ a,#json-downloader{
     border-top: none;
 }
 
+.Toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 4.7vh;
+    justify-content: center;
+    width:14.7vw;
+}
+
 .LeftBar {
     display: flex;
     flex-wrap: nowrap;
@@ -186,7 +196,7 @@ a,#json-downloader{
     border: 2px groove #666666;
     height: calc(93vh/3);
     justify-content: center;
-    width:14.7vw;;
+    width:14.7vw;
 }
 
 .LeftLabel {
