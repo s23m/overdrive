@@ -279,10 +279,7 @@ export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
     console.log(resizeVars);
 
-    if (canvas.tool === "Select") {
-        //TODO: Add select tool action
-
-    } else if (canvas.tool === "Vertex") {
+    if (canvas.tool === "Vertex") {
 
         if (resizeVars[0] !== null) {
             resizing = true;

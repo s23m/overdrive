@@ -211,10 +211,10 @@ export class LeftMenu extends React.Component{
         var leftMenuContents;
 
         var toolbar = <div id = "Toolbar" className = "Toolbar">
-            <div id = "Select" className="Toolbar" onClick={() => this.props.setMode('Select')}><p>SELECT</p></div>
-            <div id = "Vertex" className="Toolbar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
-            <div id = "Arrow" className="Toolbar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
-            <div id = "Containment" className="Toolbar" onClick={() => this.props.setMode('Containment')}><img src={iconDiamond} alt ="Containment"/></div>
+            <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode('Select')}><p>SELECT</p></div>
+            <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
+            <div id = "Arrow" className="ToolbarItem" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
+            <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode('Containment')}><img src={iconDiamond} alt ="Containment"/></div>
         </div>;
 
         if (this.state.menu === "Vertex") {

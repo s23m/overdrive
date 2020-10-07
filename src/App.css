@@ -179,15 +179,19 @@ a,#json-downloader{
     border-top: none;
 }
 
-/* TODO: Fix this styling, at the moment the left bar content overlaps the toolbar*/
 .Toolbar {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     border: 2px groove #666666;
     height: 4.7vh;
+    width:15vw;
+}
+
+.ToolbarItem{
+    display: flex;
+    width: calc(15vw/4);
     justify-content: center;
-    width:14.7vw;
 }
 
 .LeftBar {
