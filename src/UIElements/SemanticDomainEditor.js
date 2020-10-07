@@ -269,7 +269,7 @@ function createColumns() {
         { name: 'name', title: 'Name' },
         { name: 'description', title: 'Description' },
         { name: 'abbreviation', title: 'Abbreviation' },
-        { name: 'shortAbbreviation', title: 'Short abbreviation' },
+        { name: 'shortAbbreviation', title: 'Short Abbreviation' },
     ];
 
     // Add translation columns
