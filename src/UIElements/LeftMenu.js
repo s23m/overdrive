@@ -22,7 +22,7 @@ export class LeftMenu extends React.Component{
     constructor() {
         super();
         this.state = {
-            menu: "Blank",
+            menu: "Tools",
             selectedObject: null,
             fileNames: []
         };
@@ -41,11 +41,16 @@ export class LeftMenu extends React.Component{
 
     componentDidMount() {
         this.menu = this.props.mainState.menu;
+        this.selectedItem = this.props.mainState.drawMode;
+        if (this.menu === "Tools") {
+            this.props.setMode(this.selectedItem)
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({menu:nextProps.mainState.menu});
         this.setState({selectedObject:nextProps.mainState.selectedObject});
+
     }
 
     setIcons() {
@@ -204,9 +209,12 @@ export class LeftMenu extends React.Component{
 
 
 // return the correct menu based on the selected item
-    getMenu = () => {
-        if (this.state.menu === "Blank") {
+    getMenu = () =>{
+        if (this.state.menu === "Tools") {
             return <form ref={this.setFormRef} className={this.props.className}>
+                <div id = "Vertex" className="LeftBar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
+                <div id = "Arrow" className="LeftBar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
+                <div id = "Containment" className="LeftBar" onClick={() => this.props.setMode('Containment')}><img src={iconDiamond} alt ="Containment"/></div>
                </form>;
 
         } else if (this.state.menu === "Vertex") {
