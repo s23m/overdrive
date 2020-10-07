@@ -67,6 +67,8 @@ export function open(jsonString) {
                     case "Vertex":
                         var newVertex = new Vertex(item.UUID, item.title, item.content, item.x, item.y, item.width, item.height);
                         newVertex.translations = item.translations;
+                        newVertex.abbreviation = item.abbreviation
+                        newVertex.shortAbbreviation = item.shortAbbreviation;
                         newObjects.push(newVertex);
                         break;
                     default:
@@ -84,6 +86,8 @@ export function open(jsonString) {
                     case "Arrow":
                         var newArrow = new Arrow(item.UUID, newObjects, item.pathData);
                         newArrow.translations = item.translations;
+                        newArrow.abbreviation = item.abbreviation
+                        newArrow.shortAbbreviation = item.shortAbbreviation;
                         newObjects.push(newArrow);
                         break;
                     default:
