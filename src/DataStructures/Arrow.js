@@ -528,6 +528,7 @@ export class Arrow {
         }
 
         if (this.selected) {
+            canvasContext.strokeStyle = "#000000";
             for (let i = 0; i < this.path.length; i++) {
                 let pos = this.path[i];
                 drawMarker(pos[0], pos[1]);

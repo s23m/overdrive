@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { getDistance } from "../UIElements/CanvasDraw";
+import { drawMarker, getDistance } from "../UIElements/CanvasDraw";
 import {Icon} from "@material-ui/core";
 import React from "react";
 
@@ -225,18 +225,6 @@ export class Vertex {
     }
 
     draw(canvasContext) {
-        if (this.selected) {
-            let r = Math.hypot(this.x + this.width - this.x, this.y + this.height-this.y);
-            //canvasContext.setLineDash([1,dashLength]);
-            let gradient = canvasContext.createRadialGradient(this.x+(this.width/2),this.y+(this.height/2),0,this.x + (this.width/2),this.y + (this.height/2),r);
-            gradient.addColorStop(0.5,"black");
-            gradient.addColorStop(0.6,"orange");
-            gradient.addColorStop(0,"yellow");
-            gradient.addColorStop(0.4,"orange");
-            gradient.addColorStop(1,"yellow");
-            canvasContext.strokeStyle = gradient;
-        }
-
         // Font size
         var fontSize = 12;
         padding = 5;
@@ -288,6 +276,15 @@ export class Vertex {
         if (this.content[0] !== "") {
             this.realHeight = this.height-textHeight-padding*2;
             canvasContext.strokeRect(this.x, this.y, this.width, this.realHeight);
+        }
+
+        // Draw selected markers if rect is selected
+        if (this.selected) {
+            canvasContext.fillStyle = "#000000";
+            drawMarker(this.x, this.y);
+            drawMarker(this.x+this.width, this.y);
+            drawMarker(this.x, this.y+this.height);
+            drawMarker(this.x+this.width, this.y+this.height);
         }
 
         // Draw Icons by filename
