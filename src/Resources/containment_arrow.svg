@@ -26,9 +26,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="16.362949"
-     inkscape:cx="5.0883513"
-     inkscape:zoom="15.839192"
+     inkscape:cy="16.572881"
+     inkscape:cx="-11.319863"
+     inkscape:zoom="11.2"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -61,12 +61,30 @@
        id="rect871"
        style="fill:#000000;stroke:none;stroke-width:0.183728;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
-       style="fill:#000000;stroke-width:0.253536"
+       style="fill:#000000;stroke-width:0.21731"
        id="rect129"
-       width="3.5"
-       height="3.5"
-       x="5.9999843"
-       y="0.50030631"
+       width="2.9999032"
+       height="2.9999032"
+       x="0.7998001"
+       y="6.2001224"
        transform="rotate(-0.00184733)" />
+    <path
+       transform="matrix(0.97291684,-0.36281527,0.36198283,0.97515421,0.6104855,2.1973196)"
+       inkscape:transform-center-y="0.27537327"
+       inkscape:transform-center-x="0.2660895"
+       d="M 8.5948033,1.4572118 6.5625178,4.2902569 5.1251716,1.1137235 Z"
+       inkscape:randomized="0"
+       inkscape:rounded="1.04083e-17"
+       inkscape:flatsided="true"
+       sodipodi:arg2="0.62227575"
+       sodipodi:arg1="-0.4249218"
+       sodipodi:r2="1.0064926"
+       sodipodi:r1="2.0129852"
+       sodipodi:cy="2.2870641"
+       sodipodi:cx="6.7608309"
+       sodipodi:sides="3"
+       id="path867"
+       style="fill:#000000;stroke:none;stroke-width:0.0752847;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       sodipodi:type="star" />
   </g>
 </svg>
