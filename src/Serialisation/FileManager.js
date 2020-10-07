@@ -63,10 +63,9 @@ export function open(jsonString) {
         // Copy behaviour over (vertexs first)
         loadedObjects.forEach((item) => {
             if (item !== null) {
-                switch (item.name) {
+                switch (item.typeName) {
                     case "Vertex":
-                        var newVertex = new Vertex(item.UUID, item.title, item.content, item.x, item.y, item.width, item.height);
-                        newVertex.translations = item.translations;
+                        var newVertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
                         newObjects.push(newVertex);
                         break;
                     default:
@@ -78,12 +77,11 @@ export function open(jsonString) {
         // Copy behaviour over (everything else)
         loadedObjects.forEach((item) => {
             if (item !== null) {
-                switch (item.name) {
+                switch (item.typeName) {
                     case "Vertex":
                         break;
                     case "Arrow":
-                        var newArrow = new Arrow(item.UUID, newObjects, item.pathData);
-                        newArrow.translations = item.translations;
+                        var newArrow = new Arrow(newObjects, item.pathData, null, item.semanticIdentity);
                         newObjects.push(newArrow);
                         break;
                     default:

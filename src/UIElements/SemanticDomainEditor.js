@@ -215,7 +215,7 @@ function removeColumn() {
 
     // Delete from currentObjects
     for (let object of currentObjects) {
-        object.translations.delete(value);
+        object.semanticIdentity.translations.delete(value);
     }
 
     // Delete column
@@ -235,21 +235,13 @@ export function resetRows() {
         let object = currentObjects[i];
 
         // Constants
-        row['id'] = object.UUID; // Just going to be based on UUID since it's easy and unique
-        row['UUID'] = object.UUID;
+        row['id'] = object.semanticIdentity.UUID; // Just going to be based on UUID since it's easy and unique
+        row['UUID'] = object.semanticIdentity.UUID;
         row['type'] = object.constructor.name;
-
-        row['abbreviation'] = object.abbreviation;
-        row['shortAbbreviation'] = object.shortAbbreviation;
-
-        // Exceptions
-        if (object.constructor.name === "Vertex") {
-            row['name'] = object.title;
-            row['description'] = object.content;
-        } else {
-            row['name'] = object.name;
-            row['description'] = object.description;
-        }
+        row['name'] = object.semanticIdentity.name;
+        row['description'] = object.semanticIdentity.description;
+        row['abbreviation'] = object.semanticIdentity.abbreviation;
+        row['shortAbbreviation'] = object.semanticIdentity.shortAbbreviation;
 
         // Translations
         for (let o = 0; o < object.translations.length; o++) {
@@ -295,34 +287,27 @@ function updateChangedObject(rows) {
         // Find object
         for (let o = 0; o < currentObjects.length; o++) {
             // If should update
-            if (row['UUID'] === currentObjects[i].UUID) {
+            if (row['UUID'] === currentObjects[i].semanticIdentity.UUID) {
                 // Constants
-                currentObjects[i].abbreviation = row['abbreviation'];
-                currentObjects[i].shortAbbreviation = row['shortAbbreviation'];
-
-                // Exceptions
-                if (currentObjects[i].constructor.name === "Vertex") {
-                    currentObjects[i].title = row['name'];
-                    currentObjects[i].content = row['description'];
-                } else {
-                    currentObjects[i].name = row['name'];
-                    currentObjects[i].description = row['description'];
-                }
+                currentObjects[i].semanticIdentity.abbreviation = row['abbreviation'];
+                currentObjects[i].semanticIdentity.shortAbbreviation = row['shortAbbreviation'];
+                currentObjects[i].semanticIdentity.name = row['name'];
+                currentObjects[i].semanticIdentity.description = row['description'];
 
                 // Translations
                 for (let translation of translationColumns) {
                     // Find translation in list
                     var set = false;
-                    for (let o = 0; o < currentObjects[i].translations.length; i++) {
-                        if (currentObjects[i].translations[o][0] === translation) {
-                            currentObjects[i].translations[o][1] = row[translation];
+                    for (let o = 0; o < currentObjects[i].semanticIdentity.translations.length; i++) {
+                        if (currentObjects[i].semanticIdentity.translations[o][0] === translation) {
+                            currentObjects[i].semanticIdentity.translations[o][1] = row[translation];
                             set = true;
                             break;
                         }
                     }
 
                     if (!set) {
-                        currentObjects[i].translations.push([translation, row[translation]]);
+                        currentObjects[i].semanticIdentity.translations.push([translation, row[translation]]);
                     }
                 }
             }
