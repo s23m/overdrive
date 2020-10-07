@@ -16,10 +16,10 @@ export class Vertex {
     constructor(title, content, x, y, width, height, semanticIdentity) {
         this.typeName = "Vertex";
 
-        if (semanticIdentity !== null){
+        if (semanticIdentity !== undefined){
             this.semanticIdentity = semanticIdentity;
         } else {
-            this.semanticIdentity = new SemanticIdentity(title);
+            this.semanticIdentity = new SemanticIdentity(title,"","","", undefined ,[]);
         }
 
         this.title = title;
@@ -338,8 +338,6 @@ export class Vertex {
 
         // Disable shadows for text
         canvasContext.shadowOffsetX = 0.0; canvasContext.shadowOffsetY = 0.0;
-
-        // TODO draw text for icons
 
         let txPos = this.x + iconPadding;
         let tyPos = this.y + iconHeight;

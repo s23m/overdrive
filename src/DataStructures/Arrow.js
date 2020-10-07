@@ -20,10 +20,10 @@ export class Arrow {
     constructor(objectsList, pathData, type, semanticIdentity) {
         this.typeName = "Arrow";
 
-        if (semanticIdentity !== null){
+        if (semanticIdentity !== undefined){
             this.semanticIdentity = semanticIdentity;
         } else {
-            this.semanticIdentity = new SemanticIdentity(this.typeName);
+            this.semanticIdentity = new SemanticIdentity("Arrow from " + objectsList[0] + " to " + objectsList[1],"","","", undefined ,[]);
         }
 
         // Ensure there are at least 2 points
@@ -50,8 +50,8 @@ export class Arrow {
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
 
-        this.sourceCardinality = new Cardinality(1, 1, false, this.semanticIdentity.UUID);
-        this.destCardinality = new Cardinality(1, 1, false, this.semanticIdentity.UUID);
+        this.sourceCardinality = new Cardinality(1, 1, false, false,this.semanticIdentity.UUID);
+        this.destCardinality = new Cardinality(1, 1, false, false, this.semanticIdentity.UUID);
 
         this.sourceLabel = "";
         this.destLabel = "";

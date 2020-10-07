@@ -5,6 +5,7 @@
 import {Vertex, padding} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
 import {useState} from "react";
+import {SemanticIdentity} from "../DataStructures/SemanticIdentity";
 
 // Core variables
 var canvasElement;

@@ -7,7 +7,7 @@
 export class SemanticIdentity {
 
     constructor(name, description, abbreviation, shortAbbreviation, UUID, translations){
-        if (UUID !== null){
+        if (UUID !== undefined){
             this.UUID = UUID;
         } else {
             this.UUID = createUUID();
