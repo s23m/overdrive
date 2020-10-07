@@ -179,6 +179,21 @@ a,#json-downloader{
     border-top: none;
 }
 
+.Toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 4.7vh;
+    width:15vw;
+}
+
+.ToolbarItem{
+    display: flex;
+    width: calc(15vw/4);
+    justify-content: center;
+}
+
 .LeftBar {
     display: flex;
     flex-wrap: nowrap;
@@ -186,7 +201,7 @@ a,#json-downloader{
     border: 2px groove #666666;
     height: calc(93vh/3);
     justify-content: center;
-    width:14.7vw;;
+    width:14.7vw;
 }
 
 .LeftLabel {
@@ -202,6 +217,17 @@ a,#json-downloader{
     border: 2px groove #666666;
     align-items: center;
     justify-content: center;
+}
+
+.LeftHeader{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border: 2px groove #666666;
+    height: 7vh;
+    justify-content: center;
+    width:14.7vw;
+    background-color: #DDEEFF
 }
 
 .LeftContent {

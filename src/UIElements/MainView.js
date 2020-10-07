@@ -15,7 +15,7 @@ import {LeftMenu} from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
-const leftMenuTypes = ["Tools", "Vertex", "Arrow"];
+const leftMenuTypes = ["Blank", "Vertex", "Arrow"];
 
 // Simple incremental version
 // 1->2->3->4
@@ -28,7 +28,7 @@ export class MainProgramClass extends React.Component {
         this.state = {
             zoomLevel: 200,
             drawMode: "Vertex",
-            menu: "Tools",
+            menu: "Blank",
             selectedObject: null,
         };
 
@@ -43,20 +43,17 @@ export class MainProgramClass extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.menu === "Tools") {
+        let div = document.getElementById(prevState.drawMode);
 
-            let div = document.getElementById(prevState.drawMode);
-
-            if (div !== null) {
-                div.style.backgroundColor = "#FFFFFF";
-            }
-
-            div = document.getElementById(this.state.drawMode);
-
-            div.style.backgroundColor = "#CFFFFF";
-
-            console.log("Mode set to: " + this.state.drawMode);
+        if (div !== null) {
+            div.style.backgroundColor = "#FFFFFF";
         }
+
+        div = document.getElementById(this.state.drawMode);
+
+        div.style.backgroundColor = "#CFFFFF";
+
+        console.log("Mode set to: " + this.state.drawMode);
     }
 
 
@@ -94,7 +91,7 @@ export class MainProgramClass extends React.Component {
         // check if the nearest object was too far away or didnt exist
         if (nearestObject === null) {
             this.setState({
-                menu: "Tools",
+                menu: "Blank",
                 selectedObject: null,
             });
 
@@ -113,7 +110,7 @@ export class MainProgramClass extends React.Component {
             }
 
             this.setState({
-                menu: "Tools",
+                menu: "Blank",
                 selectedObject: null
             });
         }

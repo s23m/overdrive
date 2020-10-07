@@ -22,7 +22,7 @@ export class LeftMenu extends React.Component{
     constructor() {
         super();
         this.state = {
-            menu: "Tools",
+            menu: "Blank",
             selectedObject: null,
             fileNames: []
         };
@@ -42,9 +42,7 @@ export class LeftMenu extends React.Component{
     componentDidMount() {
         this.menu = this.props.mainState.menu;
         this.selectedItem = this.props.mainState.drawMode;
-        if (this.menu === "Tools") {
-            this.props.setMode(this.selectedItem)
-        }
+        this.props.setMode(this.selectedItem)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -210,21 +208,22 @@ export class LeftMenu extends React.Component{
 
 // return the correct menu based on the selected item
     getMenu = () =>{
-        if (this.state.menu === "Tools") {
-            return <form ref={this.setFormRef} className={this.props.className}>
-                <div id = "Vertex" className="LeftBar" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
-                <div id = "Arrow" className="LeftBar" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
-                <div id = "Containment" className="LeftBar" onClick={() => this.props.setMode('Containment')}><img src={iconDiamond} alt ="Containment"/></div>
-               </form>;
+        var leftMenuContents;
 
-        } else if (this.state.menu === "Vertex") {
+        var toolbar = <div id = "Toolbar" className = "Toolbar">
+            <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode('Select')}><p>SELECT</p></div>
+            <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
+            <div id = "Arrow" className="ToolbarItem" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
+            <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode('Containment')}><img src={iconDiamond} alt ="Containment"/></div>
+        </div>;
+
+        if (this.state.menu === "Vertex") {
             console.log("Vertex Selected",this.state.selectedObject);
 
             canvasDraw.drawAll();
 
-            return <form ref={this.setFormRef} className={this.props.className}>
-                <div className="LeftBar">Vertex Properties</div>
-
+            leftMenuContents = <div id = "VertexMenu">
+                <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
                 <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()}/>
                 <label className="LeftSpacer">&nbsp;</label>
@@ -238,13 +237,14 @@ export class LeftMenu extends React.Component{
 
                 {this.getColourPicker()}
 
-                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
-            </form>;
+                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Blank"})}}>Remove</button>;
+            </div>;
 
         } else if (this.state.menu === "Arrow") {
             console.log("Arrow Selected");
-            return <form ref={this.setFormRef} className={this.props.className}>
-                <div className="LeftBar">Arrow Properties</div>
+            
+            leftMenuContents = <div id = "ArrowMenu">
+                <div className="LeftHeader">Arrow Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
                 <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="ArrowHeadFrom" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
@@ -304,10 +304,12 @@ export class LeftMenu extends React.Component{
                 }
                 <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
 
-
-            </form>;
+            </div>
         }
 
+        return <div>{toolbar}<form ref={this.setFormRef} className={this.props.className}>
+            {leftMenuContents}
+            </form></div>;
     };
 
     render() {
