@@ -244,8 +244,8 @@ export function resetRows() {
         row['shortAbbreviation'] = object.semanticIdentity.shortAbbreviation;
 
         // Translations
-        for (let o = 0; o < object.translations.length; o++) {
-            let translation = object.translations[o];
+        for (let o = 0; o < object.semanticIdentity.translations.length; o++) {
+            let translation = object.semanticIdentity.translations[o];
 
             row[translation[0]] = translation[1];
         }

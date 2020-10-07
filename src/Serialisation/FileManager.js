@@ -66,8 +66,6 @@ export function open(jsonString) {
                 switch (item.typeName) {
                     case "Vertex":
                         var newVertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
-                        newVertex.abbreviation = item.abbreviation
-                        newVertex.shortAbbreviation = item.shortAbbreviation;
                         newObjects.push(newVertex);
                         break;
                     default:
@@ -84,8 +82,6 @@ export function open(jsonString) {
                         break;
                     case "Arrow":
                         var newArrow = new Arrow(newObjects, item.pathData, null, item.semanticIdentity);
-                        newArrow.abbreviation = item.abbreviation
-                        newArrow.shortAbbreviation = item.shortAbbreviation;
                         newObjects.push(newArrow);
                         break;
                     default:
