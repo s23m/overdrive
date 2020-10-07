@@ -222,8 +222,8 @@ export class LeftMenu extends React.Component{
 
             canvasDraw.drawAll();
 
-            leftMenuContents = <div id = "VertexMenu" className = "LeftBar">
-                <div className="LeftBar">Vertex Properties</div>
+            leftMenuContents = <div id = "VertexMenu">
+                <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
                 <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()}/>
                 <label className="LeftSpacer">&nbsp;</label>
@@ -243,8 +243,8 @@ export class LeftMenu extends React.Component{
         } else if (this.state.menu === "Arrow") {
             console.log("Arrow Selected");
             
-            leftMenuContents = <div id = "ArrowMenu" className = "LeftBar">
-                <div className="LeftBar">Arrow Properties</div>
+            leftMenuContents = <div id = "ArrowMenu">
+                <div className="LeftHeader">Arrow Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
                 <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="ArrowHeadFrom" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
@@ -307,10 +307,9 @@ export class LeftMenu extends React.Component{
             </div>
         }
 
-        return <form ref={this.setFormRef} className={this.props.className}>
-            {toolbar}
+        return <div>{toolbar}<form ref={this.setFormRef} className={this.props.className}>
             {leftMenuContents}
-            </form>;
+            </form></div>;
     };
 
     render() {

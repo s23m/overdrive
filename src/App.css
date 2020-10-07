@@ -215,6 +215,17 @@ a,#json-downloader{
     justify-content: center;
 }
 
+.LeftHeader{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border: 2px groove #666666;
+    height: 7vh;
+    justify-content: center;
+    width:14.7vw;
+    background-color: #DDEEFF
+}
+
 .LeftContent {
     border: 2px groove #666666;
     align-items: center;
