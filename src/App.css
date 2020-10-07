@@ -179,6 +179,7 @@ a,#json-downloader{
     border-top: none;
 }
 
+/* TODO: Fix this styling, at the moment the left bar content overlaps the toolbar*/
 .Toolbar {
     display: flex;
     flex-wrap: nowrap;

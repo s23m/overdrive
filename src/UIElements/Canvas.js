@@ -89,6 +89,7 @@ export class Canvas extends React.Component {
                 movingAllowed = false;
             }
 
+            //TODO: Move this action to select tool
             // Check if currently drawing an arrow
             if (canvasDraw.arrowPath.length !== 0) {
                 canvasDraw.onRightMouseRelease(canvas, x, y)
