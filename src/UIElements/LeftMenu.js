@@ -11,7 +11,9 @@ import { SketchPicker } from 'react-color';
 // Icons
 import iconVertex from "../Resources/vertex.svg";
 import iconArrow from "../Resources/arrow.svg";
-import iconDiamond from "../Resources/diamond.svg";
+import iconContainment from "../Resources/containment_arrow.svg";
+import iconSelect from "../Resources/select.svg"
+
 import {deleteElement} from "./CanvasDraw";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
@@ -211,10 +213,10 @@ export class LeftMenu extends React.Component{
         var leftMenuContents;
 
         var toolbar = <div id = "Toolbar" className = "Toolbar">
-            <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode('Select')}><p>SELECT</p></div>
+            <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode('Select')}><img src={iconSelect} alt ="Select"/></div>
             <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
             <div id = "Arrow" className="ToolbarItem" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
-            <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode('Containment')}><img src={iconDiamond} alt ="Containment"/></div>
+            <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode('Containment')}><img src={iconContainment} alt ="Containment"/></div>
         </div>;
 
         if (this.state.menu === "Vertex") {

@@ -357,7 +357,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 
 
         console.log(findIntersected(x,y) + nextArrowType);
-        if(findIntersected(x,y) !== null && nextArrowType != -1){
+        if(findIntersected(x,y) !== null && nextArrowType !== -1){
             // Create
             nextArrowType = 2;
             let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
@@ -374,7 +374,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             nextArrowType = -1;
             return;
 
-        } else {
+        } else if (nextArrowType !== -1) {
             nextArrowType = 3;
             arrowPath.push(getConnectionDataForArrow(x, y));
             lastX = x;
