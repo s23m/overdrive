@@ -170,13 +170,15 @@ a,#json-downloader{
     justify-content: center;
 }
 
-.LeftMenus {
+.LeftMenus{
     display: flex;
     height: 94.2vh;
     width: 15vw;
     border: 2px groove #666666;
     flex-direction: column;
     border-top: none;
+    background: none;
+    z-index: 5;
 }
 
 .Toolbar {
@@ -194,6 +196,10 @@ a,#json-downloader{
     justify-content: center;
 }
 
+.VertexMenu, .ArrowMenu{
+    max-width: 15vw;
+}
+
 .LeftBar {
     display: flex;
     flex-wrap: nowrap;
@@ -208,15 +214,23 @@ a,#json-downloader{
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    border: 2px groove #666666;
+    border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;
     align-items: center;
     justify-content: center;
+    background-color: white;
+    width: 15vw;
 }
 
 .LeftTitle {
-    border: 2px groove #666666;
+    border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;
     align-items: center;
     justify-content: center;
+    width: 14.6vw;
+    background-color: #E0FFFF;
 }
 
 .LeftHeader{
@@ -226,16 +240,29 @@ a,#json-downloader{
     border: 2px groove #666666;
     height: 7vh;
     justify-content: center;
-    width:14.7vw;
+    width:15vw;
     background-color: #DDEEFF
 }
 
 .LeftContent {
-    border: 2px groove #666666;
+    border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;
     align-items: center;
     justify-content: center;
     resize:none;
     height: 10vh;
+    width: 14.6vw;
+    background-color: #E0FFFF;
+}
+
+.LeftSelector{
+    width: 15vw;
+    text-align-last: center;
+}
+
+.CardinalityBox{
+    width: 5vw;
 }
 
 .Canvas {

@@ -23,7 +23,11 @@ export class Arrow {
         if (semanticIdentity !== undefined){
             this.semanticIdentity = semanticIdentity;
         } else {
-            this.semanticIdentity = new SemanticIdentity("Arrow from " + objectsList[0] + " to " + objectsList[1],"","","", undefined ,[]);
+            if(objectsList.length > 1) {
+                this.semanticIdentity = new SemanticIdentity("Arrow from " + objectsList[0].semanticIdentity.name + " to " + objectsList[1].semanticIdentity.name, "", "", "", undefined, []);
+            }else{
+                this.semanticIdentity = new SemanticIdentity("Arrow connecting 1 or less vertices", "", "", "", undefined, []);
+            }
         }
 
         // Ensure there are at least 2 points

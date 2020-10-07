@@ -53,6 +53,14 @@ export class LeftMenu extends React.Component{
 
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let elem = document.getElementById("LeftTitle")
+        if(elem !== null){
+            elem.select();
+            elem.click()
+        }
+    }
+
     setIcons() {
         fetch('http://localhost:8080/icons/list',{
             method:'GET',
@@ -238,6 +246,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 {this.getColourPicker()}
+                <label className="LeftSpacer">&nbsp;</label>
 
                 <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Blank"})}}>Remove</button>;
             </div>;
@@ -249,7 +258,7 @@ export class LeftMenu extends React.Component{
                 <div className="LeftHeader">Arrow Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
-                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="ArrowHeadFrom" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
+                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
@@ -258,7 +267,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">To Node Head</label>
-                <select name="ArrowHeadTo" id="ArrowHeadTo" className="ArrowHeadTo" defaultValue={EdgeEndToString[this.state.selectedObject.endType]} onChange={() => this.setToNodeHead()}>
+                <select name="ArrowHeadTo" id="ArrowHeadTo" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.endType]} onChange={() => this.setToNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
@@ -267,14 +276,14 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Line Type</label>
-                <select name="LineType" id="LineType" className="LineType" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
+                <select name="LineType" id="LineType" className="LeftSelector" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
                     <option value = "Solid">Solid</option>
                     <option value = "Dashed">Dashed</option>
                 </select>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Line Colour</label>
-                <select name="LineColour" id="LineColour" className="LineColour" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
+                <select name="LineColour" id="LineColour" className="LeftSelector" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
                     <option value = "Black">Black</option>
                     <option value = "Red">Red</option>
                     <option value = "Blue">Blue</option>
@@ -285,22 +294,22 @@ export class LeftMenu extends React.Component{
                 {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Cardinality</label>
                     Visible: <input type="checkbox" id = "sourceCardinalityShown" defaultChecked={this.state.selectedObject.sourceCardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
-                    <input type="number" id = "sourceFromCardindality" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
-                    <input type="number" id = "sourceToCardindality" defaultValue={this.state.selectedObject.sourceCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Destination Cardinality</label>
                     Visible: <input type="checkbox" id = "destCardinalityShown" defaultChecked={this.state.selectedObject.destCardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
-                    <input type="number" id = "destFromCardindality" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
-                    <input type="number" id = "destToCardindality" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Source Label</label>
-                    <input id="SourceLabel" className="SourceLabel" defaultValue={this.state.selectedObject.sourceLabel} onKeyUp={() => this.setStartLabel()}/>
+                    <input id="SourceLabel" className="LeftTitle" defaultValue={this.state.selectedObject.sourceLabel} onKeyUp={() => this.setStartLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Destination Label</label>
-                    <input id="DestLabel" className="DestLabel" defaultValue={this.state.selectedObject.destLabel} onKeyUp={() => this.setEndLabel()}/>
+                    <input id="DestLabel" className="LeftTitle" defaultValue={this.state.selectedObject.destLabel} onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 }
