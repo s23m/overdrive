@@ -17,6 +17,7 @@ import iconSelect from "../Resources/select.svg"
 import {deleteElement} from "./CanvasDraw";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
+//Property Enums
 export const LeftMenuType = {
     TreeView: "TreeView",
     Vertex: "Vertex",
@@ -252,7 +253,7 @@ export class LeftMenu extends React.Component{
 
         if (this.state.menu === LeftMenuType.TreeView) {
             //TODO: Containment tree display
-            
+
         } else if (this.state.menu === LeftMenuType.Vertex) {
             console.log("Vertex Selected",this.state.selectedObject);
 
@@ -281,7 +282,7 @@ export class LeftMenu extends React.Component{
             console.log("Arrow Selected");
             
             leftMenuContents = <div id = "ArrowMenu">
-                <div className="LeftHeader">Arrow Properties</div>
+                <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
                 <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
@@ -320,13 +321,13 @@ export class LeftMenu extends React.Component{
                 {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Cardinality</label>
                     Visible: <input type="checkbox" id = "sourceCardinalityShown" defaultChecked={this.state.selectedObject.sourceCardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
-                    <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Destination Cardinality</label>
                     Visible: <input type="checkbox" id = "destCardinalityShown" defaultChecked={this.state.selectedObject.destCardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
-                    <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
