@@ -46,6 +46,16 @@
     border-radius: 10px;
 }
 
+input{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: Black;
+    font-size: calc(0.8vh + 0.8vw);
+}
+
 .IconSelector .dropdown-menu.show{
     background-color: white;
     border: 2px groove #666666;
@@ -129,7 +139,7 @@ a,#json-downloader{
     border: 2px groove #666666;
     height: 5vh;
     width: 10vw;
-    line-height: 4.5vh;
+    line-height: 5vh;
     text-align: end;
     border-right: 0;
 }
