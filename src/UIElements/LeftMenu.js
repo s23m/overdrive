@@ -78,10 +78,12 @@ export class LeftMenu extends React.Component{
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        let elem = document.getElementById("LeftTitle")
-        if(elem !== null){
-            elem.select();
-            elem.click()
+        if(prevState.selectedObject !== this.state.selectedObject) {
+            let elem = document.getElementById("LeftTitle")
+            if (elem !== null) {
+                elem.select();
+                elem.click()
+            }
         }
     }
 

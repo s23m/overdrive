@@ -115,11 +115,8 @@ export class MainProgramClass extends React.Component {
 
     }
 
-    searchFor = (e) => {
-        var searchTerm = e.target.value;
-        if (searchTerm === "") {
-            return null;
-        }
+    setModelName = (e) => {
+        this.setState({modelName:document.getElementById("ModelName").value})
     };
 
     // Code for file uploading
@@ -177,7 +174,7 @@ export class MainProgramClass extends React.Component {
 
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="json-downloader" onClick={() => fileManager.save()} download="export.json">Export to JSON</button>
+                                <button id="json-downloader" onClick={() => fileManager.save()}>Export to JSON</button>
                             </div>
                         </Dropdown.Item>
 
@@ -187,7 +184,7 @@ export class MainProgramClass extends React.Component {
                         Semantic Editor
                     </div>
 
-                    <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Model Name" onChange={(e) => this.searchFor(e)}/>
+                    <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Model Name" onChange={(e) => this.setModelName(e)}/>
 
                     <div className="TopBarIcon">&nbsp;</div>
                     {/*The + and - are backwards on purpose here*/}
