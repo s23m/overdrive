@@ -7,16 +7,34 @@ import { SemanticIdentity } from "./SemanticIdentity";
 
 export class Cardinality {
     constructor(lowerBound, upperBound, attachedToUUID, isVisible = false, semanticIdentity) {
-        this.lowerBound = lowerBound;
-        this.upperBound = upperBound;
+        this.numLowerBound = lowerBound;
+        this.numUpperBound = upperBound;
         this.attachedToUUID = attachedToUUID;
         this.isVisible = isVisible;
 
-        if (semanticIdentity !== null){
+        if (semanticIdentity !== undefined){
             this.semanticIdentity = semanticIdentity;
         } else {
             this.semanticIdentity = new SemanticIdentity(this.toString(), this.getDescription())
         }
+    }
+
+    set lowerBound(value){
+        this.numLowerBound = value;
+        this.semanticIdentity.name = this.toString();
+    }
+
+    get lowerBound(){
+        return this.numLowerBound;
+    }
+
+    set upperBound(value){
+        this.numUpperBound = value;
+        this.semanticIdentity.name = this.toString();
+    }
+
+    get upperBound(){
+        return this.numUpperBound;
     }
 
     toggleVisibility() {

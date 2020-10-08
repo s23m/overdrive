@@ -478,11 +478,28 @@ export function setZoom(newZoom) {
 
 // Useful for debugging
 export function drawMarker(xpos, ypos) {
+    const radius = 2;
+    const lineWidth = 0.5;
+    const strokeColour = "#007ACC";
+    const fillColour = "#007ACC55";
+
+    var oldLineWidth = canvasContext.lineWidth;
+    canvasContext.lineWidth = lineWidth;
+    var oldStrokeStyle = canvasContext.strokeStyle;
+    canvasContext.strokeStyle = strokeColour;
+    var oldFillStyle = canvasContext.fillStyle;
+    canvasContext.fillStyle = fillColour;
+    
     canvasContext.globalAlpha = 1.0;
     canvasContext.beginPath();
-    canvasContext.arc(xpos, ypos, 3, 0, Math.PI*2, false);
+    canvasContext.arc(xpos, ypos, radius, 0, Math.PI*2, false);
     canvasContext.fill();
+    canvasContext.stroke();
     canvasContext.closePath();
+
+    canvasContext.lineWidth = oldLineWidth;
+    canvasContext.strokeStyle = oldStrokeStyle;
+    canvasContext.fillStyle = oldFillStyle;
 }
 
 // Setting colors indirectly
