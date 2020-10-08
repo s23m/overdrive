@@ -21,7 +21,7 @@ export class EdgeEnd {
         if (cardinality !== undefined){
             this.cardinality = cardinality;
         } else {
-            this.cardinality = new Cardinality(1, 1, false, false, this.semanticIdentity.UUID)
+            this.cardinality = new Cardinality(1, 1, this.semanticIdentity.UUID);
         }
 
         this.label = label;
