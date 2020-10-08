@@ -261,7 +261,7 @@ export class Arrow {
     drawDiamondEnd(canvasContext, x, y, angle, fillColour = "#FFF") {
         //Constants
         const sideLength = 7;
-        const deg45 = Math.PI / 4;
+        const deg20 = Math.PI / 9;
         const angleInverted = angle + Math.PI;
 
         //Generate points for the diamond
@@ -271,16 +271,16 @@ export class Arrow {
             Y: y
         });
         diamondPoints.push({
-            X: x + sideLength * Math.cos(angleInverted - deg45),
-            Y: y + sideLength * Math.sin(angleInverted - deg45)
+            X: x + sideLength * Math.cos(angleInverted - deg20),
+            Y: y + sideLength * Math.sin(angleInverted - deg20)
         });
         diamondPoints.push({
-            X: x + sideLength * Math.SQRT2 * Math.cos(angleInverted),
-            Y: y + sideLength * Math.SQRT2 * Math.sin(angleInverted)
+            X: x + sideLength * 2 * Math.cos(angleInverted),
+            Y: y + sideLength * 2 * Math.sin(angleInverted)
         });
         diamondPoints.push({
-            X: x + sideLength * Math.cos(angleInverted + deg45),
-            Y: y + sideLength * Math.sin(angleInverted + deg45)
+            X: x + sideLength * Math.cos(angleInverted + deg20),
+            Y: y + sideLength * Math.sin(angleInverted + deg20)
         });
         diamondPoints.push({
             X: x,
