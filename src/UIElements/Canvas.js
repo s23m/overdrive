@@ -1,5 +1,6 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
+import { Tool } from './LeftMenu';
 
 var movingAllowed = false;
 
@@ -77,7 +78,7 @@ export class Canvas extends React.Component {
 
         // If it was a left click
         if (e.button === 0) {
-            if(canvas.tool === "Select"){
+            if(canvas.tool === Tool.Select){
                 this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                 canvasDraw.drawAll()
             }else {

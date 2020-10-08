@@ -9,13 +9,11 @@ import * as fileManager from '../Serialisation/FileManager';
 import {DropdownButton,Dropdown} from "react-bootstrap";
 
 import {Canvas} from './Canvas';
-import {LeftMenu} from './LeftMenu';
+import {LeftMenu, LeftMenuType, StringToLeftMenuType, Tool} from './LeftMenu';
 
 // Semantic domain editor
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
-
-const leftMenuTypes = ["Blank", "Vertex", "Arrow"];
 
 // Simple incremental version
 // 1->2->3->4
@@ -27,8 +25,8 @@ export class MainProgramClass extends React.Component {
         super(props);
         this.state = {
             zoomLevel: 200,
-            drawMode: "Vertex",
-            menu: "Blank",
+            drawMode: Tool.Vertex,
+            menu: LeftMenuType.TreeView,
             selectedObject: null,
         };
 
@@ -38,7 +36,7 @@ export class MainProgramClass extends React.Component {
     }
 
     componentDidMount() {
-        this.setMode("Vertex");
+        this.setMode(Tool.Vertex);
         console.log("Mounted");
     }
 
@@ -91,14 +89,14 @@ export class MainProgramClass extends React.Component {
         // check if the nearest object was too far away or didnt exist
         if (nearestObject === null) {
             this.setState({
-                menu: "Blank",
+                menu: LeftMenuType.TreeView,
                 selectedObject: null,
             });
 
         }
 
         // if the selected object has a left menu,
-        else if (leftMenuTypes.includes(nearestObject.constructor.name)) {
+        else if (StringToLeftMenuType[nearestObject.constructor.name] !== null) {
             this.setState({
                 menu: nearestObject.constructor.name,
                 selectedObject: nearestObject
@@ -110,7 +108,7 @@ export class MainProgramClass extends React.Component {
             }
 
             this.setState({
-                menu: "Blank",
+                menu: LeftMenuType.TreeView,
                 selectedObject: null
             });
         }

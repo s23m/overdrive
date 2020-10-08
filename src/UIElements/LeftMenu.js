@@ -17,6 +17,29 @@ import iconSelect from "../Resources/select.svg"
 import {deleteElement} from "./CanvasDraw";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
+export const LeftMenuType = {
+    TreeView: "TreeView",
+    Vertex: "Vertex",
+    Arrow: "Arrow"
+};
+
+export const LeftMenuTypeToString = {};
+LeftMenuTypeToString[LeftMenuType.TreeView] = "TreeView";
+LeftMenuTypeToString[LeftMenuType.Vertex] = "Vertex";
+LeftMenuTypeToString[LeftMenuType.Arrow] = "Arrow";
+
+export const StringToLeftMenuType = {};
+LeftMenuTypeToString["TreeView"] = LeftMenuType.TreeView;
+LeftMenuTypeToString["Vertex"] = LeftMenuType.Vertex;
+LeftMenuTypeToString["Arrow"] = LeftMenuType.Arrow;
+
+export const Tool = {
+    Select: "Select",
+    Vertex: "Vertex",
+    Arrow: "Arrow",
+    Containment: "Containment"
+};
+
 // class to display the left hand menu, where we will be showing
 // object editing tools for now
 export class LeftMenu extends React.Component{
@@ -24,7 +47,7 @@ export class LeftMenu extends React.Component{
     constructor() {
         super();
         this.state = {
-            menu: "Blank",
+            menu: LeftMenuType.TreeView,
             selectedObject: null,
             fileNames: []
         };
@@ -221,13 +244,13 @@ export class LeftMenu extends React.Component{
         var leftMenuContents;
 
         var toolbar = <div id = "Toolbar" className = "Toolbar">
-            <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode('Select')}><img src={iconSelect} alt ="Select"/></div>
-            <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode('Vertex')}><img src={iconVertex} alt ="Vertex"/></div>
-            <div id = "Arrow" className="ToolbarItem" onClick={() => this.props.setMode('Arrow')}><img src={iconArrow} alt ="Arrow"/></div>
-            <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode('Containment')}><img src={iconContainment} alt ="Containment"/></div>
+            <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
+            <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}><img src={iconVertex} alt ="Vertex"/></div>
+            <div id = "Arrow" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Arrow)}><img src={iconArrow} alt ="Arrow"/></div>
+            <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Containment)}><img src={iconContainment} alt ="Containment"/></div>
         </div>;
 
-        if (this.state.menu === "Vertex") {
+        if (this.state.menu === LeftMenuType.Vertex) {
             console.log("Vertex Selected",this.state.selectedObject);
 
             canvasDraw.drawAll();
@@ -248,10 +271,10 @@ export class LeftMenu extends React.Component{
                 {this.getColourPicker()}
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Blank"})}}>Remove</button>;
+                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}}>Remove</button>
             </div>;
 
-        } else if (this.state.menu === "Arrow") {
+        } else if (this.state.menu === LeftMenuType.Arrow) {
             console.log("Arrow Selected");
             
             leftMenuContents = <div id = "ArrowMenu">
