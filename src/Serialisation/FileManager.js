@@ -38,7 +38,7 @@ export function save() {
     let dataFile = new Blob([dataStr], {type: 'text/json'});
 
     DLelement.href = URL.createObjectURL(dataFile);
-    DLelement.download = "Export.json";
+    DLelement.download = document.getElementById("ModelName").value + ".json";
     document.body.appendChild(DLelement);
     DLelement.click();
 }

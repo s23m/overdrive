@@ -187,6 +187,8 @@ export class MainProgramClass extends React.Component {
                         Semantic Editor
                     </div>
 
+                    <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Model Name" onChange={(e) => this.searchFor(e)}/>
+
                     <div className="TopBarIcon">&nbsp;</div>
                     {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
