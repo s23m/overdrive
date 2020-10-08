@@ -17,6 +17,7 @@ import iconSelect from "../Resources/select.svg"
 import {deleteElement} from "./CanvasDraw";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
+//Property Enums
 export const LeftMenuType = {
     TreeView: "TreeView",
     Vertex: "Vertex",
@@ -252,7 +253,7 @@ export class LeftMenu extends React.Component{
 
         if (this.state.menu === LeftMenuType.TreeView) {
             //TODO: Containment tree display
-            
+
         } else if (this.state.menu === LeftMenuType.Vertex) {
             console.log("Vertex Selected",this.state.selectedObject);
 
