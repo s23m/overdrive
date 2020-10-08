@@ -197,7 +197,7 @@ export class LeftMenu extends React.Component{
             }
         });
 
-        return <DropdownButton title="Icon Selector" name="Icons" id="IconSelector" className="IconSelector">
+        return <DropdownButton title="Category Selector" name="Icons" id="IconSelector" className="IconSelector">
             {dropdownOptions}
         </DropdownButton>;
     }
