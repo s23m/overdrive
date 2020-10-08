@@ -24,7 +24,9 @@ export class Arrow {
             this.semanticIdentity = semanticIdentity;
         } else {
             if(objectsList.length > 1) {
-                this.semanticIdentity = new SemanticIdentity("Arrow from " + objectsList[0].semanticIdentity.name + " to " + objectsList[1].semanticIdentity.name, "", "", "", undefined, []);
+                this.semanticIdentity = new SemanticIdentity("Arrow from " + objectsList[0].semanticIdentity.UUID + " to " + objectsList[1].semanticIdentity.UUID, "", "", "", undefined, []);
+            }else if (objectsList.length === 1){
+                this.semanticIdentity = new SemanticIdentity("Arrow connecting " + objectsList[0].semanticIdentity.UUID, "", "", "", undefined, []);
             }else{
                 this.semanticIdentity = new SemanticIdentity("Arrow connecting 1 or less vertices", "", "", "", undefined, []);
             }
