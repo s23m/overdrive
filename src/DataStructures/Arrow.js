@@ -2,10 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import {Cardinality} from "./Cardinality";
 import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
+import { EdgeEnd } from "./EdgeEnd";
 import {pathFindTo} from "../Utils/PathFinder";
 
 export class Arrow {
@@ -42,25 +42,21 @@ export class Arrow {
 
         // Type
         if (type === 0 || type === 3) {
-            this.startType = ArrowProps.EdgeEnd.NONE;
-            this.endType = ArrowProps.EdgeEnd.NONE;
+            this.sourceEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+            this.destEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+
         } else if (type === 1) {
-            this.startType = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-            this.endType = ArrowProps.EdgeEnd.NONE;
+            this.sourceEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID, ArrowProps.EdgeEnd.FILLED_DIAMOND);
+            this.destEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+
         } else if (type === 2) {
-            this.startType = ArrowProps.EdgeEnd.NONE;
-            this.endType = ArrowProps.EdgeEnd.ARROW;
+            this.sourceEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+            this.destEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID, ArrowProps.EdgeEnd.ARROW);
         }
 
 
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
-
-        this.sourceCardinality = new Cardinality(1, 1, false, false,this.semanticIdentity.UUID);
-        this.destCardinality = new Cardinality(1, 1, false, false, this.semanticIdentity.UUID);
-
-        this.sourceLabel = "";
-        this.destLabel = "";
 
         this.selected = false;
     }
@@ -106,25 +102,25 @@ export class Arrow {
     }
 
     updateSourceCardinality(lowerBound, upperBound, visibility) {
-        this.sourceCardinality = new Cardinality(lowerBound, upperBound, visibility, this.semanticIdentity.UUID);
+        this.sourceEdgeEnd.updateCardinality(lowerBound, upperBound, visibility);
     }
 
     updateDestCardinality(lowerBound, upperBound, visibility) {
-        this.destCardinality = new Cardinality(lowerBound, upperBound, visibility, this.semanticIdentity.UUID);
+        this.destEdgeEnd.updateCardinality(lowerBound, upperBound, visibility);
     }
 
     setStartLabel(label) {
-        this.sourceLabel = label;
+        this.sourceEdgeEnd.label = label;
     }
 
     setEndLabel(label) {
-        this.destLabel = label;
+        this.destEdgeEnd.label = label;
     }
 
     setStartType(startType) {
         var val = ArrowProps.StringToEdgeEnd[startType];
         if (val !== undefined) {
-            this.startType = val;
+            this.sourceEdgeEnd.type = val;
         } else {
             console.log("Attempted to assign invalid startType: %s", startType);
         }
@@ -133,7 +129,7 @@ export class Arrow {
     setEndType(endType) {
         var val = ArrowProps.StringToEdgeEnd[endType];
         if (val !== undefined) {
-            this.endType = val;
+            this.destEdgeEnd.type = val;
         } else {
             console.log("Attempted to assign invalid endType: %s", endType);
         }
@@ -182,165 +178,15 @@ export class Arrow {
         return [nodeIndex, vertexNodes];
     }
 
-    drawLines(canvasContext, points, strokeColour, fillColour) {
-        canvasContext.strokeStyle = strokeColour;
-        if (fillColour !== undefined) {
-            canvasContext.fillStyle = fillColour;
-        }
-
-        canvasContext.beginPath();
-        canvasContext.moveTo(points[0].X, points[0].Y);
-        for (let i = 1; i < points.length; i++) {
-            canvasContext.lineTo(points[i].X, points[i].Y)
-        }
-        
-        if (fillColour !== undefined) {
-            canvasContext.closePath();
-            canvasContext.fill();
-        }
-        canvasContext.stroke();
-
-        canvasContext.fillStyle = "#000"
-        canvasContext.strokeStyle = "#000";
-    }
-
-    drawArrowEnd(canvasContext, x, y, angle) {
-        //Constants
-        const strokeLength = 7;
-        const angleFromLine = Math.PI/6;
-        const angleInverted = angle + Math.PI;
-
-        //Generate points for the arrowhead
-        var arrowPoints = [];
-        arrowPoints.push({
-            X: x + strokeLength * Math.cos(angleInverted - angleFromLine),
-            Y: y + strokeLength * Math.sin(angleInverted - angleFromLine)
-        });
-        arrowPoints.push({
-            X: x,
-            Y: y
-        });
-        arrowPoints.push({
-            X: x + strokeLength * Math.cos(angleInverted + angleFromLine),
-            Y: y + strokeLength * Math.sin(angleInverted + angleFromLine)
-        });
-
-        //Arrowhead drawing
-        this.drawLines(canvasContext, arrowPoints, this.lineColour)
-    }
-
-    drawTriangleEnd(canvasContext, x, y, angle, fillColour = "#FFF") {
-        //Constants
-        const sideLength = 7;
-        const deg30 = Math.PI / 6;
-        const angleInverted = angle + Math.PI;
-
-        //Generate points for the triangle
-        var trianglePoints = [];
-        trianglePoints.push({
-            X: x,
-            Y: y
-        });
-        trianglePoints.push({
-            X: x + sideLength * Math.cos(angleInverted - deg30),
-            Y: y + sideLength * Math.sin(angleInverted - deg30)
-        });
-        trianglePoints.push({
-            X: x + sideLength * Math.cos(angleInverted + deg30),
-            Y: y + sideLength * Math.sin(angleInverted + deg30)
-        });
-        trianglePoints.push({
-            X: x,
-            Y: y
-        });
-
-        //Triangle drawing
-        this.drawLines(canvasContext, trianglePoints, this.lineColour, fillColour);
-    }
-
-    drawDiamondEnd(canvasContext, x, y, angle, fillColour = "#FFF") {
-        //Constants
-        const sideLength = 7;
-        const deg45 = Math.PI / 4;
-        const angleInverted = angle + Math.PI;
-
-        //Generate points for the diamond
-        var diamondPoints = [];
-        diamondPoints.push({
-            X: x,
-            Y: y
-        });
-        diamondPoints.push({
-            X: x + sideLength * Math.cos(angleInverted - deg45),
-            Y: y + sideLength * Math.sin(angleInverted - deg45)
-        });
-        diamondPoints.push({
-            X: x + sideLength * Math.SQRT2 * Math.cos(angleInverted),
-            Y: y + sideLength * Math.SQRT2 * Math.sin(angleInverted)
-        });
-        diamondPoints.push({
-            X: x + sideLength * Math.cos(angleInverted + deg45),
-            Y: y + sideLength * Math.sin(angleInverted + deg45)
-        });
-        diamondPoints.push({
-            X: x,
-            Y: y
-        });
-
-        //Diamond drawing
-        this.drawLines(canvasContext, diamondPoints, this.lineColour, fillColour);
-    }
-
     drawStartHead(canvasContext) {
         var lineAngle = Math.atan2(this.getSY() - this.getNSY(), this.getSX() - this.getNSX());
-
-        switch (this.startType) {
-            case ArrowProps.EdgeEnd.NONE:
-                break;
-            case ArrowProps.EdgeEnd.ARROW:
-                this.drawArrowEnd(canvasContext, this.getSX(), this.getSY(), lineAngle);
-                break;
-            case ArrowProps.EdgeEnd.TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.getSX(), this.getSY(), lineAngle);
-                break;
-            case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.getSX(), this.getSY(), lineAngle, this.lineColour);
-                break;
-            case ArrowProps.EdgeEnd.DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.getSX(), this.getSY(), lineAngle);
-                break;
-            case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.getSX(), this.getSY(), lineAngle, this.lineColour);
-                break;
-            default:
-                console.log("Arrow had unexpected startType: %s", this.startType);
-        }
+        console.log(this.sourceEdgeEnd);
+        this.sourceEdgeEnd.draw(canvasContext, this.getSX(), this.getSY(), lineAngle, this.lineColour);
     }
 
     drawEndHead(canvasContext) {
         var lineAngle = Math.atan2(this.getEY() - this.getNEY(), this.getEX() - this.getNEX());
-
-        switch (this.endType) {
-            case ArrowProps.EdgeEnd.NONE:
-                break;
-            case ArrowProps.EdgeEnd.ARROW:
-                this.drawArrowEnd(canvasContext, this.getEX(), this.getEY(), lineAngle);
-                break;
-            case ArrowProps.EdgeEnd.TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.getEX(), this.getEY(), lineAngle);
-                break;
-            case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
-                this.drawTriangleEnd(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
-                break;
-            case ArrowProps.EdgeEnd.DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.getEX(), this.getEY(), lineAngle);
-                break;
-            case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
-                break;
-            default:
-                console.log("Arrow had unexpected endType: %s", this.endType);
-        }
+        this.destEdgeEnd.draw(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
     }
 
     getTextOffsets(canvasContext, sourceText, destText, sourceCtext, destCtext) {
@@ -457,23 +303,23 @@ export class Arrow {
 
 
     drawLabelsAndCardinalities(canvasContext) {
-        let sourceCardText = this.sourceCardinality.toString();
-        let destCardText = this.destCardinality.toString();
-        let Offsets = this.getTextOffsets(canvasContext,this.sourceLabel,this.destLabel,sourceCardText,destCardText);
+        let sourceCardText = this.sourceEdgeEnd.cardinality.toString();
+        let destCardText = this.destEdgeEnd.cardinality.toString();
+        let Offsets = this.getTextOffsets(canvasContext,this.sourceEdgeEnd.label,this.destEdgeEnd.label,sourceCardText,destCardText);
 
         //draw source text
-        canvasContext.fillText(this.sourceLabel, this.getSX() + Offsets[0], this.getSY() + Offsets[1]);
+        canvasContext.fillText(this.sourceEdgeEnd.label, this.getSX() + Offsets[0], this.getSY() + Offsets[1]);
 
         //draw destination text
-        canvasContext.fillText(this.destLabel, this.getEX() + Offsets[2], this.getEY() + Offsets[3]);
+        canvasContext.fillText(this.destEdgeEnd.label, this.getEX() + Offsets[2], this.getEY() + Offsets[3]);
 
         //draw source cardinality
-        if (this.sourceCardinality.isVisible) {
+        if (this.sourceEdgeEnd.cardinality.isVisible) {
             canvasContext.fillText(sourceCardText, this.getSX() + Offsets[4], this.getSY() + Offsets[5]);
         }
 
         //draw destination cardinality
-        if (this.destCardinality.isVisible) {
+        if (this.destEdgeEnd.cardinality.isVisible) {
             canvasContext.fillText(destCardText, this.getEX() + Offsets[6], this.getEY() + Offsets[7]);
         }
     }

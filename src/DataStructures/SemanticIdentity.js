@@ -18,7 +18,7 @@ export class SemanticIdentity {
         this.abbreviation = abbreviation;
         this.shortAbbreviation = shortAbbreviation;
 
-        if (translations !== null){
+        if (translations !== undefined){
             this.translations = translations;
         } else {
             this.translations = [];

@@ -4,12 +4,12 @@
 
  //EDGE ENDS
 export const EdgeEnd = {
-    NONE: 1,
-    ARROW: 2,
-    TRIANGLE: 3,
-    FILLED_TRIANGLE: 4,
-    DIAMOND: 5,
-    FILLED_DIAMOND: 6
+    NONE: "None",
+    ARROW: "Arrow",
+    TRIANGLE: "Triangle",
+    FILLED_TRIANGLE: "Filled Triangle",
+    DIAMOND: "Diamond",
+    FILLED_DIAMOND: "Filled Diamond"
 };
 
 export const EdgeEndToString = {};

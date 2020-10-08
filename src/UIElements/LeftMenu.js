@@ -287,7 +287,7 @@ export class LeftMenu extends React.Component{
                 <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
-                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
+                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.sourceEdgeEnd.type]} onChange={() => this.setFromNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
@@ -296,7 +296,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">To Node Head</label>
-                <select name="ArrowHeadTo" id="ArrowHeadTo" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.endType]} onChange={() => this.setToNodeHead()}>
+                <select name="ArrowHeadTo" id="ArrowHeadTo" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.destEdgeEnd.type]} onChange={() => this.setToNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
