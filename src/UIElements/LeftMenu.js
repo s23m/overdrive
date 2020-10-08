@@ -250,7 +250,10 @@ export class LeftMenu extends React.Component{
             <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Containment)}><img src={iconContainment} alt ="Containment"/></div>
         </div>;
 
-        if (this.state.menu === LeftMenuType.Vertex) {
+        if (this.state.menu === LeftMenuType.TreeView) {
+            //TODO: Containment tree display
+            
+        } else if (this.state.menu === LeftMenuType.Vertex) {
             console.log("Vertex Selected",this.state.selectedObject);
 
             canvasDraw.drawAll();
