@@ -382,6 +382,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             canvasElement.onmousemove = function (e) {
                 onMouseMove(e, canvas)
             };
+            return;
         }
 
         if(nextArrowType === -1){
@@ -396,6 +397,7 @@ export function onLeftMouseRelease(canvas, x, y) {
                 onMouseMove(e, canvas)
             };
         }
+        return;
 
     }
 
