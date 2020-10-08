@@ -143,8 +143,8 @@ export class EdgeEnd {
             Y: y + sideLength * Math.sin(angleInverted - deg20)
         });
         diamondPoints.push({
-            X: x + sideLength * Math.SQRT2 * Math.cos(angleInverted),
-            Y: y + sideLength * Math.SQRT2 * Math.sin(angleInverted)
+            X: x + sideLength * 2 * Math.cos(angleInverted),
+            Y: y + sideLength * 2 * Math.sin(angleInverted)
         });
         diamondPoints.push({
             X: x + sideLength * Math.cos(angleInverted + deg20),
