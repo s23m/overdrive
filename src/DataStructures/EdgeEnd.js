@@ -72,7 +72,7 @@ export class EdgeEnd {
         canvasContext.strokeStyle = "#000";
     }
 
-    drawArrowEnd(canvasContext, x, y, angle) {
+    drawArrowEnd(canvasContext, x, y, angle, lineColour) {
         //Constants
         const strokeLength = 7;
         const angleFromLine = Math.PI/6;
@@ -94,10 +94,10 @@ export class EdgeEnd {
         });
 
         //Arrowhead drawing
-        this.drawLines(canvasContext, arrowPoints, this.lineColour)
+        this.drawLines(canvasContext, arrowPoints, lineColour)
     }
 
-    drawTriangleEnd(canvasContext, x, y, angle, fillColour = "#FFF") {
+    drawTriangleEnd(canvasContext, x, y, angle, lineColour, fillColour = "#FFF") {
         //Constants
         const sideLength = 7;
         const deg30 = Math.PI / 6;
@@ -123,10 +123,10 @@ export class EdgeEnd {
         });
 
         //Triangle drawing
-        this.drawLines(canvasContext, trianglePoints, this.lineColour, fillColour);
+        this.drawLines(canvasContext, trianglePoints, lineColour, fillColour);
     }
 
-    drawDiamondEnd(canvasContext, x, y, angle, fillColour = "#FFF") {
+    drawDiamondEnd(canvasContext, x, y, angle, lineColour, fillColour = "#FFF") {
         //Constants
         const sideLength = 7;
         const deg20 = Math.PI / 9;
@@ -156,7 +156,7 @@ export class EdgeEnd {
         });
 
         //Diamond drawing
-        this.drawLines(canvasContext, diamondPoints, this.lineColour, fillColour);
+        this.drawLines(canvasContext, diamondPoints, lineColour, fillColour);
     }
 
     draw(canvasContext, x, y, angle, lineColour){
@@ -164,19 +164,19 @@ export class EdgeEnd {
             case ArrowProps.EdgeEnd.NONE:
                 break;
             case ArrowProps.EdgeEnd.ARROW:
-                this.drawArrowEnd(canvasContext, x, y, angle);
+                this.drawArrowEnd(canvasContext, x, y, angle, lineColour);
                 break;
             case ArrowProps.EdgeEnd.TRIANGLE:
-                this.drawTriangleEnd(canvasContext, x, y, angle);
-                break;
-            case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
                 this.drawTriangleEnd(canvasContext, x, y, angle, lineColour);
                 break;
+            case ArrowProps.EdgeEnd.FILLED_TRIANGLE:
+                this.drawTriangleEnd(canvasContext, x, y, angle, lineColour, lineColour);
+                break;
             case ArrowProps.EdgeEnd.DIAMOND:
-                this.drawDiamondEnd(canvasContext, x, y, angle);
+                this.drawDiamondEnd(canvasContext, x, y, angle, lineColour);
                 break;
             case ArrowProps.EdgeEnd.FILLED_DIAMOND:
-                this.drawDiamondEnd(canvasContext, x, y, angle, lineColour);
+                this.drawDiamondEnd(canvasContext, x, y, angle, lineColour, lineColour);
                 break;
             default:
                 console.log("EdgeEnd had unexpected type: %s", this.type);
