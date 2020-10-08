@@ -32,6 +32,9 @@ export class Arrow {
             }
         }
 
+        this.sourceEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+        this.destEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+
         // Ensure there are at least 2 points
         if (pathData.length === 1) pathData.push(pathData[0]);
         // Save pathData for later
@@ -42,16 +45,16 @@ export class Arrow {
 
         // Type
         if (type === 0 || type === 3) {
-            this.sourceEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
-            this.destEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
 
         } else if (type === 1) {
-            this.sourceEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID, ArrowProps.EdgeEnd.FILLED_DIAMOND);
-            this.destEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
 
         } else if (type === 2) {
-            this.sourceEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID);
-            this.destEdgeEnd = new EdgeEnd(this.semanticIdentity.UUID, ArrowProps.EdgeEnd.ARROW);
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
         }
 
 
@@ -180,7 +183,6 @@ export class Arrow {
 
     drawStartHead(canvasContext) {
         var lineAngle = Math.atan2(this.getSY() - this.getNSY(), this.getSX() - this.getNSX());
-        console.log(this.sourceEdgeEnd);
         this.sourceEdgeEnd.draw(canvasContext, this.getSX(), this.getSY(), lineAngle, this.lineColour);
     }
 

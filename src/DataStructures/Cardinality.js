@@ -21,7 +21,6 @@ export class Cardinality {
 
     set lowerBound(value){
         this.numLowerBound = value;
-        console.log(this.semanticIdentity);
         this.semanticIdentity.name = this.toString();
     }
 
@@ -31,7 +30,6 @@ export class Cardinality {
 
     set upperBound(value){
         this.numUpperBound = value;
-        console.log(this.semanticIdentity);
         this.semanticIdentity.name = this.toString();
     }
 
