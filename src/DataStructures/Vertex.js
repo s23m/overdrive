@@ -234,7 +234,7 @@ export class Vertex {
         var fontSize = 12;
         padding = 5;
         // Set font settings
-        canvasContext.font = fontSize+"px Arial";
+        canvasContext.font = fontSize+"px Segoe UI";
         canvasContext.fontSize = fontSize;
 
         // Find the maximum width of text and size the class accordingly
