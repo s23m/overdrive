@@ -133,6 +133,11 @@ export default () => {
     var [columns, setColumnsRet] = useState(createColumns());
     setColumns = setColumnsRet;
 
+    const [editingStateColumnExtensions] = useState([
+        { columnName: 'UUID', editingEnabled: false },
+        { columnName: 'type', editingEnabled: false },
+    ]);
+
     const [generatedRows, setRowsRet] = useState([]);
     rows = generatedRows;
     setRows = setRowsRet;
@@ -183,7 +188,10 @@ export default () => {
                 columns={columns}
                 getRowId={getRowId}
             >
-                <EditingState onCommitChanges={commitChanges} />
+                <EditingState
+                    onCommitChanges={commitChanges}
+                    columnExtensions={editingStateColumnExtensions}
+                />
                 <Table cellComponent={FocusableCell} />
                 <TableHeaderRow />
                 <Toolbar />
