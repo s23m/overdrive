@@ -281,7 +281,7 @@ export class LeftMenu extends React.Component{
             console.log("Arrow Selected");
             
             leftMenuContents = <div id = "ArrowMenu">
-                <div className="LeftHeader">Arrow Properties</div>
+                <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
                 <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
