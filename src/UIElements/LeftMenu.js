@@ -271,7 +271,7 @@ export class LeftMenu extends React.Component{
                 {this.getColourPicker()}
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}}>Remove</button>;
+                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}}>Remove</button>
             </div>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
