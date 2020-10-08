@@ -12,7 +12,7 @@ export const EdgeEnd = {
     FILLED_DIAMOND: 6
 };
 
-export var EdgeEndToString = {};
+export const EdgeEndToString = {};
 EdgeEndToString[EdgeEnd.NONE] = "None";
 EdgeEndToString[EdgeEnd.ARROW] = "Arrow";
 EdgeEndToString[EdgeEnd.TRIANGLE] = "Triangle";
@@ -20,7 +20,7 @@ EdgeEndToString[EdgeEnd.FILLED_TRIANGLE] = "FilledTriangle";
 EdgeEndToString[EdgeEnd.DIAMOND] = "Diamond";
 EdgeEndToString[EdgeEnd.FILLED_DIAMOND] = "FilledDiamond";
 
-export var StringToEdgeEnd = {};
+export const StringToEdgeEnd = {};
 StringToEdgeEnd["None"] = EdgeEnd.NONE;
 StringToEdgeEnd["Arrow"] = EdgeEnd.ARROW;
 StringToEdgeEnd["Triangle"] = EdgeEnd.TRIANGLE;
@@ -36,13 +36,13 @@ export const LineColour = {
     GREEN: "#00FF00"
 }
 
-export var LineColourToStringName = {};
+export const LineColourToStringName = {};
 LineColourToStringName[LineColour.BLACK] = "Black";
 LineColourToStringName[LineColour.RED] = "Red";
 LineColourToStringName[LineColour.BLUE] = "Blue";
 LineColourToStringName[LineColour.GREEN] = "Green";
 
-export var StringNameToLineColour = {};
+export const StringNameToLineColour = {};
 StringNameToLineColour["Black"] = LineColour.BLACK;
 StringNameToLineColour["Red"] = LineColour.RED;
 StringNameToLineColour["Blue"] = LineColour.BLUE;
@@ -54,10 +54,10 @@ export const LineType = {
     DASHED: 2
 };
 
-export var LineTypeToString = {};
+export const LineTypeToString = {};
 LineTypeToString[LineType.SOLID] = "Solid";
 LineTypeToString[LineType.DASHED] = "Dashed";
 
-export var StringToLineType = {};
+export const StringToLineType = {};
 StringToLineType["Solid"] = LineType.SOLID;
 StringToLineType["Dashed"] = LineType.DASHED;

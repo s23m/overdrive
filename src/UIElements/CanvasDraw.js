@@ -4,6 +4,7 @@
 
 import {Vertex, padding} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
+import {Tool} from "./LeftMenu";
 import {useState} from "react";
 import {SemanticIdentity} from "../DataStructures/SemanticIdentity";
 
@@ -279,7 +280,7 @@ export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
     console.log(resizeVars);
 
-    if (canvas.tool === "Vertex") {
+    if (canvas.tool === Tool.Vertex) {
 
         if (resizeVars[0] !== null) {
             resizing = true;
@@ -290,7 +291,7 @@ export function onLeftMousePress(canvas, x, y) {
         }
 
         let intersection = findIntersected(x,y);
-        if(canvas.tool === "Vertex" && intersection !== null){
+        if(canvas.tool === Tool.Vertex && intersection !== null){
             console.log("Selecting intersected Vertex");
             canvas.props.setLeftMenu(intersection);
             cancelDraw = true;
@@ -306,7 +307,7 @@ export function onLeftMousePress(canvas, x, y) {
 }
 
 export function onRightMouseRelease(canvas, x, y) {
-    if (canvas.tool === "Arrow" || canvas.tool === "Containment") {
+    if (canvas.tool === Tool.Arrow || canvas.tool === Tool.Containment) {
         // Create
         nextArrowType = 2;
         let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
@@ -353,7 +354,7 @@ export function onLeftMouseRelease(canvas, x, y) {
         return;
     }
 
-    if (canvas.tool === "Arrow" || canvas.tool === "Containment") {
+    if (canvas.tool === Tool.Arrow || canvas.tool === Tool.Containment) {
 
 
         console.log(findIntersected(x,y) + nextArrowType);
@@ -385,9 +386,9 @@ export function onLeftMouseRelease(canvas, x, y) {
         }
 
         if(nextArrowType === -1){
-            if(canvas.tool === "Arrow")
+            if(canvas.tool === Tool.Arrow)
                 nextArrowType = 0;
-            if(canvas.tool === "Containment")
+            if(canvas.tool === Tool.Containment)
                 nextArrowType = 1;
             arrowPath.push(getConnectionDataForArrow(x, y));
             lastX = x;
@@ -399,7 +400,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 
     }
 
-    if (nextArrowType === 3 || canvas.tool === "Vertex") {
+    if (nextArrowType === 3 || canvas.tool === Tool.Vertex) {
         let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
         addObject(newObject);
 
@@ -509,18 +510,18 @@ export function findIntersected(x, y) {
 function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
     switch(canvas.tool) {
-        case "Vertex":
+        case Tool.Vertex:
             let pos = orderCoordinates(x1, y1, x2, y2);
             let vy1 = findNearestGridY(pos[1], 0);
             let vy2 = findNearestGridY(pos[3], 0);
             return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
-        case "Arrow":
+        case Tool.Arrow:
             newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
             return new Arrow(currentObjects, newPath, nextArrowType);
 
 
-        case "Containment":
+        case Tool.Containment:
             newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
 
             return new Arrow(currentObjects, newPath, nextArrowType);
