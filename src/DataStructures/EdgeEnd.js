@@ -5,7 +5,13 @@
 import { SemanticIdentity } from "./SemanticIdentity";
 import { Cardinality } from "./Cardinality";
 import * as ArrowProps from "./ArrowProperties";
- 
+
+// Object that contains all the parts of an arrow ending including:
+// Head type
+// Cardinality
+// Label
+//
+// Used in the Arrow class
 export class EdgeEnd {
     constructor(attachedToUUID, headType = ArrowProps.EdgeEnd.NONE, cardinality, label = "", semanticIdentity) {
         this.attachedToUUID = attachedToUUID;

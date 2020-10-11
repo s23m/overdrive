@@ -7,7 +7,6 @@ import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {pathFindTo} from "../Utils/PathFinder";
-import {Cardinality} from "./Cardinality";
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
@@ -58,14 +57,10 @@ export class Arrow {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
         }
 
-
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
 
         this.selected = false;
-
-        this.sourceCardinality = new Cardinality();
-        this.destCardinality = new Cardinality();
     }
 
     // Rebuilds path from cached pathData
@@ -112,8 +107,40 @@ export class Arrow {
         this.sourceEdgeEnd.updateCardinality(lowerBound, upperBound, visibility);
     }
 
+    getSourceCardinalityVisibility() {
+        return this.sourceEdgeEnd.cardinality.isVisible;
+    }
+
+    toggleSourceCardinalityVisibility() {
+        this.sourceEdgeEnd.cardinality.toggleVisibility();
+    }
+
+    getSourceCardinalityLowerBound() {
+        return this.sourceEdgeEnd.cardinality.lowerBound;
+    }
+
+    getSourceCardinalityUpperBound() {
+        return this.sourceEdgeEnd.cardinality.upperBound;
+    }
+
     updateDestCardinality(lowerBound, upperBound, visibility) {
         this.destEdgeEnd.updateCardinality(lowerBound, upperBound, visibility);
+    }
+
+    getDestCardinalityVisibility() {
+        return this.destEdgeEnd.cardinality.isVisible;
+    }
+
+    toggleDestCardinalityVisibility() {
+        this.destEdgeEnd.cardinality.toggleVisibility();
+    }
+
+    getDestCardinalityLowerBound() {
+        return this.destEdgeEnd.cardinality.lowerBound;
+    }
+
+    getDestCardinalityUpperBound() {
+        return this.destEdgeEnd.cardinality.upperBound;
     }
 
     setStartLabel(label) {
@@ -359,13 +386,6 @@ export class Arrow {
             canvasContext.stroke();
         }
 
-        if (this.selected) {
-            for (let i = 0; i < this.path.length; i++) {
-                let pos = this.path[i];
-                drawMarker(pos[0], pos[1]);
-            }
-        }
-
         canvasContext.strokeStyle = "#000";
         canvasContext.setLineDash([]);
 
@@ -373,6 +393,13 @@ export class Arrow {
         this.drawEndHead(canvasContext);
         //store which labels were flipped and in which direction (x/y)
         this.drawLabelsAndCardinalities(canvasContext);
+
+        if (this.selected) {
+            for (let i = 0; i < this.path.length; i++) {
+                let pos = this.path[i];
+                drawMarker(pos[0], pos[1]);
+            }
+        }
     }
 
     intersects(cx, cy) {
