@@ -57,7 +57,6 @@ export class Canvas extends React.Component {
             let dist = Math.hypot(x, y, x2, y2);
 
             if (dist > 10 && movingAllowed) {
-                console.log("it did");
                 canvasDraw.onMiddleClick(canvas, x, y);
             }
         }
@@ -89,8 +88,7 @@ export class Canvas extends React.Component {
         // if it was a right click
         if (e.button === 2) {
 
-            if(movingAllowed) {
-                console.log("solidified")
+            if (movingAllowed) {
                 canvasDraw.solidifyObject();
                 movingAllowed = false;
             }

@@ -78,12 +78,10 @@ export class LeftMenu extends React.Component{
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevState.selectedObject !== this.state.selectedObject) {
-            let elem = document.getElementById("LeftTitle")
-            if (elem !== null) {
-                elem.select();
-                elem.click()
-            }
+        let elem = document.getElementById("LeftTitle")
+        if(elem !== null){
+            elem.select();
+            elem.click()
         }
     }
 
@@ -117,14 +115,6 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.setContent(newContent);
         canvasDraw.drawAll()
     }
-
-    /*setIcon() {
-        var iconName = document.getElementById("IconSelector").value;
-        this.state.selectedObject.setIcons([iconName],[true],[true]);
-        console.log(iconName);
-        canvasDraw.drawAll()
-    }
-    */
 
     //ARROW SETTERS
     setFromNodeHead() {
@@ -166,10 +156,10 @@ export class LeftMenu extends React.Component{
     updateCardinality() {
         var sourceLowerBound = document.getElementById("sourceFromCardindality").value;
         var sourceUpperBound = document.getElementById("sourceToCardindality").value;
-        var currentSourceVisibility = this.state.selectedObject.sourceEdgeEnd.cardinality.isVisible;
+        var currentSourceVisibility = this.state.selectedObject.sourceCardinality.isVisible;
         var destLowerBound = document.getElementById("destFromCardindality").value;
         var destUpperBound = document.getElementById("destToCardindality").value;
-        var currentDestVisibility = this.state.selectedObject.destEdgeEnd.cardinality.isVisible;
+        var currentDestVisibility = this.state.selectedObject.destCardinality.isVisible;
 
         this.state.selectedObject.updateSourceCardinality(sourceLowerBound, sourceUpperBound, currentSourceVisibility);
         this.state.selectedObject.updateDestCardinality(destLowerBound, destUpperBound, currentDestVisibility);
@@ -178,11 +168,11 @@ export class LeftMenu extends React.Component{
     }
 
     toggleSourceCardinalityVisibility() {
-        this.state.selectedObject.sourceEdgeEnd.cardinality.toggleVisibility();
+        this.state.selectedObject.sourceCardinality.toggleVisibility();
     }
 
     toggleDestCardinalityVisibility() {
-        this.state.selectedObject.destEdgeEnd.cardinality.toggleVisibility();
+        this.state.selectedObject.destCardinality.toggleVisibility();
     }
 
     getS23MIconsSelector() {
@@ -257,8 +247,6 @@ export class LeftMenu extends React.Component{
             //TODO: Containment tree display
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
-            console.log("Vertex Selected",this.state.selectedObject);
-
             canvasDraw.drawAll();
 
             leftMenuContents = <div id = "VertexMenu">
@@ -277,7 +265,7 @@ export class LeftMenu extends React.Component{
                 {this.getColourPicker()}
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}}>Remove</button>
+                <button className="LeftLabel" onClick={(e) => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
             </div>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
@@ -287,7 +275,7 @@ export class LeftMenu extends React.Component{
                 <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
-                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.sourceEdgeEnd.type]} onChange={() => this.setFromNodeHead()}>
+                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.startType]} onChange={() => this.setFromNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
@@ -296,7 +284,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">To Node Head</label>
-                <select name="ArrowHeadTo" id="ArrowHeadTo" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.destEdgeEnd.type]} onChange={() => this.setToNodeHead()}>
+                <select name="ArrowHeadTo" id="ArrowHeadTo" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.endType]} onChange={() => this.setToNodeHead()}>
                     <option value = "None">-No Icon</option>
                     <option value = "Arrow">-></option>
                     <option value = "Triangle">-▷</option>
@@ -322,23 +310,23 @@ export class LeftMenu extends React.Component{
 
                 {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Cardinality</label>
-                    Visible: <input type="checkbox" id = "sourceCardinalityShown" defaultChecked={this.state.selectedObject.sourceEdgeEnd.cardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
-                    <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceEdgeEnd.cardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
+                    Visible: <input type="checkbox" id = "sourceCardinalityShown" defaultChecked={this.state.selectedObject.sourceCardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
+                    <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
-                    <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceEdgeEnd.cardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Destination Cardinality</label>
-                    Visible: <input type="checkbox" id = "destCardinalityShown" defaultChecked={this.state.selectedObject.destEdgeEnd.cardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
-                    <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destEdgeEnd.cardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
+                    Visible: <input type="checkbox" id = "destCardinalityShown" defaultChecked={this.state.selectedObject.destCardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
+                    <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
-                    <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destEdgeEnd.cardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                    <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
 
                 <label className="LeftLabel">Source Label</label>
-                    <input id="SourceLabel" className="LeftTitle" defaultValue={this.state.selectedObject.sourceEdgeEnd.label} onKeyUp={() => this.setStartLabel()}/>
+                    <input id="SourceLabel" className="LeftTitle" defaultValue={this.state.selectedObject.sourceLabel} onKeyUp={() => this.setStartLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Destination Label</label>
-                    <input id="DestLabel" className="LeftTitle" defaultValue={this.state.selectedObject.destEdgeEnd.label} onKeyUp={() => this.setEndLabel()}/>
+                    <input id="DestLabel" className="LeftTitle" defaultValue={this.state.selectedObject.destLabel} onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 }

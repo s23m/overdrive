@@ -149,17 +149,13 @@ function checkResizeBounds(x, y) {
             let top = Math.abs(y1-y) < tolerance;
             let bottom = Math.abs(y2-y) <tolerance;
             let left = Math.abs(x1-x) < tolerance;
-            console.log(Math.abs(x2-x))
             let right = Math.abs(x2-x) < tolerance;
-            console.log(y + " between " + y1 + " and " + y2)
             let inYbounds = y > y1 && y < y2;
             let inXbounds = x > x1 && x < x2;
 
             if (right && inYbounds){
-                console.log("it happened ok")
                 return [item, "right"];
             }
-            console.log(right, inYbounds)
 
             if (top && left) {
                 return [item, "topLeft"];
@@ -278,7 +274,6 @@ export function setCurrentObjects(newObjects) {
 // Event based functions
 export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
-    console.log(resizeVars);
 
     if (canvas.tool === Tool.Vertex) {
 
@@ -356,8 +351,6 @@ export function onLeftMouseRelease(canvas, x, y) {
 
     if (canvas.tool === Tool.Arrow || canvas.tool === Tool.Containment) {
 
-
-        console.log(findIntersected(x,y) + nextArrowType);
         if(findIntersected(x,y) !== null && nextArrowType !== -1){
             // Create
             nextArrowType = 2;
@@ -534,15 +527,13 @@ function createObject(canvas, x1, y1, x2, y2) {
             let vy1 = findNearestGridY(pos[1], 0);
             let vy2 = findNearestGridY(pos[3], 0);
             return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+
         case Tool.Arrow:
             newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
-
             return new Arrow(currentObjects, newPath, nextArrowType);
-
 
         case Tool.Containment:
             newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
-
             return new Arrow(currentObjects, newPath, nextArrowType);
 
         default:

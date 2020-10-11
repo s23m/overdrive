@@ -142,6 +142,15 @@ export default () => {
     rows = generatedRows;
     setRows = setRowsRet;
 
+    const [tableColumnExtensions] = useState([
+        { columnName: 'UUID', wordWrapEnabled: true },
+        { columnName: 'type', wordWrapEnabled: true },
+        { columnName: 'name', wordWrapEnabled: true },
+        { columnName: 'description', wordWrapEnabled: true },
+        { columnName: 'abbreviation', wordWrapEnabled: true },
+        { columnName: 'shortAbbreviation', wordWrapEnabled: true },
+    ]);
+
     const [startEditAction, setStartEditAction] = useState('click');
     const [selectTextOnEditStart, setSelectTextOnEditStart] = useState(true);
 
@@ -192,7 +201,7 @@ export default () => {
                     onCommitChanges={commitChanges}
                     columnExtensions={editingStateColumnExtensions}
                 />
-                <Table cellComponent={FocusableCell} />
+                <Table cellComponent={FocusableCell} columnExtensions={tableColumnExtensions} />
                 <TableHeaderRow />
                 <Toolbar />
                 <EditPropsPanel

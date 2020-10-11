@@ -63,8 +63,6 @@ app.get('/icons/list', (req,res) =>{
             error = true;
         }
 
-        console.log(files[0].substring(files[0].length-4,files[0].length))
-
         files.forEach((file) => {
             if (file.substring(file.length-4,file.length) === ".png") {
 

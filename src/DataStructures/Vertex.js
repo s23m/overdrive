@@ -360,8 +360,13 @@ export class Vertex {
 
         // Draw name
         this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title).width);
+
+        canvasContext.font = "italic " + fontSize + "px Segoe UI";
+
         canvasContext.fillText(this.title, this.x+padding, this.y+dy+iconAreaHeight);
         dy += padding*2 + fontSize;
+
+        canvasContext.font = fontSize+"px Segoe UI";
 
         // Draw text
         for (let i = 0; i < this.content.length; i++) {
