@@ -382,7 +382,6 @@ export class Arrow {
             canvasContext.beginPath();
             canvasContext.moveTo(from[0], from[1]);
             canvasContext.lineTo(to[0], to[1]);
-            canvasContext.closePath();
             canvasContext.stroke();
         }
 
