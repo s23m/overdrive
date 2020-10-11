@@ -39,8 +39,8 @@ export class Vertex {
         this.realHeight = height;
 
         // Make sure width and height meet a reasonable minimum
-        this.width = Math.min(width, defaultMinimumSize)
-        this.height = Math.min(height, defaultMinimumSize)
+        this.width = Math.max(width, defaultMinimumSize)
+        this.height = Math.max(height, defaultMinimumSize)
     }
 
     setSelected(selected) {
