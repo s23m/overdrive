@@ -25,7 +25,10 @@ export function getSaveData() {
 
         // The data here should all have uuids and should be convertible back into their objects.
         currentObjects: objectsToSave,
+
+        "modelName":document.getElementById("ModelName").value
     };
+
 
     return saveData;
 }

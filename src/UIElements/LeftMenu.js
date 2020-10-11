@@ -310,16 +310,19 @@ export class LeftMenu extends React.Component{
 
                 {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Cardinality</label>
-                    Visible: <input type="checkbox" id = "sourceCardinalityShown" defaultChecked={this.state.selectedObject.sourceCardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
+                <div className="CardinalityArea"> <div className="LeftCheckboxLabel"> Visible: </div> <input type="checkbox" id = "sourceCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.sourceCardinality.isVisible} onChange={() => this.toggleSourceCardinalityVisibility()}/>
                     <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.sourceCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                </div>
+
 
                 <label className="LeftLabel">Destination Cardinality</label>
-                    Visible: <input type="checkbox" id = "destCardinalityShown" defaultChecked={this.state.selectedObject.destCardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
+                <div className="CardinalityArea"> <div className="LeftCheckboxLabel">Visible:</div> <input type="checkbox" id = "destCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.destCardinality.isVisible} onChange={() => this.toggleDestCardinalityVisibility()}/>
                     <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.lowerBound} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.destCardinality.upperBound} min="-1" max="25" onChange={() => this.updateCardinality()}/>
+                </div>
 
                 <label className="LeftLabel">Source Label</label>
                     <input id="SourceLabel" className="LeftTitle" defaultValue={this.state.selectedObject.sourceLabel} onKeyUp={() => this.setStartLabel()}/>

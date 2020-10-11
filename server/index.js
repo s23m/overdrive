@@ -25,13 +25,22 @@ app.get('/', (req,res) => {
 // save a JSON Serialisation
 app.post('/serialisation/save', (req,res) => {
 
+    let content = JSON.stringify(req.body);
+
    //file name is current date time
     let date = new Date(Date.now());
     let weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     let dateString = weekday[date.getDay()] + ' ' + date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + date.getHours() + '.' + date.getMinutes() + ' ' + date.getSeconds() + '.'+ date.getMilliseconds();
 
-    let filePath = __dirname.substring(0,__dirname.length-7) + '/public/saves/' + dateString + '.json';
-    let content = JSON.stringify(req.body);
+    let modelName = req.body.modelName;
+
+    if(modelName === undefined){
+        modelName = "Unnamed Model"
+    }
+
+    let filePath = __dirname.substring(0,__dirname.length-7) + '/public/saves/' + modelName + " "+ dateString + '.json';
+    console.log(filePath)
+
 
     //write json to file
     fs.writeFile(filePath,content,function (error) {
@@ -80,7 +89,6 @@ app.get('/icons/list', (req,res) =>{
         }
 
     });
-
 });
 
 

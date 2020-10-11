@@ -404,6 +404,10 @@ export function onLeftMouseRelease(canvas, x, y) {
     drawAll(currentObjects);
 }
 
+export function getModelName() {
+    return
+}
+
 function onMouseMove(e, canvas) {
     let position = getGraphXYFromMouseEvent(e);
 

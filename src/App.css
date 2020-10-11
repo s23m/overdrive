@@ -93,6 +93,21 @@ input{
     width: 5vw;
 }
 
+.CardinalityArea{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.LeftCheckboxLabel{
+    width: 10vw;
+}
+
+.LeftCheckbox{
+    width: 2vw;
+}
+
 .LowerPanel {
     display: flex;
     flex-wrap: nowrap;
@@ -264,7 +279,7 @@ a,#json-downloader{
     background-color: #E0FFFF;
 }
 
-.LeftSelector{
+.LeftSelector {
     width: 15vw;
     text-align-last: center;
 }
