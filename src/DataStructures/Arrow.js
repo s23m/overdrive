@@ -7,6 +7,7 @@ import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {pathFindTo} from "../Utils/PathFinder";
+import {Cardinality} from "./Cardinality";
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
@@ -62,12 +63,15 @@ export class Arrow {
         this.lineType = ArrowProps.LineType.SOLID;
 
         this.selected = false;
+
+        this.sourceCardinality = new Cardinality();
+        this.destCardinality = new Cardinality();
     }
 
     // Rebuilds path from cached pathData
     rebuildPath(objects) {
         // X, Y data for path
-        this.path = []
+        this.path = [];
 
         for (let i = 0; i < this.pathData.length; i++) {
             // Check if its case 0 or 1
