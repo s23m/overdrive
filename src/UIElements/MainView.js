@@ -56,7 +56,7 @@ export class MainProgramClass extends React.Component {
 
 
     zoom = (type) => {
-        var cZoom = this.state.zoomLevel;
+        let cZoom = this.state.zoomLevel;
         if (type === "+") {
             if (this.state.zoomLevel < 500) {
                 this.setState({zoomLevel:cZoom += 25});
@@ -83,9 +83,9 @@ export class MainProgramClass extends React.Component {
             this.setState({drawMode: "Select"})
         }
 
-        console.log(Tool[mode])
+        console.log(Tool[mode]);
 
-        this.setState({SelectedTool: Tool[mode]})
+        this.setState({SelectedTool: Tool[mode]});
 
         canvasDraw.setArrowType(mode)
 
@@ -127,7 +127,7 @@ export class MainProgramClass extends React.Component {
 
     }
 
-    setModelName = (e) => {
+    setModelName = () => {
         this.setState({modelName:document.getElementById("ModelName").value})
     };
 
@@ -136,15 +136,15 @@ export class MainProgramClass extends React.Component {
     // Please move it to src/DataStructures/FileManager.js or similar
     showFile = () => {
         if (window.File && window.FileReader && window.FileList && window.Blob) {
-            var file = document.querySelector('input[type=file]').files[0];
+            let file = document.querySelector('input[type=file]').files[0];
 
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.readAsText(file);
             reader.onload=function() {fileManager.open(reader.result)}
         } else {
             alert("Your browser is too old to support HTML5 File API");
         }
-    }
+    };
 
     // Used to enable/disable the semantic domain editor
     toggleSemanticDomainState = () => {
@@ -159,7 +159,7 @@ export class MainProgramClass extends React.Component {
             this.setState(this.state);
             console.log("Semantic Domain enabled");
         }
-    }
+    };
 
     render() {
         var GUI =

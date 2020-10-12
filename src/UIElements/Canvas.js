@@ -12,7 +12,7 @@ export class Canvas extends React.Component {
         this.state = {}
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps, nextContext) {
         this.zoom = nextProps.mainState.zoomLevel;
         this.tool = nextProps.mainState.drawMode;
 
@@ -31,8 +31,7 @@ export class Canvas extends React.Component {
 
     mouseDown = (e, canvas) => {
         let position = canvasDraw.getGraphXYFromMouseEvent(e);
-        var x = position[0]; var y = position[1];
-        let eventListenerHolder;
+        let x = position[0]; let y = position[1];
         this.setState({
             startX: x,
             startY: y
@@ -73,7 +72,7 @@ export class Canvas extends React.Component {
         canvasDraw.solidifyObject();
 
         let position = canvasDraw.getGraphXYFromMouseEvent(e);
-        let x = position[0]; var y = position[1];
+        let x = position[0]; let y = position[1];
 
         // If it was a left click
         if (e.button === 0) {
@@ -106,7 +105,7 @@ export class Canvas extends React.Component {
 
     };
 
-    mouseLeave(e, canvas) {
+    mouseLeave() {
         canvasDraw.onMouseLeave()
     }
 
@@ -118,4 +117,4 @@ export class Canvas extends React.Component {
 
 }
 
-window.addEventListener("resize",canvasDraw.resetMouseOrigin)
+window.addEventListener("resize",canvasDraw.resetMouseOrigin);

@@ -46,8 +46,8 @@ export const Tool = {
 // object editing tools for now
 export class LeftMenu extends React.Component{
 
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         this.state = {
             menu: LeftMenuType.TreeView,
             selectedObject: null,
@@ -72,14 +72,14 @@ export class LeftMenu extends React.Component{
         this.props.setMode(this.selectedItem)
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps,nextContext) {
         this.setState({menu:nextProps.mainState.menu});
         this.setState({selectedObject:nextProps.mainState.selectedObject});
 
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        let elem = document.getElementById("LeftTitle")
+        let elem = document.getElementById("LeftTitle");
         if(elem !== null){
             elem.select();
             elem.click()
@@ -116,62 +116,50 @@ export class LeftMenu extends React.Component{
 
     //VERTEX SETTERS
     setTitle() {
-        var newTitle = document.getElementById("LeftTitle").value;
+        let newTitle = document.getElementById("LeftTitle").value;
         this.state.selectedObject.setTitle(newTitle);
         canvasDraw.drawAll()
     }
 
     setContent() {
-        var newContent = document.getElementById("LeftContent").value;
+        let newContent = document.getElementById("LeftContent").value;
         newContent = newContent.split("\n");
         this.state.selectedObject.setContent(newContent);
         canvasDraw.drawAll()
     }
 
     //ARROW SETTERS
-    setFromNodeHead() {
-        var newFromHead = document.getElementById("ArrowHeadFrom").value;
-        this.state.selectedObject.setStartType(newFromHead);
-        canvasDraw.drawAll()
-    }
-
-    setToNodeHead() {
-        var newToHead = document.getElementById("ArrowHeadTo").value;
-        this.state.selectedObject.setEndType(newToHead);
-        canvasDraw.drawAll()
-    }
-
     setLineType() {
-        var newLineType = document.getElementById("LineType").value;
+        let newLineType = document.getElementById("LineType").value;
         this.state.selectedObject.setLineType(newLineType);
         canvasDraw.drawAll()
     }
 
     setColour() {
-        var newColour = document.getElementById("LineColour").value;
+        let newColour = document.getElementById("LineColour").value;
         this.state.selectedObject.setLineColour(newColour);
         canvasDraw.drawAll()
     }
 
     setStartLabel() {
-        var newLabel = document.getElementById("SourceLabel").value;
+        let newLabel = document.getElementById("SourceLabel").value;
         this.state.selectedObject.setStartLabel(newLabel);
         canvasDraw.drawAll();
     }
 
     setEndLabel() {
-        var newLabel = document.getElementById("DestLabel").value;
+        let newLabel = document.getElementById("DestLabel").value;
         this.state.selectedObject.setEndLabel(newLabel);
         canvasDraw.drawAll();
     }
 
     updateCardinality() {
-        var sourceLowerBound = document.getElementById("sourceFromCardindality").value;
-        var sourceUpperBound = document.getElementById("sourceToCardindality").value;
-        var currentSourceVisibility = this.state.selectedObject.getSourceCardinalityVisibility();
-        var destLowerBound = document.getElementById("destFromCardindality").value;
-        var destUpperBound = document.getElementById("destToCardindality").value;
-        var currentDestVisibility = this.state.selectedObject.getDestCardinalityVisibility();
+        let sourceLowerBound = document.getElementById("sourceFromCardindality").value;
+        let sourceUpperBound = document.getElementById("sourceToCardindality").value;
+        let currentSourceVisibility = this.state.selectedObject.getSourceCardinalityVisibility();
+        let destLowerBound = document.getElementById("destFromCardindality").value;
+        let destUpperBound = document.getElementById("destToCardindality").value;
+        let currentDestVisibility = this.state.selectedObject.getDestCardinalityVisibility();
 
         this.state.selectedObject.updateSourceCardinality(sourceLowerBound, sourceUpperBound, currentSourceVisibility);
         this.state.selectedObject.updateDestCardinality(destLowerBound, destUpperBound, currentDestVisibility);
@@ -213,12 +201,11 @@ export class LeftMenu extends React.Component{
     };
 
     setVertexColour = (colour) =>{
-        this.state.selectedObject.setColour(colour.hex)
+        this.state.selectedObject.setColour(colour.hex);
         canvasDraw.drawAll()
     };
 
     getColourPicker() {
-        let reference = this;
         return <DropdownButton title = "Colour Selector" id = "ColourSelector">
         <SketchPicker
             color={this.getVertexColour}
@@ -265,9 +252,9 @@ export class LeftMenu extends React.Component{
 
 // return the correct menu based on the selected item
     getMenu = () =>{
-        var leftMenuContents;
+        let leftMenuContents;
 
-        var toolbar = <div id = "Toolbar" className = "Toolbar">
+        let toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
             <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}><img src={iconVertex} alt ="Vertex"/></div>
             <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconArrow} alt ="Edge"/></div>
@@ -298,7 +285,7 @@ export class LeftMenu extends React.Component{
                 {this.getColourPicker()}
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <button className="LeftLabel" onClick={(e) => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
+                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
             </form>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {

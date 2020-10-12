@@ -53,7 +53,7 @@ export class Arrow {
         if (type === Tool.Edge || type === Tool.Specialisation || type === Tool.Visibility) {
             this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
         }else{
-            console.log("Failed to find correct tool")
+            console.log("Failed to find correct tool");
             this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
         }
 
@@ -65,7 +65,7 @@ export class Arrow {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
             this.lineType = ArrowProps.LineType.DASHED
         }else{
-            console.log("Failed to find correct tool")
+            console.log("Failed to find correct tool");
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
         }
 
@@ -131,8 +131,8 @@ export class Arrow {
         for (let i = 0; i < objects.length; i++) {
             if (objects[i] !== null) {
                 if (objects[i].semanticIdentity.UUID === pathItem[1]) {
-                    var x = pathItem[2]*objects[i].width + objects[i].x;
-                    var y = pathItem[3]*objects[i].realHeight + objects[i].y;
+                    let x = pathItem[2]*objects[i].width + objects[i].x;
+                    let y = pathItem[3]*objects[i].realHeight + objects[i].y;
                     return [x, y]
                 }
             }
@@ -194,26 +194,8 @@ export class Arrow {
         this.destEdgeEnd.label = label;
     }
 
-    setStartType(startType) {
-        var val = ArrowProps.StringToEdgeEnd[startType];
-        if (val !== undefined) {
-            this.sourceEdgeEnd.type = val;
-        } else {
-            console.log("Attempted to assign invalid startType: %s", startType);
-        }
-    }
-
-    setEndType(endType) {
-        var val = ArrowProps.StringToEdgeEnd[endType];
-        if (val !== undefined) {
-            this.destEdgeEnd.type = val;
-        } else {
-            console.log("Attempted to assign invalid endType: %s", endType);
-        }
-    }
-
     setLineColour(lineColour) {
-        var val = ArrowProps.StringNameToLineColour[lineColour];
+        let val = ArrowProps.StringNameToLineColour[lineColour];
         if (val !== undefined) {
             this.lineColour = val;
         } else {
@@ -222,7 +204,7 @@ export class Arrow {
     }
 
     setLineType(lineType) {
-        var val = ArrowProps.StringToLineType[lineType];
+        let val = ArrowProps.StringToLineType[lineType];
         if (val !== undefined) {
             this.lineType = val;
         } else {
@@ -243,7 +225,7 @@ export class Arrow {
         let left        = nodeIndex++;
 
         // Create nodes for: fromVertex
-        var vertexNodes = [];
+        let vertexNodes = [];
         vertexNodes.push([topLeft,     vertex.x-d,              vertex.y+vertex.height+d, [left, top]]);               // Top    Left
         vertexNodes.push([top,         vertex.x+vertex.width/2, vertex.y+vertex.height+d, [topLeft, topRight]]);       // Top
         vertexNodes.push([topRight,    vertex.x+vertex.width+d, vertex.y+vertex.height+d, [top, right]]);              // Top    Right
@@ -256,12 +238,12 @@ export class Arrow {
     }
 
     drawStartHead(canvasContext) {
-        var lineAngle = Math.atan2(this.getSY() - this.getNSY(), this.getSX() - this.getNSX());
+        let lineAngle = Math.atan2(this.getSY() - this.getNSY(), this.getSX() - this.getNSX());
         this.sourceEdgeEnd.draw(canvasContext, this.getSX(), this.getSY(), lineAngle, this.lineColour);
     }
 
     drawEndHead(canvasContext) {
-        var lineAngle = Math.atan2(this.getEY() - this.getNEY(), this.getEX() - this.getNEX());
+        let lineAngle = Math.atan2(this.getEY() - this.getNEY(), this.getEX() - this.getNEX());
         this.destEdgeEnd.draw(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
     }
 
@@ -274,21 +256,21 @@ export class Arrow {
         // 'M' is the widest possible character
         let charWidth = canvasContext.measureText("M").width;
 
-        let sxOffset = 0;
-        let syOffset = 0;
-        let exOffset = 0;
-        let eyOffset = 0;
+        let sxOffset;
+        let syOffset;
+        let exOffset;
+        let eyOffset;
 
-        let sxOffsetc = 0;
-        let syOffsetc = 0;
-        let exOffsetc = 0;
-        let eyOffsetc = 0;
+        let sxOffsetc;
+        let syOffsetc;
+        let exOffsetc;
+        let eyOffsetc;
 
         let xFlip = true;
         let yFlip = true;
 
         // true if arrow is landscape, false if arrow is portrait;
-        let LRArrow = Math.abs(this.getSX()-this.getEX()) > Math.abs(this.getSY()-this.getEY())
+        let LRArrow = Math.abs(this.getSX()-this.getEX()) > Math.abs(this.getSY()-this.getEY());
 
         if (LRArrow) {
             if (this.getSX() > this.getEX()) {
@@ -309,7 +291,7 @@ export class Arrow {
                 sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
             }
         } else {
-            sxOffset = -1*(sourceTextWidth+charWidth/2)
+            sxOffset = -1*(sourceTextWidth+charWidth/2);
             if (LRArrow) {
                 sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
             } else {
@@ -347,7 +329,7 @@ export class Arrow {
                 exOffsetc = -1*(destCtextWidth+charWidth/2)
             }
         } else {
-            exOffset = -1*(destTextWidth+charWidth/2)
+            exOffset = -1*(destTextWidth+charWidth/2);
             if (LRArrow) {
                 exOffsetc = -1*(destCtextWidth+charWidth/2)
             } else {
@@ -357,18 +339,18 @@ export class Arrow {
 
 
         if (yFlip) {
-            eyOffset = textHeight
+            eyOffset = textHeight;
             if (LRArrow) {
-                eyOffsetc = -1*(textHeight/2)
+                eyOffsetc = -1*(textHeight/2);
             } else {
                 eyOffsetc = eyOffset = textHeight;
             }
         } else {
-            eyOffset = -1*(textHeight/2)
+            eyOffset = -1*(textHeight/2);
             if (LRArrow) {
                 eyOffsetc = eyOffset = textHeight;
             } else {
-                eyOffsetc = -1*(textHeight/2)
+                eyOffsetc = -1*(textHeight/2);
             }
         }
 
@@ -401,7 +383,7 @@ export class Arrow {
     }
 
     draw(canvasContext) {
-        var dashLength = 5;
+        let dashLength = 5;
 
         switch (this.lineType) {
             case ArrowProps.LineType.SOLID:
@@ -456,11 +438,11 @@ export class Arrow {
 
     // Checks if it intersects with one of the line segments
     intersectsSegment(cx, cy, from, to) {
-        var m = getDistance(cx, cy, from[0], from[1]);
-        var n = getDistance(cx, cy, to[0], to[1]);
-        var l = getDistance(from[0], from[1], to[0], to[1]);
+        let m = getDistance(cx, cy, from[0], from[1]);
+        let n = getDistance(cx, cy, to[0], to[1]);
+        let l = getDistance(from[0], from[1], to[0], to[1]);
 
-        var threshold = 1;
+        let threshold = 1;
 
         return (m+n-threshold < l);
     }
@@ -483,12 +465,12 @@ export class Arrow {
 
     // Get second last x/y
     getNEX() {
-        var index = this.path.length-2;
+        let index = this.path.length-2;
         if (index < 0) index = 0;
         return this.path[index][0];
     }
     getNEY() {
-        var index = this.path.length-2;
+        let index = this.path.length-2;
         if (index < 0) index = 0;
         return this.path[index][1];
     }

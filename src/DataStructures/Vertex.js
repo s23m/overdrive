@@ -75,7 +75,7 @@ export class Vertex {
 
     getContentAsString() {
         if (this.content !== null) {
-            var mergedContent = "";
+            let mergedContent = "";
             
             for (let i = 0; i < this.content.length; i++) {
                 mergedContent = mergedContent.concat(this.content[i]);
@@ -95,7 +95,6 @@ export class Vertex {
         let fileNames = this.icons[0];
         let Icons = this.icons[1];
         let Text = this.icons[2];
-        let Elements = this.icons[3];
 
         let index = fileNames.indexOf(fileName);
 
@@ -121,7 +120,6 @@ export class Vertex {
         let fileNames = this.icons[0];
         let icons = this.icons[1];
         let text = this.icons[2];
-        let elements = this.icons[3]; // For completion sake
 
         let index = fileNames.indexOf(fileName);
 
@@ -316,6 +314,15 @@ export class Vertex {
         let yPos = this.y + iconPadding;
         let xPos = this.x + this.width + iconPadding;
 
+        function loadImage(imageElement) {
+            let sh = imageElement.height;
+            let sw = imageElement.width;
+            let scale = iconHeight / sh;
+            canvasContext.drawImage(imageElement, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
+            yPos += iconHeight + (iconPadding * 2); // What's the point of this line? yPos should be out of scope when this method is run
+
+        }
+
         for (let i = 0; i < this.icons[0].length; i++) {
 
             if (this.icons[1][i] === true) {
@@ -331,19 +338,11 @@ export class Vertex {
                     imageElement.src = "http://localhost:8080/icons/" + this.icons[0][i];
 
                     imageElement.onload = () => {
-                        let sh = imageElement.height;
-                        let sw = imageElement.width;
-                        let scale = iconHeight / sh;
-                        canvasContext.drawImage(imageElement, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
-                        yPos += iconHeight + (iconPadding * 2); // What's the point of this line? yPos should be out of scope when this method is run
+                        loadImage(imageElement);
                         this.imageElements[this.icons[0][i]] = imageElement
                     };
                 } else {
-                    let sh = element.height;
-                    let sw = element.width;
-                    let scale = iconHeight / sh;
-                    canvasContext.drawImage(element, xPos-(iconPadding*2)-(sw*scale), yPos, sw * scale, sh * scale);
-                    yPos += iconHeight + (iconPadding * 2);
+                    loadImage(element)
                 }
             } else {
                 yPos += iconHeight + (iconPadding * 2);
@@ -415,7 +414,7 @@ export class Vertex {
     //
     // If threshold is -1, xRel and yRel are equal to cursorX, cursorY
     // This only happens when cursor shouldn't connect to vertex
-    getNearestSideFrom(cursorX, cursorY, lastX, lastY) {
+    getNearestSideFrom(cursorX, cursorY) {
 
         // Else
         return this.getNearestSide(cursorX, cursorY);
@@ -423,7 +422,7 @@ export class Vertex {
 
     getNearestSide(cursorX, cursorY) {
         // Create possibilities
-        var sides = [];
+        let sides = [];
 
         // If can connect to top/bottom
         if (cursorX > this.x && cursorX < this.x+this.width) {

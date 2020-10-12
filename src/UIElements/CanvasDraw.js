@@ -243,7 +243,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
                 nearestAngle = angles[i];
             }
         }
-        let nearestRad = nearestAngle * (Math.PI/180)
+        let nearestRad = nearestAngle * (Math.PI/180);
 
         // Create vector
         let xv = l * Math.cos(nearestRad);
@@ -455,11 +455,11 @@ export function drawMarker(xpos, ypos) {
     const strokeColour = "#007ACC";
     const fillColour = "#007ACC55";
 
-    var oldLineWidth = canvasContext.lineWidth;
+    let oldLineWidth = canvasContext.lineWidth;
     canvasContext.lineWidth = lineWidth;
-    var oldStrokeStyle = canvasContext.strokeStyle;
+    let oldStrokeStyle = canvasContext.strokeStyle;
     canvasContext.strokeStyle = strokeColour;
-    var oldFillStyle = canvasContext.fillStyle;
+    let oldFillStyle = canvasContext.fillStyle;
     canvasContext.fillStyle = fillColour;
     
     canvasContext.globalAlpha = 1.0;
@@ -472,11 +472,6 @@ export function drawMarker(xpos, ypos) {
     canvasContext.lineWidth = oldLineWidth;
     canvasContext.strokeStyle = oldStrokeStyle;
     canvasContext.fillStyle = oldFillStyle;
-}
-
-// Setting colors indirectly
-export function setFillStyle(color) {
-    canvasContext.fillStyle = color;
 }
 
 // Gets the distance between x1, y1 and x2, y2
@@ -526,7 +521,7 @@ export function getGraphXYFromMouseEvent(e) {
 export function getDownload() {
 
     let DLelement = document.createElement("a");
-    DLelement.href = canvasElement.toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream')
+    DLelement.href = canvasElement.toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream');
     DLelement.download = "Graph.png";
     document.body.appendChild(DLelement);
     DLelement.click();
@@ -553,7 +548,7 @@ function recalculateScale() {
     // Adjusts the aspect ratio so it is 1:1 instead of matching the windows.
     // Also removes blurry rendering
     //let dpi = window.devicePixelRatio;
-    let canvasContainer = document.getElementsByClassName("Canvas")[0]
+    let canvasContainer = document.getElementsByClassName("Canvas")[0];
     let styleHeight = +getComputedStyle(canvasContainer).getPropertyValue("height").slice(0, -2);
     let styleWidth = +getComputedStyle(canvasContainer).getPropertyValue("width").slice(0, -2);
 
