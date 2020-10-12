@@ -310,10 +310,10 @@ export class LeftMenu extends React.Component{
                 <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">Is Navigable?</label>
-                <input type="checkbox" id="IsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable()} onChange={() => this.setNavigable()}/>
+                <input type="checkbox" id="IsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable()} onClick={() => this.setNavigable()}/>
 
                 <label className="LeftLabel">Is Aggregation?</label>
-                <input type="checkbox" id="IsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation()} onChange={() => this.setAggregation()}/>
+                <input type="checkbox" id="IsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation()} onClick={() => this.setAggregation()}/>
 
                 <label className="LeftLabel">Line Type</label>
                 <select name="LineType" id="LineType" className="LeftSelector" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
