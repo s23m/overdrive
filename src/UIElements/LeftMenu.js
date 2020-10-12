@@ -37,8 +37,9 @@ LeftMenuTypeToString["Arrow"] = LeftMenuType.Arrow;
 export const Tool = {
     Select: "Select",
     Vertex: "Vertex",
-    Arrow: "Arrow",
-    Containment: "Containment"
+    Visibility: "Visibility",
+    Edge: "Edge",
+    Specialisation: "Specialisation"
 };
 
 // class to display the left hand menu, where we will be showing
@@ -252,8 +253,9 @@ export class LeftMenu extends React.Component{
         var toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
             <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}><img src={iconVertex} alt ="Vertex"/></div>
-            <div id = "Arrow" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Arrow)}><img src={iconArrow} alt ="Arrow"/></div>
-            <div id = "Containment" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Containment)}><img src={iconContainment} alt ="Containment"/></div>
+            <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconArrow} alt ="Edge"/></div>
+            <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconContainment} alt ="Specialisation"/></div>
+            <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={null} alt ="Visibility"/></div>
         </div>;
 
         if (this.state.menu === LeftMenuType.TreeView) {

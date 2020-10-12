@@ -41,17 +41,17 @@ export class MainProgramClass extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        let div = document.getElementById(prevState.drawMode);
+        let div = document.getElementById(prevState.SelectedTool);
 
         if (div !== null) {
             div.style.backgroundColor = "#FFFFFF";
         }
 
-        div = document.getElementById(this.state.drawMode);
+        div = document.getElementById(this.state.SelectedTool);
 
         div.style.backgroundColor = "#CFFFFF";
 
-        console.log("Mode set to: " + this.state.drawMode);
+        console.log("Mode set to: " + this.state.SelectedTool);
     }
 
 
@@ -75,7 +75,19 @@ export class MainProgramClass extends React.Component {
 
     setMode(mode) {
 
-        this.setState({drawMode: mode});
+        if(mode === Tool.Visibility || mode === Tool.Edge || mode === Tool.Specialisation){
+            this.setState({drawMode: "Arrow"})
+        }else if (mode === Tool.Vertex){
+            this.setState({drawMode: "Vertex"})
+        }else if (mode === Tool.Select){
+            this.setState({drawMode: "Select"})
+        }
+
+        console.log(Tool[mode])
+
+        this.setState({SelectedTool: Tool[mode]})
+
+        canvasDraw.setArrowType(mode)
 
     };
 

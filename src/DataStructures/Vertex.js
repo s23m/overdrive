@@ -39,7 +39,7 @@ export class Vertex {
         this.realHeight = height;
 
         // Make sure width and height meet a reasonable minimum
-        this.width = Math.max(width, defaultMinimumSize)
+        this.width = Math.max(width, defaultMinimumSize);
         this.height = Math.max(height, defaultMinimumSize)
     }
 
@@ -56,7 +56,7 @@ export class Vertex {
     }
 
     addChild(child) {
-        this.children.push(child)
+        this.children.push(child);
         if (this.width < this.children.length * 60) {
             this.width = this.children.length * 60
         }
@@ -143,7 +143,7 @@ export class Vertex {
     }
 
     isIconSet(fileName) {
-        let index = this.icons[0].indexOf(fileName)
+        let index = this.icons[0].indexOf(fileName);
         if (index === -1) {
             return false;
         }
@@ -151,7 +151,7 @@ export class Vertex {
     }
 
     isTextSet(fileName) {
-            let index = this.icons[0].indexOf(fileName)
+            let index = this.icons[0].indexOf(fileName);
             if (index === -1) {
                 return false;
             } else {
@@ -164,8 +164,8 @@ export class Vertex {
     }
 
     expandSide(side, x, y,canvasContext) {
-        var ex = 0;
-        var ey = 0;
+        let ex = 0;
+        let ey = 0;
 
         switch (side) {
             case "topLeft":
@@ -219,7 +219,7 @@ export class Vertex {
             default:
                 break;
         }
-        this.height = Math.max(this.height,12+padding)
+        this.height = Math.max(this.height,12+padding);
         this.draw(canvasContext)
     }
 
@@ -258,20 +258,20 @@ export class Vertex {
         }
 
         // Font size
-        var fontSize = 12;
+        let fontSize = 12;
         padding = 5;
         // Set font settings
         canvasContext.font = fontSize+"px Segoe UI";
         canvasContext.fontSize = fontSize;
 
         // Find the maximum width of text and size the class accordingly
-        var measuredNameText = canvasContext.measureText(this.title).width;
-        var maxWidth = Math.max(measuredNameText + padding*2, this.width);
+        let measuredNameText = canvasContext.measureText(this.title).width;
+        let maxWidth = Math.max(measuredNameText + padding*2, this.width);
         this.contentHeight = 0;
 
         // Iterate over all content text lines
         for (let i = 0; i < this.content.length; i++) {
-            var measuredText = canvasContext.measureText(this.content[i]);
+            let measuredText = canvasContext.measureText(this.content[i]);
             maxWidth = Math.max(maxWidth, measuredText.width, measuredNameText);
             this.contentHeight += fontSize+padding;
         }
@@ -313,8 +313,8 @@ export class Vertex {
         }
 
         // Draw Icons by filename
-        var yPos = this.y + iconPadding;
-        var xPos = this.x + this.width + iconPadding;
+        let yPos = this.y + iconPadding;
+        let xPos = this.x + this.width + iconPadding;
 
         for (let i = 0; i < this.icons[0].length; i++) {
 
@@ -354,7 +354,7 @@ export class Vertex {
         canvasContext.fillStyle = "#000000";
 
         // Draw Height for text that will be increased to draw downward
-        var dy = padding+fontSize;
+        let dy = padding+fontSize;
 
         // Disable shadows for text
         canvasContext.shadowOffsetX = 0.0; canvasContext.shadowOffsetY = 0.0;
@@ -403,8 +403,8 @@ export class Vertex {
         if (x < this.x) return false;
         if (y < this.y) return false;
         if (x > this.x+this.width) return false;
-        if (y > this.y+this.height) return false;
-        return true;
+        return y <= this.y + this.height;
+
     }
 
     // Gets the nearest side, in Arrow compatible x,y percentage values
@@ -422,7 +422,7 @@ export class Vertex {
         }
 
         // If can connect to left/right
-        else if (lastY > this.y && lastY < this.y+this.height) {
+        else if (lastY > this.y && lastY < this.y+this.realHeight) {
             return this.getNearestSide(cursorX, lastY);
         }
 
@@ -432,19 +432,19 @@ export class Vertex {
 
     getNearestSide(cursorX, cursorY) {
         // Create possibilities
-        var sides = []
+        var sides = [];
 
         // If can connect to top/bottom
         if (cursorX > this.x && cursorX < this.x+this.width) {
-            var xPercentage = (cursorX-this.x)/this.width;
+            let xPercentage = (cursorX-this.x)/this.width;
 
             sides.push([Math.abs(cursorY-(this.y)), xPercentage, 0]);
-            sides.push([Math.abs(cursorY-(this.y+this.height)), xPercentage, 1]);
+            sides.push([Math.abs(cursorY-(this.y+this.realHeight)), xPercentage, 1]);
         }
 
         // If can connect to left/right
-        else if (cursorY > this.y && cursorY < this.y+this.height) {
-            var yPercentage = (cursorY-this.y)/this.height;
+        else if (cursorY > this.y && cursorY < this.y+this.realHeight) {
+            let yPercentage = (cursorY-this.y)/this.realHeight;
 
             sides.push([Math.abs(cursorX-(this.x)), 0, yPercentage]);
             sides.push([Math.abs(cursorX-(this.x+this.width)), 1, yPercentage]);
@@ -456,7 +456,7 @@ export class Vertex {
         }
 
         // Return side with shortest distance
-        var shortest = sides[0];
+        let shortest = sides[0];
         for (let i = 1; i < sides.length; i++) {
             if (sides[i][0] < shortest[0]) {
                 shortest = sides[i];

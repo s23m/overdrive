@@ -7,6 +7,8 @@ import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {pathFindTo} from "../Utils/PathFinder";
+import {Cardinality} from "./Cardinality";
+import {Tool} from "../UIElements/LeftMenu";
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
@@ -44,23 +46,34 @@ export class Arrow {
         this.rebuildPath(objectsList);
 
         // Type
-        if (type === 0 || type === 3) {
-            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-
-        } else if (type === 1) {
-            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-
-        } else if (type === 2) {
-            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-        }
 
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
 
+        if (type === Tool.Edge || type === Tool.Specialisation || type === Tool.Visibility) {
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+        }else{
+            console.log("Failed to find correct tool")
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+        }
+
+        if (type === Tool.Edge) {
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+        }else if (type === Tool.Specialisation){
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.TRIANGLE
+        }else if (type === Tool.Visibility){
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+            this.lineType = ArrowProps.LineType.DASHED
+        }else{
+            console.log("Failed to find correct tool")
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+        }
+
+
         this.selected = false;
+
+        this.sourceCardinality = new Cardinality();
+        this.destCardinality = new Cardinality();
     }
 
     // Rebuilds path from cached pathData

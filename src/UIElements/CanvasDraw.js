@@ -39,7 +39,8 @@ var lastY = 0;
 // Resize status
 var resizing = false;
 
-var nextArrowType = 0;
+var arrowType = 0;
+var firstArrowJoint = true;
 
 var cancelDraw = false;
 
@@ -213,8 +214,10 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         coordinate = [1, cursorX, cursorY];
     }
 
+    console.log(arrowPath.length)
+
     // If can't snap to right angles
-    if (arrowPath.length < 1 || coordinate[0] === 0) return coordinate;
+    if (arrowPath.length < 1 || coordinate[0] === 0) return {coord:coordinate, snapped:nearest!== null};
 
     // Get angle
     let lastPathX = arrowPath[arrowPath.length-1][1];
@@ -252,7 +255,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         coordinate = [coordinate[0], lastPathX+xv, lastPathY+yv];
     }
 
-    return coordinate;
+    return {coord:coordinate, snapped:nearest!== null}
 }
 
 function resizeObjectOnMouseMove(e,resizeVars) {
@@ -269,6 +272,10 @@ function addObject(object) {
 export function setCurrentObjects(newObjects) {
     currentObjects = newObjects;
     drawAll();
+}
+
+function arrowToolSelected(){
+    return arrowType === Tool.Visibility || arrowType === Tool.Edge || arrowType === Tool.Specialisation
 }
 
 // Event based functions
@@ -301,13 +308,18 @@ export function onLeftMousePress(canvas, x, y) {
     canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
 }
 
+export function setArrowType(type) {
+    arrowType = type
+}
+
 export function onRightMouseRelease(canvas, x, y) {
-    if (canvas.tool === Tool.Arrow || canvas.tool === Tool.Containment) {
+    if (arrowToolSelected()) {
         // Create
-        nextArrowType = 2;
         let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+
         // Reset path
         arrowPath = [];
+        firstArrowJoint = true;
 
         addObject(newObject);
 
@@ -316,7 +328,7 @@ export function onRightMouseRelease(canvas, x, y) {
 
         drawAll(currentObjects);
 
-        nextArrowType = -1;
+        canvas.props.setLeftMenu(newObject)
     }
 }
 
@@ -336,27 +348,15 @@ export function onLeftMouseRelease(canvas, x, y) {
     // Disable example draw
     canvasElement.onmousemove = null;
 
-    if(nextArrowType === 1){
-        arrowPath.push(getConnectionDataForArrow(x, y));
-        lastX = x;
-        lastY = y;
-        canvasElement.onmousemove = function (e) {
-            onMouseMove(e, canvas)
-        };
-        let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
-        addObject(newObject);
-        nextArrowType = 3;
-        return;
-    }
+    if (arrowToolSelected()) {
 
-    if (canvas.tool === Tool.Arrow || canvas.tool === Tool.Containment) {
-
-        if(findIntersected(x,y) !== null && nextArrowType !== -1){
+        if(getConnectionDataForArrow(x,y).snapped && !firstArrowJoint){
             // Create
-            nextArrowType = 2;
             let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+
             // Reset path
             arrowPath = [];
+            firstArrowJoint = true;
 
             addObject(newObject);
 
@@ -365,47 +365,27 @@ export function onLeftMouseRelease(canvas, x, y) {
 
             drawAll(currentObjects);
 
-            nextArrowType = -1;
-            return;
+            canvas.props.setLeftMenu(newObject)
 
-        } else if (nextArrowType !== -1) {
-            nextArrowType = 3;
-            arrowPath.push(getConnectionDataForArrow(x, y));
+        } else {
+            arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;
             lastY = y;
             canvasElement.onmousemove = function (e) {
                 onMouseMove(e, canvas)
             };
-            return;
+            firstArrowJoint = false;
         }
-
-        if(nextArrowType === -1){
-            if(canvas.tool === Tool.Arrow)
-                nextArrowType = 0;
-            if(canvas.tool === Tool.Containment)
-                nextArrowType = 1;
-            arrowPath.push(getConnectionDataForArrow(x, y));
-            lastX = x;
-            lastY = y;
-            canvasElement.onmousemove = function (e) {
-                onMouseMove(e, canvas)
-            };
-        }
-        return;
 
     }
 
-    if (nextArrowType === 3 || canvas.tool === Tool.Vertex) {
+    if (canvas.tool === Tool.Vertex) {
         let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
         addObject(newObject);
 
         canvas.props.setLeftMenu(newObject);
     }
     drawAll(currentObjects);
-}
-
-export function getModelName() {
-    return
 }
 
 function onMouseMove(e, canvas) {
@@ -431,7 +411,7 @@ export function onMiddleClick(canvas, x, y) {
 
 export function onMouseLeave() {
     canvasElement.onmousemove = {};
-    nextArrowType = -1;
+    firstArrowJoint  = true;
     drawAll()
 }
 
@@ -525,23 +505,17 @@ export function findIntersected(x, y) {
 
 function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
-    switch(canvas.tool) {
-        case Tool.Vertex:
-            let pos = orderCoordinates(x1, y1, x2, y2);
-            let vy1 = findNearestGridY(pos[1], 0);
-            let vy2 = findNearestGridY(pos[3], 0);
-            return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
-
-        case Tool.Arrow:
-            newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
-            return new Arrow(currentObjects, newPath, nextArrowType);
-
-        case Tool.Containment:
-            newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2)]);
-            return new Arrow(currentObjects, newPath, nextArrowType);
-
-        default:
+    if(canvas.tool === "Vertex") {
+        let pos = orderCoordinates(x1, y1, x2, y2);
+        let vy1 = findNearestGridY(pos[1], 0);
+        let vy2 = findNearestGridY(pos[3], 0);
+        return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+    }else
+        if(arrowToolSelected()) {
+        newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
+        return new Arrow(currentObjects, newPath, arrowType);
     }
+
     return null;
 }
 
