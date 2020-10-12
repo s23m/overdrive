@@ -365,6 +365,8 @@ export class Arrow {
         let destCardText = this.destEdgeEnd.cardinality.toString();
         let Offsets = this.getTextOffsets(canvasContext,this.sourceEdgeEnd.label,this.destEdgeEnd.label,sourceCardText,destCardText);
 
+        canvasContext.fillStyle = "#000";
+
         //draw source text
         canvasContext.fillText(this.sourceEdgeEnd.label, this.getSX() + Offsets[0], this.getSY() + Offsets[1]);
 
@@ -372,12 +374,12 @@ export class Arrow {
         canvasContext.fillText(this.destEdgeEnd.label, this.getEX() + Offsets[2], this.getEY() + Offsets[3]);
 
         //draw source cardinality
-        if (this.sourceEdgeEnd.cardinality.isVisible) {
+        if (this.getSourceCardinalityVisibility()) {
             canvasContext.fillText(sourceCardText, this.getSX() + Offsets[4], this.getSY() + Offsets[5]);
         }
 
         //draw destination cardinality
-        if (this.destEdgeEnd.cardinality.isVisible) {
+        if (this.getDestCardinalityVisibility()) {
             canvasContext.fillText(destCardText, this.getEX() + Offsets[6], this.getEY() + Offsets[7]);
         }
     }
