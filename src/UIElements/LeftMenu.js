@@ -10,8 +10,9 @@ import { SketchPicker } from 'react-color';
 
 // Icons
 import iconVertex from "../Resources/vertex.svg";
-import iconArrow from "../Resources/arrow.svg";
-import iconContainment from "../Resources/containment_arrow.svg";
+import iconEdge from "../Resources/edge.svg";
+import iconSpecialisation from "../Resources/specialisation.svg";
+import iconVisibility from "../Resources/visibility.svg"
 import iconSelect from "../Resources/select.svg"
 
 import {deleteElement} from "./CanvasDraw";
@@ -257,9 +258,9 @@ export class LeftMenu extends React.Component{
         let toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
             <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}><img src={iconVertex} alt ="Vertex"/></div>
-            <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconArrow} alt ="Edge"/></div>
-            <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconContainment} alt ="Specialisation"/></div>
-            <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={null} alt ="Visibility"/></div>
+            <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
+            <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt ="Specialisation"/></div>
+            <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt ="Visibility"/></div>
         </div>;
 
         if (this.state.menu === LeftMenuType.TreeView) {

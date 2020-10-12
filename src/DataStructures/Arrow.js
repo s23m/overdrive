@@ -305,12 +305,12 @@ export class Arrow {
             if (LRArrow) {
                 syOffsetc = -1*(textHeight/2)
             } else {
-                syOffsetc = syOffset = textHeight;
+                syOffsetc = syOffset;
             }
         } else {
             syOffset = -1*(textHeight/2);
             if (LRArrow) {
-                syOffsetc = syOffset = textHeight;
+                syOffsetc = syOffset;
             } else {
                 syOffsetc = -1*(textHeight/2)
             }
@@ -343,14 +343,14 @@ export class Arrow {
             if (LRArrow) {
                 eyOffsetc = -1*(textHeight/2);
             } else {
-                eyOffsetc = eyOffset = textHeight;
+                eyOffsetc = eyOffset;
             }
         } else {
             eyOffset = -1*(textHeight/2);
             if (LRArrow) {
-                eyOffsetc = eyOffset = textHeight;
+                eyOffsetc = textHeight;
             } else {
-                eyOffsetc = -1*(textHeight/2);
+                eyOffsetc = eyOffset;
             }
         }
 
