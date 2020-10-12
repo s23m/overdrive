@@ -245,6 +245,23 @@ export class LeftMenu extends React.Component{
         canvasDraw.drawAll();
     }
 
+    setNavigable(){
+        if(this.state.selectedObject.getAggregation()){
+            this.state.selectedObject.toggleAggregation();
+        }
+        document.getElementById("IsAggregation").checked = false;
+        this.state.selectedObject.toggleNavigable();
+        canvasDraw.drawAll()
+    }
+
+    setAggregation(){
+        if(this.state.selectedObject.getNavigable()){
+            this.state.selectedObject.toggleNavigable();
+        }
+        document.getElementById("IsNavigable").checked = false;
+        this.state.selectedObject.toggleAggregation();
+        canvasDraw.drawAll()
+    }
 
 // return the correct menu based on the selected item
     getMenu = () =>{
@@ -292,23 +309,11 @@ export class LeftMenu extends React.Component{
             leftMenuContents = <form id = "ArrowMenu">
                 <div className="LeftHeader">Edge Properties</div>
 
-                <label className="LeftLabel">From Node Head</label>
-                <select name="ArrowHeadFrom" id="ArrowHeadFrom" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.sourceEdgeEnd.type]} onChange={() => this.setFromNodeHead()}>
-                    <option value = "None">-No Icon</option>
-                    <option value = "Arrow">-></option>
-                    <option value = "Triangle">-▷</option>
-                    <option value = "FilledDiamond">-◆</option>
-                </select>
-                <label className="LeftSpacer">&nbsp;</label>
+                <label className="LeftLabel">Is Navigable?</label>
+                <input type="checkbox" id="IsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable()} onChange={() => this.setNavigable()}/>
 
-                <label className="LeftLabel">To Node Head</label>
-                <select name="ArrowHeadTo" id="ArrowHeadTo" className="LeftSelector" defaultValue={EdgeEndToString[this.state.selectedObject.destEdgeEnd.type]} onChange={() => this.setToNodeHead()}>
-                    <option value = "None">-No Icon</option>
-                    <option value = "Arrow">-></option>
-                    <option value = "Triangle">-▷</option>
-                    <option value = "FilledDiamond">-◆</option>
-                </select>
-                <label className="LeftSpacer">&nbsp;</label>
+                <label className="LeftLabel">Is Aggregation?</label>
+                <input type="checkbox" id="IsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation()} onChange={() => this.setAggregation()}/>
 
                 <label className="LeftLabel">Line Type</label>
                 <select name="LineType" id="LineType" className="LeftSelector" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>

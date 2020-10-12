@@ -69,12 +69,41 @@ export class Arrow {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
         }
 
-        this.edgeType = type
+        this.edgeType = type;
 
         this.selected = false;
 
+        this.isNavigable = false;
+        this.isAggregation = false;
+
         this.sourceCardinality = new Cardinality();
         this.destCardinality = new Cardinality();
+    }
+
+    toggleNavigable(){
+        this.isNavigable = !this.isNavigable;
+        if(this.isNavigable){
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW
+        }else{
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+        }
+    }
+
+    toggleAggregation(){
+        this.isAggregation = !this.isAggregation;
+        if(this.isAggregation){
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND
+        }else{
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+        }
+    }
+
+    getNavigable(){
+        return this.isNavigable
+    }
+
+    getAggregation(){
+        return this.isAggregation
     }
 
     // Rebuilds path from cached pathData
