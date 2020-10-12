@@ -163,22 +163,22 @@ export class Vertex {
         return [this.x, this.y, this.x+this.width, this.y+this.realHeight];
     }
 
-    expandSide(side, x, y) {
+    expandSide(side, x, y,canvasContext) {
         var ex = 0;
         var ey = 0;
 
         switch (side) {
             case "topLeft":
-                ey = this.y + this.height;
+                ey += this.y + this.height;
                 this.y = y;
                 this.height = ey-this.y;
-                ex = this.x + this.width;
+                ex += this.x + this.width;
                 this.x = x;
                 this.width = ex-this.x;
                 break;
 
             case "topRight":
-                ey = this.y + this.height;
+                ey += this.y + this.height;
                 this.y = y;
                 this.height = ey-this.y;
                 this.width = x-this.x;
@@ -186,18 +186,18 @@ export class Vertex {
 
             case "bottomLeft":
                 this.height = y-this.y;
-                ex = this.x + this.width;
+                ex += this.x + this.width;
                 this.x = x;
                 this.width = ex-this.x;
                 break;
 
             case "bottomRight":
-                this.height = y-this.y;
+                this.height = y-this.y-this.contentHeight-padding*4-this.iconAreaHeight;
                 this.width = x-this.x;
                 break;
 
             case "left":
-                ex = this.x + this.width;
+                ex += this.x + this.width;
                 this.x = x;
                 this.width = ex-this.x;
                 break;
@@ -207,7 +207,7 @@ export class Vertex {
                 break;
 
             case "top":
-                ey = this.y + this.height;
+                ey += this.y + this.height;
                 this.y = y;
                 this.height = ey-this.y;
                 break;
@@ -219,17 +219,44 @@ export class Vertex {
             default:
                 break;
         }
+        this.height = Math.max(this.height,12+padding)
+        this.draw(canvasContext)
     }
+
 
     increaseWidthIfNecessary(canvasContext, possibleWidth) {
         if (possibleWidth > this.width) {
             this.width = possibleWidth;
-             setTimeout(() => {this.draw(canvasContext)},50)
         }
 
     }
 
     draw(canvasContext) {
+
+        // Icon height in px
+        let iconHeight = 20;
+        let iconPadding = 2;
+        let iconListLen = this.icons[0].length;
+
+        // check for width increases
+        for (let i = 0; i < this.icons[0].length; i++) {
+
+            if (this.icons[1][i] === true) {
+                if (this.icons[2][i] === true) {
+                    this.increaseWidthIfNecessary(canvasContext, iconHeight + canvasContext.measureText("<< " + this.icons[0][i] + " >>").width);
+                }
+            }else{
+                if (this.icons[2][i] === true) {
+                    this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText("<< " + this.icons[0][i] + " >>").width);
+                }
+            }
+        }
+        this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title).width);
+
+        for (let i = 0; i < this.content.length; i++) {
+            this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.content[i]).width + padding*2);
+        }
+
         // Font size
         var fontSize = 12;
         padding = 5;
@@ -240,13 +267,13 @@ export class Vertex {
         // Find the maximum width of text and size the class accordingly
         var measuredNameText = canvasContext.measureText(this.title).width;
         var maxWidth = Math.max(measuredNameText + padding*2, this.width);
-        var textHeight = 0;
+        this.contentHeight = 0;
 
         // Iterate over all content text lines
         for (let i = 0; i < this.content.length; i++) {
             var measuredText = canvasContext.measureText(this.content[i]);
             maxWidth = Math.max(maxWidth, measuredText.width, measuredNameText);
-            textHeight += fontSize+padding;
+            this.contentHeight += fontSize+padding;
         }
 
         if (maxWidth > this.width) {
@@ -257,30 +284,23 @@ export class Vertex {
         // And generally make it look nice
         canvasContext.shadowOffsetX = 2.0; canvasContext.shadowOffsetY = 2.0;
 
-        // Icon height in px
-        let iconHeight = 20;
-        let iconPadding = 2;
-        let iconListLen = this.icons[0].length;
-
-        let iconAreaHeight = (iconHeight + (iconPadding * 2)) * iconListLen;
+        this.iconAreaHeight = (iconHeight + (iconPadding * 2)) * iconListLen;
 
         // Update rect height
         // Use this to force text to fit
         if (this.content[0] !== "") {
-            this.height = padding * 4 + fontSize + iconAreaHeight + textHeight;
+            this.realHeight = padding * 4 + this.height + this.iconAreaHeight + this.contentHeight;
         }else{
-            this.height = padding * 2 + fontSize + iconAreaHeight
+            this.realHeight = padding * 2 + this.height + this.iconAreaHeight
         }
 
         // Draw rect
         canvasContext.fillStyle = this.colour;
-        canvasContext.fillRect(this.x, this.y, this.width, this.height);
-        canvasContext.strokeRect(this.x, this.y, this.width, this.height);
-        this.realHeight = this.height;
+        canvasContext.fillRect(this.x, this.y, this.width, this.realHeight);
+        canvasContext.strokeRect(this.x, this.y, this.width, this.realHeight);
 
         if (this.content[0] !== "") {
-            this.realHeight = this.height-textHeight-padding*2;
-            canvasContext.strokeRect(this.x, this.y, this.width, this.realHeight);
+            canvasContext.strokeRect(this.x, this.y, this.width, this.height+this.iconAreaHeight+padding*2);
         }
 
         // Draw selected markers if rect is selected
@@ -288,8 +308,8 @@ export class Vertex {
             canvasContext.fillStyle = "#000000";
             drawMarker(this.x, this.y);
             drawMarker(this.x+this.width, this.y);
-            drawMarker(this.x, this.y+this.height);
-            drawMarker(this.x+this.width, this.y+this.height);
+            drawMarker(this.x, this.y+this.realHeight);
+            drawMarker(this.x+this.width, this.y+this.realHeight);
         }
 
         // Draw Icons by filename
@@ -363,15 +383,15 @@ export class Vertex {
 
         canvasContext.font = "italic " + fontSize + "px Segoe UI";
 
-        canvasContext.fillText(this.title, this.x+padding, this.y+dy+iconAreaHeight);
-        dy += padding*2 + fontSize;
+        canvasContext.fillText(this.title, this.x+padding, this.y+dy+this.iconAreaHeight);
+        dy = padding*2 +this.height + this.contentHeight;
 
         canvasContext.font = fontSize+"px Segoe UI";
 
         // Draw text
         for (let i = 0; i < this.content.length; i++) {
             this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.content[i]).width + padding*2);
-            canvasContext.fillText(this.content[i], this.x+padding, this.y+dy+iconAreaHeight);
+            canvasContext.fillText(this.content[i], this.x+padding, this.y+dy+this.iconAreaHeight);
             dy += fontSize + padding;
         }
 

@@ -257,7 +257,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
 
 function resizeObjectOnMouseMove(e,resizeVars) {
     let coords = getGraphXYFromMouseEvent(e);
-    resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1]);
+    resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1],canvasContext);
 }
 
 // Sets the objects uuid and adds it to the currentObjects
