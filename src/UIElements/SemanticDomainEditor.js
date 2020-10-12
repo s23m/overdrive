@@ -267,6 +267,33 @@ export function resetRows() {
             row[translation[0]] = translation[1];
         }
 
+        // Add Arrow Ends
+        if (object.constructor.name === "Arrow") {
+            // Add source edge end
+            const edgeEndRow = {};
+            let edgeEndObject = object.sourceEdgeEnd;
+            edgeEndRow['id'] = object.semanticIdentity.UUID+"edgeEnd";
+            edgeEndRow['UUID'] = object.semanticIdentity.UUID;
+            edgeEndRow['type'] = edgeEndObject.constructor.name;
+            edgeEndRow['name'] = "";
+            edgeEndRow['description'] = "";
+            edgeEndRow['abbreviation'] = "";
+            edgeEndRow['shortAbbreviation'] = "";
+            newRows.push(edgeEndRow);
+
+            // Add dest edge end
+            const edgeDestRow = {};
+            let destEdgeEndObject = object.destEdgeEnd;
+            edgeDestRow['id'] = object.semanticIdentity.UUID+"edgeDest";
+            edgeDestRow['UUID'] = object.semanticIdentity.UUID;
+            edgeDestRow['type'] = destEdgeEndObject.constructor.name;
+            edgeDestRow['name'] = "";
+            edgeDestRow['description'] = "";
+            edgeDestRow['abbreviation'] = "";
+            edgeDestRow['shortAbbreviation'] = "";
+            newRows.push(edgeDestRow);
+        }
+
         newRows.push(row);
     }
 
