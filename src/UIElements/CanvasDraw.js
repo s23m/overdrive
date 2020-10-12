@@ -360,9 +360,6 @@ export function onLeftMouseRelease(canvas, x, y) {
 
             addObject(newObject);
 
-            // Disable example draw
-            canvasElement.onmousemove = null;
-
             drawAll(currentObjects);
 
             canvas.props.setLeftMenu(newObject)

@@ -260,6 +260,7 @@ export class LeftMenu extends React.Component{
 
         if (this.state.menu === LeftMenuType.TreeView) {
             //TODO: Containment tree display
+            console.log("TreeView")
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
@@ -285,7 +286,9 @@ export class LeftMenu extends React.Component{
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
             console.log("Arrow Selected");
-            
+
+            if(this.state.selectedObject.edgeType === Tool.Edge){
+
             leftMenuContents = <form id = "ArrowMenu">
                 <div className="LeftHeader">Edge Properties</div>
 
@@ -348,9 +351,16 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 }
-                <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
+                <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
 
             </form>
+            }else{
+                leftMenuContents = <form id = "ArrowMenu">
+                    <div className="LeftHeader">Selected Edge</div>
+                    <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
+
+                    </form>
+            }
         }
 
         return <div>{toolbar}<form ref={this.setFormRef} className={this.props.className}>

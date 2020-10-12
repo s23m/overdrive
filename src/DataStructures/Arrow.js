@@ -69,6 +69,7 @@ export class Arrow {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
         }
 
+        this.edgeType = type
 
         this.selected = false;
 
