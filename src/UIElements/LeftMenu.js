@@ -83,6 +83,17 @@ export class LeftMenu extends React.Component{
             elem.select();
             elem.click()
         }
+        let leftmenu = document.getElementById("VertexMenu");
+        if(leftmenu === null){
+            leftmenu = document.getElementById("ArrowMenu");
+        }
+        if(leftmenu !== null){
+            leftmenu.addEventListener("keypress", (e) => {
+                if(e.key === "Enter")
+                e.preventDefault();
+            })
+        }
+
     }
 
     setIcons() {
@@ -251,7 +262,7 @@ export class LeftMenu extends React.Component{
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
 
-            leftMenuContents = <div id = "VertexMenu">
+            leftMenuContents = <form id = "VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
                 <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()}/>
@@ -268,12 +279,12 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <button className="LeftLabel" onClick={(e) => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
-            </div>;
+            </form>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
             console.log("Arrow Selected");
             
-            leftMenuContents = <div id = "ArrowMenu">
+            leftMenuContents = <form id = "ArrowMenu">
                 <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">From Node Head</label>
@@ -337,7 +348,7 @@ export class LeftMenu extends React.Component{
                 }
                 <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"Tools"})}}>Remove</button>
 
-            </div>
+            </form>
         }
 
         return <div>{toolbar}<form ref={this.setFormRef} className={this.props.className}>
