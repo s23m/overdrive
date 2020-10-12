@@ -6,6 +6,8 @@ import { SemanticIdentity } from "./SemanticIdentity";
 
 export class Cardinality {
     constructor(lowerBound, upperBound, attachedToUUID, isVisible = false, semanticIdentity) {
+        this.typeName = "Cardinality";
+        
         this.numLowerBound = lowerBound;
         this.numUpperBound = upperBound;
         this.attachedToUUID = attachedToUUID;
