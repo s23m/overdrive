@@ -31,6 +31,7 @@ export class Vertex {
         this.colour = defaultColour;
         this.selected = false;
         this.imageElements = {};
+        this.fontSize = 12;
 
         // Note these values often change in runtime
         this.width = width;
@@ -258,11 +259,10 @@ export class Vertex {
         }
 
         // Font size
-        let fontSize = 12;
         padding = 5;
         // Set font settings
-        canvasContext.font = fontSize+"px Segoe UI";
-        canvasContext.fontSize = fontSize;
+        canvasContext.font = this.fontSize+"px Segoe UI";
+        canvasContext.fontSize = this.fontSize;
 
         // Find the maximum width of text and size the class accordingly
         let measuredNameText = canvasContext.measureText(this.title).width;
@@ -273,7 +273,7 @@ export class Vertex {
         for (let i = 0; i < this.content.length; i++) {
             let measuredText = canvasContext.measureText(this.content[i]);
             maxWidth = Math.max(maxWidth, measuredText.width, measuredNameText);
-            this.contentHeight += fontSize+padding;
+            this.contentHeight += this.fontSize+padding;
         }
 
         if (maxWidth > this.width) {
@@ -354,7 +354,7 @@ export class Vertex {
         canvasContext.fillStyle = "#000000";
 
         // Draw Height for text that will be increased to draw downward
-        let dy = padding+fontSize;
+        let dy = padding+this.fontSize;
 
         // Disable shadows for text
         canvasContext.shadowOffsetX = 0.0; canvasContext.shadowOffsetY = 0.0;
@@ -381,18 +381,18 @@ export class Vertex {
         // Draw name
         this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title).width);
 
-        canvasContext.font = "italic " + fontSize + "px Segoe UI";
+        canvasContext.font = "italic " + this.fontSize + "px Segoe UI";
 
         canvasContext.fillText(this.title, this.x+padding, this.y+dy+this.iconAreaHeight);
         dy = padding*2 +this.height + this.contentHeight;
 
-        canvasContext.font = fontSize+"px Segoe UI";
+        canvasContext.font = this.fontSize+"px Segoe UI";
 
         // Draw text
         for (let i = 0; i < this.content.length; i++) {
             this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.content[i]).width + padding*2);
             canvasContext.fillText(this.content[i], this.x+padding, this.y+dy+this.iconAreaHeight);
-            dy += fontSize + padding;
+            dy += this.fontSize + padding;
         }
 
         canvasContext.strokeStyle = "black"
@@ -416,15 +416,6 @@ export class Vertex {
     // If threshold is -1, xRel and yRel are equal to cursorX, cursorY
     // This only happens when cursor shouldn't connect to vertex
     getNearestSideFrom(cursorX, cursorY, lastX, lastY) {
-        // If can connect to top/bottom
-        if (lastX > this.x && lastX < this.x+this.width) {
-            return this.getNearestSide(lastX, cursorY);
-        }
-
-        // If can connect to left/right
-        else if (lastY > this.y && lastY < this.y+this.realHeight) {
-            return this.getNearestSide(cursorX, lastY);
-        }
 
         // Else
         return this.getNearestSide(cursorX, cursorY);
@@ -443,8 +434,8 @@ export class Vertex {
         }
 
         // If can connect to left/right
-        else if (cursorY > this.y && cursorY < this.y+this.realHeight) {
-            let yPercentage = (cursorY-this.y)/this.realHeight;
+        else if (cursorY > this.y && cursorY < this.y+(this.realHeight)) {
+            let yPercentage = (cursorY-this.y)/(this.realHeight);
 
             sides.push([Math.abs(cursorX-(this.x)), 0, yPercentage]);
             sides.push([Math.abs(cursorX-(this.x+this.width)), 1, yPercentage]);

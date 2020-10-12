@@ -214,8 +214,6 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         coordinate = [1, cursorX, cursorY];
     }
 
-    console.log(arrowPath.length)
-
     // If can't snap to right angles
     if (arrowPath.length < 1 || coordinate[0] === 0) return {coord:coordinate, snapped:nearest!== null};
 

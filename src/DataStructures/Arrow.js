@@ -132,7 +132,7 @@ export class Arrow {
             if (objects[i] !== null) {
                 if (objects[i].semanticIdentity.UUID === pathItem[1]) {
                     var x = pathItem[2]*objects[i].width + objects[i].x;
-                    var y = pathItem[3]*objects[i].height + objects[i].y;
+                    var y = pathItem[3]*objects[i].realHeight + objects[i].y;
                     return [x, y]
                 }
             }
