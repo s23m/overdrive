@@ -25,11 +25,11 @@ export class Arrow {
             this.semanticIdentity = semanticIdentity;
         } else {
             if(objectsList.length > 1) {
-                this.semanticIdentity = new SemanticIdentity("Arrow from " + objectsList[0].semanticIdentity.UUID + " to " + objectsList[1].semanticIdentity.UUID, "", "", "", undefined, []);
+                this.semanticIdentity = new SemanticIdentity("Arrow from " + objectsList[0].semanticIdentity.UUID + " to " + objectsList[1].semanticIdentity.UUID, "", "", "");
             }else if (objectsList.length === 1){
-                this.semanticIdentity = new SemanticIdentity("Arrow connecting " + objectsList[0].semanticIdentity.UUID, "", "", "", undefined, []);
+                this.semanticIdentity = new SemanticIdentity("Arrow connecting " + objectsList[0].semanticIdentity.UUID, "", "", "");
             }else{
-                this.semanticIdentity = new SemanticIdentity("Arrow connecting 1 or less vertices", "", "", "", undefined, []);
+                this.semanticIdentity = new SemanticIdentity("Arrow connecting 1 or less vertices", "", "", "");
             }
         }
 
@@ -58,11 +58,14 @@ export class Arrow {
 
         if (type === Tool.Edge) {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+            this.typeName = "Edge";
         }else if (type === Tool.Specialisation){
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.TRIANGLE
+            this.typeName = "Specialisation";
         }else if (type === Tool.Visibility){
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
             this.lineType = ArrowProps.LineType.DASHED
+            this.typeName = "Visibility";
         }else{
             console.log("Failed to find correct tool");
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE

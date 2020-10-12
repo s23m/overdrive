@@ -254,7 +254,7 @@ export function resetRows() {
         // Constants
         row['id'] = object.semanticIdentity.UUID; // Just going to be based on UUID since it's easy and unique
         row['UUID'] = object.semanticIdentity.UUID;
-        row['type'] = object.constructor.name;
+        row['type'] = object.typeName;
         row['name'] = object.semanticIdentity.name;
         row['description'] = object.semanticIdentity.description;
         row['abbreviation'] = object.semanticIdentity.abbreviation;
