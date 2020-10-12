@@ -6,7 +6,6 @@ import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
-import {pathFindTo} from "../Utils/PathFinder";
 import {Cardinality} from "./Cardinality";
 import {Tool} from "../UIElements/LeftMenu";
 

@@ -174,7 +174,7 @@ export class MainProgramClass extends React.Component {
 
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <a id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</a>
+                                <button id="downloader" onClick={() => canvasDraw.getDownload()} download="image.png">Export as .png</button>
                             </div>
                         </Dropdown.Item>
 

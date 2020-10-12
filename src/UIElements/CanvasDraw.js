@@ -2,11 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import {Vertex, padding} from "../DataStructures/Vertex";
+import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
 import {Tool} from "./LeftMenu";
-import {useState} from "react";
-import {SemanticIdentity} from "../DataStructures/SemanticIdentity";
 
 // Core variables
 var canvasElement;
