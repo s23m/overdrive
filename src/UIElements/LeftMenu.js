@@ -321,7 +321,7 @@ export class LeftMenu extends React.Component{
 
                 {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Cardinality</label>
-                <div className="CardinalityArea"> <div className="LeftCheckboxLabel"> Visible: </div> <input type="checkbox" id = "sourceCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getSourceCardinalityVisibility()} onChange={() => this.toggleSourceCardinalityVisibility()}/>
+                <div className="CardinalityArea"> <div className="LeftCheckboxLabel"> Visible: </div> <input type="checkbox" id = "sourceCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getSourceCardinalityVisibility()} onChange={() => {this.toggleSourceCardinalityVisibility();canvasDraw.drawAll()}}/>
                     <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getSourceCardinalityLowerBound()} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getSourceCardinalityUpperBound()} min="-1" max="25" onChange={() => this.updateCardinality()}/>
@@ -329,7 +329,7 @@ export class LeftMenu extends React.Component{
 
 
                 <label className="LeftLabel">Destination Cardinality</label>
-                <div className="CardinalityArea"> <div className="LeftCheckboxLabel">Visible:</div> <input type="checkbox" id = "destCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getDestCardinalityVisibility()} onChange={() => this.toggleDestCardinalityVisibility()}/>
+                <div className="CardinalityArea"> <div className="LeftCheckboxLabel">Visible:</div> <input type="checkbox" id = "destCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getDestCardinalityVisibility()} onChange={() => {this.toggleDestCardinalityVisibility();canvasDraw.drawAll()}}/>
                     <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getDestCardinalityLowerBound()} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getDestCardinalityUpperBound()} min="-1" max="25" onChange={() => this.updateCardinality()}/>
