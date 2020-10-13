@@ -45,7 +45,6 @@ export class Arrow {
         this.rebuildPath(objectsList);
 
         // Type
-
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
 

@@ -9,6 +9,33 @@ import TreeView from 'react-simple-jstree';
 export class ContainmentTree extends React.Component {
     constructor(props) {
         super();
+        this.state = {
+            data: {
+                core: {
+                    data: [
+                        {
+                            text: "Graph", children: [
+                                {text: "Test Child", children: [
+                                    {text: "TEST"},
+                                    {text: "TEST2"}
+                                ]},
+                                {text: "Test Child 2"}
+                            ]
+                        }
+                    ]
+                }
+            },
+            selected: [],
+        };
+    }
 
+    render() {
+        const data = this.state.data;
+
+        return (
+            <div>
+                <TreeView treeData={data} />
+            </div>
+        )
     }
 }

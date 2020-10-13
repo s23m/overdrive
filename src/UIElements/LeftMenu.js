@@ -5,6 +5,7 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import {LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
+import { ContainmentTree } from "./ContainmentTree";
 
 import { SketchPicker } from 'react-color';
 
@@ -264,7 +265,7 @@ export class LeftMenu extends React.Component{
         </div>;
 
         if (this.state.menu === LeftMenuType.TreeView) {
-            leftMenuContents = this.getContainmentTree();
+            leftMenuContents = <ContainmentTree className="ContainmentTree" />;
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
@@ -359,10 +360,6 @@ export class LeftMenu extends React.Component{
             {leftMenuContents}
             </form></div>;
     };
-
-    getContainmentTree() {
-        return;
-    }
 
     render() {
         let menu = this.getMenu();
