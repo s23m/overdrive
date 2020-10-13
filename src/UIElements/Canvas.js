@@ -6,7 +6,7 @@ var movingAllowed = false;
 
 export class Canvas extends React.Component {
     constructor(props) {
-        super(props);
+        super();
         this.canvasRef = React.createRef();
 
         this.state = {}

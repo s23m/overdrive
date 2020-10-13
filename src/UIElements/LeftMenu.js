@@ -47,8 +47,8 @@ export const Tool = {
 // object editing tools for now
 export class LeftMenu extends React.Component{
 
-    constructor(args) {
-        super(args);
+    constructor(props) {
+        super();
         this.state = {
             menu: LeftMenuType.TreeView,
             selectedObject: null,

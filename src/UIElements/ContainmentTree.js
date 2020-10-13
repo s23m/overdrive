@@ -7,5 +7,8 @@ import React from 'react';
 import TreeView from 'react-simple-jstree';
 
 export class ContainmentTree extends React.Component {
-    
+    constructor(props) {
+        super();
+
+    }
 }

@@ -22,7 +22,7 @@ export const version = 1;
 export class MainProgramClass extends React.Component {
 
     constructor(props) {
-        super(props);
+        super();
         this.state = {
             zoomLevel: 200,
             drawMode: Tool.Vertex,
