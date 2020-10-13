@@ -41,10 +41,15 @@ export class Arrow {
         // Save pathData for later
         this.pathData = pathData;
 
+        this.sourceVertex = null;
+        this.destVertex = null;
+        this.updateAttachedVertices(objectsList);
+
         // Construct Path
         this.rebuildPath(objectsList);
 
         // Type
+
         this.lineColour = ArrowProps.LineColour.BLACK;
         this.lineType = ArrowProps.LineType.SOLID;
 
@@ -116,9 +121,11 @@ export class Arrow {
             // Check if its case 0 or 1
             let pathItem = this.pathData[i];
 
+            //If the first element of a PathItem is 0, the second element contains the UUID of an object
             if (pathItem[0] === 0) {
                 this.path.push(this.getZerothCasePathItem(objects, pathItem));
             }
+            //If the first element is 1, the next two elements are the X and Y points, respectively
             else if (pathItem[0] === 1) {
                 this.path.push([pathItem[1], pathItem[2]]);
             } else {
@@ -141,6 +148,31 @@ export class Arrow {
 
         console.error("Could not find vertex to connect for pathItem", pathItem);
         return null;
+    }
+
+    updateAttachedVertices(objectsArray) {
+        var pathStart = this.pathData[0];
+        var pathEnd = this.pathData[this.pathData.length - 1];
+
+        if (pathStart[0] === 0) {
+            objectsArray.forEach((currentObject, index, arr) => {
+                if (currentObject.semanticIdentity.UUID === pathStart[1]) {
+                    this.sourceVertex = currentObject;
+                }
+            });
+        } else {
+            this.sourceVertex = null;
+        }
+
+        if (pathEnd[0] === 0) {
+            objectsArray.forEach((currentObject, index, arr) => {
+                if (currentObject.semanticIdentity.UUID === pathEnd[1]) {
+                    this.destVertex = currentObject;
+                }
+            });
+        } else {
+            this.destVertex = null;
+        }
     }
 
     setSelected(selected) {
