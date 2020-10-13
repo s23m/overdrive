@@ -55,13 +55,33 @@ export class Vertex {
             if (currentObject !== null) {
                 //If the given object is a root object at this node, delete it and add it's direct children to the root of this node
                 if (currentObject.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                    this.addToChildren(currentObject.children);
                     arr.splice(index, 1);
+                    this.addToChildren(currentObject.children);
                     return true;
 
                 //Otherwise, continue to traverse down the tree starting at the current root node to find the object
                 } else {
                     if (currentObject.typeName === "Vertex" && currentObject.removeFromChildren(object)) {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        return false;
+    }
+
+    removeFromChildrenWithChildren(object) {
+        this.children.forEach((currentObject, index, arr) => {
+            if (currentObject !== null) {
+                //If the given object is a root object, delete it
+                if (currentObject.semanticIdentity.UUID === object.semanticIdentity.UUID) {
+                    arr.splice(index, 1);
+                    return true;
+                
+                //Otherwise, continue to traverse down the tree starting at the current root node to find the object
+                } else {
+                    if (currentObject.typeName === "Vertex" && currentObject.removeFromChildrenWithChildren(object)) {
                         return true;
                     }
                 }
