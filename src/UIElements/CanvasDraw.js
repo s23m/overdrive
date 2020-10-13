@@ -99,11 +99,13 @@ export function drawAll() {
 export function deleteElement(element) {
     if (element !== null) {
         if (!currentObjects.remove(element)){
-            console.error("Failed to delete object with UUID %s", element.destVertex.semanticIdentity.UUID);
+            console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
         }
     } else {
         console.error("Attempted to delete a null element");
     }
+
+    console.log(currentObjects);
     
     drawAll()
 }
