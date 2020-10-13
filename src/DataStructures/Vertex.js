@@ -42,6 +42,48 @@ export class Vertex {
         this.height = Math.max(height, defaultMinimumSize)
     }
 
+    addToChildren(object) {
+        if (Array.isArray(object)) {
+            this.children.push(...object);
+        } else {
+            this.children.push(object);
+        }
+    }
+
+    removeFromChildren(object) {
+        this.children.forEach((currentObject, index, arr) => {
+            if (currentObject !== null) {
+                //If the given object is a root object at this node, delete it and add it's direct children to the root of this node
+                if (currentObject.semanticIdentity.UUID === object.semanticIdentity.UUID) {
+                    this.addToChildren(currentObject.children);
+                    arr.splice(index, 1);
+                    return true;
+
+                //Otherwise, continue to traverse down the tree starting at the current root node to find the object
+                } else {
+                    if (currentObject.typeName === "Vertex" && currentObject.removeFromChildren(object)) {
+                        return true;
+                    }
+                }
+            }
+        });
+
+        return false;
+    }
+
+    flattenChildren() {
+        var flattenedArray = [];
+
+        this.children.forEach((currentObject, index, arr) => {
+            flattenedArray.push(currentObject);
+            if (currentObject !== null && currentObject.typeName === "Vertex") {
+                flattenedArray.push(...currentObject.flattenChildren());
+            }
+        });
+
+        return flattenedArray;
+    }
+
     setSelected(selected) {
         this.selected = selected;
     }
