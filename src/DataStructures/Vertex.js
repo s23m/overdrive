@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { drawMarker } from "../UIElements/CanvasDraw";
+import { currentObjects, drawMarker } from "../UIElements/CanvasDraw";
 import { SemanticIdentity } from "./SemanticIdentity";
 
 export var padding = 5;
@@ -25,7 +25,7 @@ export class Vertex {
         this.x = x;
         this.y = y;
         this.icons = [[],[],[]];
-        this.children = [];
+        this.children = new Set();
         this.colour = defaultColour;
         this.selected = false;
         this.imageElements = {};
@@ -42,51 +42,88 @@ export class Vertex {
         this.height = Math.max(height, defaultMinimumSize)
     }
 
-    addToChildren(object) {
-        if (Array.isArray(object)) {
-            this.children.push(...object);
-        } else {
-            this.children.push(object);
+    add(objects) {
+        if (!Array.isArray(objects)) {
+            objects = [objects];
+        }
+
+        for (let i = 0; i < objects.length; i++) {
+            let object = objects[i];
+
+            if (object.constructor.name === "Arrow") {
+                object.sourceVertex = this;
+            }
+            
+            this.children.add(object);
         }
     }
 
-    removeFromChildren(object) {
-        this.children.forEach((currentObject, index, arr) => {
-            if (currentObject !== null) {
-                //If the given object is a root object at this node, delete it and add it's direct children to the root of this node
-                if (currentObject.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                    arr.splice(index, 1);
-                    this.addToChildren(currentObject.children);
-                    return true;
+    remove(object) {
+        //If the given object is a root object at this node, delete it and add it's direct children to the root of this node
+        if (this.children.has(object)) {
+            this.children.delete(object);
+            
+            if (object.constructor.name === "Vertex") {
+                //Set the sourceVertex properties of any arrow starting at the removed vertex to null
+                for (let i = 0; i < object.children.length; i++) {
+                    let currentChild = object.children[i];
 
-                //Otherwise, continue to traverse down the tree starting at the current root node to find the object
-                } else {
-                    if (currentObject.typeName === "Vertex" && currentObject.removeFromChildren(object)) {
-                        return true;
+                    if (currentChild.constructor.name === "Arrow") {
+                        currentChild.sourceVertex = null;
+                    }
+                }
+
+                //Set the destVertex properties of any arrow ending at the removed vertex to null
+                for (let i = 0; i < this.children.length; i++) {
+                    let currentChild = this.children[i];
+
+                    if (currentChild.constructor.name === "Arrow" && currentChild.destVertex.semanticIdentity.UUID === object.semanticIdentity.UUID) {
+                        currentChild.destVertex = null;
+                    }
+                }
+
+                this.add(object.children);
+
+            } else if (object.constructor.name === "Arrow") {
+                if (object.destVertex !== null) {
+                    //Remove the destVertex from the current vertex
+                    this.children.delete(object.destVertex);
+
+                    //If the dest vertex of the arrow does not exist as a child to any other vertex, bring it to root
+                    if (!currentObjects.has(object.destVertex)) {
+                        currentObjects.add(object.destVertex);
                     }
                 }
             }
-        });
 
+            return true;
+
+        } else {
+            //Otherwise, continue to traverse down the tree starting at the current root node to find the object
+            for (let child of this.children) {
+                if (child.typeName === "Vertex" && child.remove(object)) {
+                    return true;
+                }
+            }
+        }
+        
         return false;
     }
 
-    removeFromChildrenWithChildren(object) {
-        this.children.forEach((currentObject, index, arr) => {
-            if (currentObject !== null) {
-                //If the given object is a root object, delete it
-                if (currentObject.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                    arr.splice(index, 1);
+    removeWithChildren(object) {
+        //If the given object is a root object at this node, delete it
+        if (this.children.has(object)) {
+            this.children.delete(object);
+            return true;
+            
+        //Otherwise, continue to traverse down the tree starting at the current root node to find the object
+        } else {
+            for (let child of this.children) {
+                if (child.typeName === "Vertex" && child.removeWithChildren(object)) {
                     return true;
-                
-                //Otherwise, continue to traverse down the tree starting at the current root node to find the object
-                } else {
-                    if (currentObject.typeName === "Vertex" && currentObject.removeFromChildrenWithChildren(object)) {
-                        return true;
-                    }
                 }
             }
-        });
+        }
 
         return false;
     }
@@ -102,6 +139,21 @@ export class Vertex {
         });
 
         return flattenedArray;
+    }
+
+    has(object) {
+        if (this.children.has(object)) {
+            return true;
+
+        } else {
+            for (let child of this.children) {
+                if (child.typeName === "Vertex" && child.has(object)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     setSelected(selected) {

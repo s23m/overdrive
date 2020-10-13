@@ -7,7 +7,7 @@ export class Graph {
         if (rootObjects !== undefined) {
             this.rootObjects = rootObjects;
         } else {
-            this.rootObjects = [];
+            this.rootObjects = new Set();
         }
     }
 
@@ -18,11 +18,6 @@ export class Graph {
 
         for (let i = 0; i < objects.length; i++) {
             let object = objects[i];
-            
-            if (object === null) {
-                console.warning("Attempted to add null object to Graph, skipping");
-                continue;
-            }
 
             switch (object.constructor.name) {
                 case "Vertex":
@@ -41,80 +36,113 @@ export class Graph {
     }
 
     addVertex(vertex) {
-        this.rootObjects.push(vertex);
+        this.rootObjects.add(vertex);
     }
 
     addArrow(arrow) {
         if (arrow.destVertex !== null && arrow.sourceVertex !== null) {
-            arrow.sourceVertex.addToChildren(arrow);
-            if (!this.removeWithChildren(arrow.destVertex)) {
-                console.error("Failed to delete vertex with UUID %s", arrow.destVertex.semanticIdentity.UUID);
-            }
-            arrow.sourceVertex.addToChildren(arrow.destVertex);
+            arrow.sourceVertex.add(arrow);
+            arrow.sourceVertex.add(arrow.destVertex);
+            this.rootObjects.delete(arrow.destVertex);
 
         } else if (arrow.destVertex !== null) {
-            this.rootObjects.push(arrow);
+            this.rootObjects.add(arrow);
 
         } else if (arrow.sourceVertex !== null) {
-            arrow.sourceVertex.addToChildren(arrow);
+            arrow.sourceVertex.add(arrow);
 
         } else {
-            this.rootObjects.push(arrow);
+            this.rootObjects.add(arrow);
         }
     }
 
     //Removes and object while moving it's children up to it's place in the tree
     remove(object) {
-        this.rootObjects.forEach((currentObject, index, arr) => {
-            if (currentObject !== null) {
-                //If the given object is a root object, delete it and add it's direct children to the root
-                if (currentObject.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                    arr.splice(index, 1);
-                    this.addToRoot(currentObject.children);
-                    return true;
-                
-                //Otherwise, continue to traverse down the tree starting at the current root node to find the object
-                } else {
-                    if (currentObject.typeName === "Vertex" && currentObject.removeFromChildren(object)) {
-                        return true;
+        //If the given object is a root object at this node, delete it and add it's direct children to the root of this node
+        if (this.rootObjects.has(object)) {
+            this.rootObjects.delete(object);
+
+            if (object.constructor.name === "Vertex") {
+                //Set the sourceVertex properties of any arrow starting at the removed vertex to null
+                for (let i = 0; i < object.children.length; i++) {
+                    let currentChild = object.children[i];
+
+                    if (currentChild.constructor.name === "Arrow") {
+                        currentChild.sourceVertex = null;
                     }
                 }
+
+                //Set the destVertex properties of any arrow ending at the removed vertex to null
+                for (let i = 0; i < this.rootObjects.length; i++) {
+                    let currentChild = this.rootObjects[i];
+
+                    if (currentChild.constructor.name === "Arrow" && currentChild.destVertex.semanticIdentity.UUID === object.semanticIdentity.UUID) {
+                        currentChild.destVertex = null;
+                    }
+                }
+
+                this.add(object.children);
             }
-        });
+
+            return true;
+
+        //Otherwise, continue to traverse down the tree starting at the current root node to find the object
+        } else {
+            for (let child of this.rootObjects) {
+                if (child.typeName === "Vertex" && child.remove(object)) {
+                    return true;
+                }
+            }
+        }
 
         return false;
     }
 
     removeWithChildren(object) {
-        this.rootObjects.forEach((currentObject, index, arr) => {
-            if (currentObject !== null) {
-                //If the given object is a root object, delete it
-                if (currentObject.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                    arr.splice(index, 1);
+        //If the given object is a root object at this node, delete it
+        if (this.rootObjects.has(object)) {
+            this.rootObjects.delete(object);
+            return true;
+
+        //Otherwise, continue to traverse down the tree starting at the current root node to find the object
+        } else {
+            for (let child of this.rootObjects) {
+                if (child.typeName === "Vertex" && child.removeWithChildren(object)) {
                     return true;
-                
-                //Otherwise, continue to traverse down the tree starting at the current root node to find the object
-                } else {
-                    if (currentObject.typeName === "Vertex" && currentObject.removeFromChildrenWithChildren(object)) {
-                        return true;
-                    }
                 }
             }
-        });
+        }
+
+        return false;
+    }
+
+    has(object) {
+        if (this.rootObjects.has(object)) {
+            return true;
+
+        } else {
+            for (let child of this.rootObjects) {
+                if (child.typeName === "Vertex" && child.has(object)) {
+                    return true;
+                }
+            }
+        }
 
         return false;
     }
 
     flatten() {
-        var flattenedArray = [];
+        var flattenedSet = new Set();
 
-        this.rootObjects.forEach((currentObject, index, arr) => {
-            flattenedArray.push(currentObject);
+        this.rootObjects.forEach((currentObject) => {
+            flattenedSet.add(currentObject);
             if (currentObject !== null && currentObject.typeName === "Vertex") {
-                flattenedArray.push(...currentObject.flattenChildren());
+                for (let child of currentObject.flattenChildren()) {
+                    flattenedSet.add(child);
+                }
             }
         });
 
-        return flattenedArray;
+        return Array.from(flattenedSet);
     }
 }
