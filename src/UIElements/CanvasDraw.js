@@ -97,7 +97,14 @@ export function drawAll() {
 }
 
 export function deleteElement(element) {
-    currentObjects.remove(element);
+    if (element !== null) {
+        if (!currentObjects.remove(element)){
+            console.error("Failed to delete object with UUID %s", element.destVertex.semanticIdentity.UUID);
+        }
+    } else {
+        console.error("Attempted to delete a null element");
+    }
+    
     drawAll()
 }
 
@@ -257,7 +264,7 @@ function resizeObjectOnMouseMove(e,resizeVars) {
 
 // Sets the objects uuid and adds it to the root of currentObjects
 function addObject(object) {
-    currentObjects.addToRoot(object);
+    currentObjects.add(object);
 }
 
 // Sets the currentObjects value to a new one. WARNING it will override the current value without any checks
@@ -497,7 +504,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
     } else if(arrowToolSelected()) {
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
-        return new Arrow(currentObjects, newPath, arrowType);
+        return new Arrow(currentObjects.flatten(), newPath, arrowType);
     }
 
     return null;

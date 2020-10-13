@@ -231,7 +231,7 @@ function removeColumn() {
     const value = textInput.current.value
 
     // Delete from currentObjects
-    for (let object of currentObjects) {
+    for (let object of currentObjects.flatten()) {
         object.semanticIdentity.translations.delete(value);
     }
 
@@ -246,10 +246,11 @@ function updateColumns() {
 
 export function resetRows() {
     var newRows = []
+    var currentObjectsFlattened = currentObjects.flatten();
 
-    for (let i = 0; i < currentObjects.length; i++) {
+    for (let i = 0; i < currentObjectsFlattened.length; i++) {
         const row = {};
-        let object = currentObjects[i];
+        let object = currentObjectsFlattened[i];
 
         // Constants
         row['id'] = object.semanticIdentity.UUID; // Just going to be based on UUID since it's easy and unique
@@ -298,33 +299,35 @@ function createColumns() {
 }
 
 function updateChangedObject(rows) {
+    var currentObjectsFlattened = currentObjects.flatten();
+    
     for (let i = 0; i < rows.length; i++) {
         var row = rows[i];
 
         // Find object
-        for (let o = 0; o < currentObjects.length; o++) {
+        for (let o = 0; o < currentObjectsFlattened.length; o++) {
             // If should update
-            if (row['UUID'] === currentObjects[i].semanticIdentity.UUID) {
+            if (row['UUID'] === currentObjectsFlattened[i].semanticIdentity.UUID) {
                 // Constants
-                currentObjects[i].semanticIdentity.abbreviation = row['abbreviation'];
-                currentObjects[i].semanticIdentity.shortAbbreviation = row['shortAbbreviation'];
-                currentObjects[i].semanticIdentity.name = row['name'];
-                currentObjects[i].semanticIdentity.description = row['description'];
+                currentObjectsFlattened[i].semanticIdentity.abbreviation = row['abbreviation'];
+                currentObjectsFlattened[i].semanticIdentity.shortAbbreviation = row['shortAbbreviation'];
+                currentObjectsFlattened[i].semanticIdentity.name = row['name'];
+                currentObjectsFlattened[i].semanticIdentity.description = row['description'];
 
                 // Translations
                 for (let translation of translationColumns) {
                     // Find translation in list
                     var set = false;
-                    for (let o = 0; o < currentObjects[i].semanticIdentity.translations.length; i++) {
-                        if (currentObjects[i].semanticIdentity.translations[o][0] === translation) {
-                            currentObjects[i].semanticIdentity.translations[o][1] = row[translation];
+                    for (let o = 0; o < currentObjectsFlattened[i].semanticIdentity.translations.length; i++) {
+                        if (currentObjectsFlattened[i].semanticIdentity.translations[o][0] === translation) {
+                            currentObjectsFlattened[i].semanticIdentity.translations[o][1] = row[translation];
                             set = true;
                             break;
                         }
                     }
 
                     if (!set) {
-                        currentObjects[i].semanticIdentity.translations.push([translation, row[translation]]);
+                        currentObjectsFlattened[i].semanticIdentity.translations.push([translation, row[translation]]);
                     }
                 }
             }
