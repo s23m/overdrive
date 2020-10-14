@@ -168,7 +168,7 @@ export default () => {
         }
         if (changed) {
             changedRows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
-            updateChangedObject(changedRows);
+            updateChangedObjects(changedRows);
         }
         if (deleted) {
             const deletedSet = new Set(deleted);
@@ -244,57 +244,39 @@ function updateColumns() {
     setColumns(createColumns());
 }
 
+function getRowForObject(object) {
+    const row = {};
+
+    // Constants
+    row['id'] = object.semanticIdentity.UUID; // Just going to be based on UUID since it's easy and unique
+    row['UUID'] = object.semanticIdentity.UUID;
+    row['type'] = object.constructor.name;
+    row['name'] = object.semanticIdentity.name;
+    row['description'] = object.semanticIdentity.description;
+    row['abbreviation'] = object.semanticIdentity.abbreviation;
+    row['shortAbbreviation'] = object.semanticIdentity.shortAbbreviation;
+
+    // Translations
+    for (let o = 0; o < object.semanticIdentity.translations.length; o++) {
+        let translation = object.semanticIdentity.translations[o];
+
+        row[translation[0]] = translation[1];
+    }
+
+    return row;
+}
+
 export function resetRows() {
     var newRows = []
 
     for (let i = 0; i < currentObjects.length; i++) {
-        const row = {};
-        let object = currentObjects[i];
-
-        // Constants
-        row['id'] = object.semanticIdentity.UUID; // Just going to be based on UUID since it's easy and unique
-        row['UUID'] = object.semanticIdentity.UUID;
-        row['type'] = object.constructor.name;
-        row['name'] = object.semanticIdentity.name;
-        row['description'] = object.semanticIdentity.description;
-        row['abbreviation'] = object.semanticIdentity.abbreviation;
-        row['shortAbbreviation'] = object.semanticIdentity.shortAbbreviation;
-
-        // Translations
-        for (let o = 0; o < object.semanticIdentity.translations.length; o++) {
-            let translation = object.semanticIdentity.translations[o];
-
-            row[translation[0]] = translation[1];
-        }
+        newRows.push(getRowForObject(currentObjects[i]));
 
         // Add Arrow Ends
-        if (object.constructor.name === "Arrow") {
-            // Add source edge end
-            const edgeEndRow = {};
-            let edgeEndObject = object.sourceEdgeEnd;
-            edgeEndRow['id'] = object.semanticIdentity.UUID+"edgeEnd";
-            edgeEndRow['UUID'] = object.semanticIdentity.UUID;
-            edgeEndRow['type'] = edgeEndObject.constructor.name;
-            edgeEndRow['name'] = "";
-            edgeEndRow['description'] = "";
-            edgeEndRow['abbreviation'] = "";
-            edgeEndRow['shortAbbreviation'] = "";
-            newRows.push(edgeEndRow);
-
-            // Add dest edge end
-            const edgeDestRow = {};
-            let destEdgeEndObject = object.destEdgeEnd;
-            edgeDestRow['id'] = object.semanticIdentity.UUID+"edgeDest";
-            edgeDestRow['UUID'] = object.semanticIdentity.UUID;
-            edgeDestRow['type'] = destEdgeEndObject.constructor.name;
-            edgeDestRow['name'] = "";
-            edgeDestRow['description'] = "";
-            edgeDestRow['abbreviation'] = "";
-            edgeDestRow['shortAbbreviation'] = "";
-            newRows.push(edgeDestRow);
+        if (currentObjects[i].constructor.name === "Arrow") {
+            newRows.push(getRowForObject(currentObjects[i].sourceEdgeEnd));
+            newRows.push(getRowForObject(currentObjects[i].destEdgeEnd));
         }
-
-        newRows.push(row);
     }
 
     if (setRows === null) {
@@ -324,36 +306,48 @@ function createColumns() {
     return columnNames;
 }
 
-function updateChangedObject(rows) {
-    for (let i = 0; i < rows.length; i++) {
-        var row = rows[i];
+function updateChangedObject(object, row) {
+    // If should update
+    if (object.semanticIdentity.UUID === row['UUID']) {
+        // Constants
+        object.semanticIdentity.abbreviation = row['abbreviation'];
+        object.semanticIdentity.shortAbbreviation = row['shortAbbreviation'];
+        object.semanticIdentity.name = row['name'];
+        object.semanticIdentity.description = row['description'];
 
-        // Find object
-        for (let o = 0; o < currentObjects.length; o++) {
-            // If should update
-            if (row['UUID'] === currentObjects[i].semanticIdentity.UUID) {
-                // Constants
-                currentObjects[i].semanticIdentity.abbreviation = row['abbreviation'];
-                currentObjects[i].semanticIdentity.shortAbbreviation = row['shortAbbreviation'];
-                currentObjects[i].semanticIdentity.name = row['name'];
-                currentObjects[i].semanticIdentity.description = row['description'];
-
-                // Translations
-                for (let translation of translationColumns) {
-                    // Find translation in list
-                    var set = false;
-                    for (let o = 0; o < currentObjects[i].semanticIdentity.translations.length; i++) {
-                        if (currentObjects[i].semanticIdentity.translations[o][0] === translation) {
-                            currentObjects[i].semanticIdentity.translations[o][1] = row[translation];
-                            set = true;
-                            break;
-                        }
-                    }
-
-                    if (!set) {
-                        currentObjects[i].semanticIdentity.translations.push([translation, row[translation]]);
-                    }
+        // Translations
+        for (let translation of translationColumns) {
+            // Find translation in list
+            var set = false;
+            for (let i = 0; i < object.semanticIdentity.translations.length; i++) {
+                if (object.semanticIdentity.translations[i][0] === translation) {
+                    object.semanticIdentity.translations[i][1] = row[translation];
+                    set = true;
+                    break;
                 }
+            }
+
+            if (!set) {
+                object.semanticIdentity.translations.push([translation, row[translation]]);
+            }
+        }
+    }
+
+    return row;
+}
+
+function updateChangedObjects(rows) {
+    // Iterate through all rows
+    for (let i = 0; i < rows.length; i++) {
+        // Iterate through all objects
+        for (let o = 0; o < currentObjects.length; o++) {
+            // Update main objects
+            rows[i] = updateChangedObject(currentObjects[o], rows[i]);
+
+            // Update edge ends
+            if (currentObjects[o].constructor.name === "Arrow") {
+                rows[i] = updateChangedObject(currentObjects[o].sourceEdgeEnd, rows[i]);
+                rows[i] = updateChangedObject(currentObjects[o].destEdgeEnd, rows[i]);
             }
         }
     }

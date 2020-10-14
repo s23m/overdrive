@@ -331,7 +331,6 @@ export function onRightMouseRelease(canvas, x, y) {
 }
 
 export function onLeftMouseRelease(canvas, x, y) {
-
     if(cancelDraw){
         cancelDraw = false;
         return;
@@ -348,7 +347,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 
     if (arrowToolSelected()) {
 
-        if(getConnectionDataForArrow(x,y).snapped && !firstArrowJoint){
+        if (getConnectionDataForArrow(x,y).snapped && !firstArrowJoint) UID?
             // Create
             let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
 
