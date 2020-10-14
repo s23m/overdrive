@@ -2,8 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { currentObjects, drawMarker } from "../UIElements/CanvasDraw";
+import { drawMarker } from "../UIElements/CanvasDraw";
 import { SemanticIdentity } from "./SemanticIdentity";
+import iconVertex from "../Resources/vertex.svg";
 
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
@@ -42,101 +43,30 @@ export class Vertex {
         this.height = Math.max(height, defaultMinimumSize)
     }
 
-    add(objects) {
-        if (!Array.isArray(objects)) {
-            objects = [objects];
-        }
-
-        for (let i = 0; i < objects.length; i++) {
-            let object = objects[i];
-
-            if (object.constructor.name === "Arrow") {
-                object.sourceVertex = this;
-            }
-            
-            this.children.add(object);
-        }
+    add(object) {
+        this.children.add(object);
     }
 
     remove(object) {
-        //If the given object is a root object at this node, delete it and add it's direct children to the root of this node
-        if (this.children.has(object)) {
-            this.children.delete(object);
-            
-            if (object.constructor.name === "Vertex") {
-                //Set the sourceVertex properties of any arrow starting at the removed vertex to null
-                for (let i = 0; i < object.children.length; i++) {
-                    let currentChild = object.children[i];
+        let isRemoved = this.children.has(object);
+        this.children.delete(object);
 
-                    if (currentChild.constructor.name === "Arrow") {
-                        currentChild.sourceVertex = null;
-                    }
-                }
-
-                //Set the destVertex properties of any arrow ending at the removed vertex to null
-                for (let i = 0; i < this.children.length; i++) {
-                    let currentChild = this.children[i];
-
-                    if (currentChild.constructor.name === "Arrow" && currentChild.destVertex.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                        currentChild.destVertex = null;
-                    }
-                }
-
-                this.add(object.children);
-
-            } else if (object.constructor.name === "Arrow") {
-                if (object.destVertex !== null) {
-                    //Remove the destVertex from the current vertex
-                    this.children.delete(object.destVertex);
-
-                    //If the dest vertex of the arrow does not exist as a child to any other vertex, bring it to root
-                    if (!currentObjects.has(object.destVertex)) {
-                        currentObjects.add(object.destVertex);
-                    }
-                }
-            }
-
-            return true;
-
-        } else {
-            //Otherwise, continue to traverse down the tree starting at the current root node to find the object
-            for (let child of this.children) {
-                if (child.typeName === "Vertex" && child.remove(object)) {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
-    }
-
-    removeWithChildren(object) {
-        //If the given object is a root object at this node, delete it
-        if (this.children.has(object)) {
-            this.children.delete(object);
-            return true;
-            
-        //Otherwise, continue to traverse down the tree starting at the current root node to find the object
-        } else {
-            for (let child of this.children) {
-                if (child.typeName === "Vertex" && child.removeWithChildren(object)) {
-                    return true;
-                }
-            }
+        for (let child of this.children) {
+            isRemoved |= child.remove(object);
         }
 
-        return false;
+        return isRemoved;
     }
 
     flattenChildren() {
         var flattenedArray = [];
 
-        this.children.forEach((currentObject, index, arr) => {
-            flattenedArray.push(currentObject);
-            if (currentObject !== null && currentObject.typeName === "Vertex") {
-                flattenedArray.push(...currentObject.flattenChildren());
+        for (let child of this.children) {
+            flattenedArray.push(child);
+            if (child !== null) {
+                flattenedArray.push(...child.flattenChildren());
             }
-        });
+        }
 
         return flattenedArray;
     }
@@ -147,13 +77,32 @@ export class Vertex {
 
         } else {
             for (let child of this.children) {
-                if (child.typeName === "Vertex" && child.has(object)) {
+                if (child.has(object)) {
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    toTreeViewElement() {
+        let children = [];
+        for (let child of this.children) {
+            children.push(child.toTreeViewElement());
+        }
+
+        let text = this.title;
+        if (text === null || text === "") {
+            text = "Unnamed Vertex";
+        }
+
+        return {
+            text: text, 
+            id: this.semanticIdentity.UUID, 
+            icon: "",
+            children: children 
+        };
     }
 
     setSelected(selected) {
