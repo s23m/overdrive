@@ -47,12 +47,18 @@ export class Vertex {
         this.children.add(object);
     }
 
-    remove(object) {
-        let isRemoved = this.children.has(object);
-        this.children.delete(object);
+    remove(traversedVertices, object) {
+        let isRemoved = false;
 
-        for (let child of this.children) {
-            isRemoved |= child.remove(object);
+        if (!traversedVertices.has(this)) {
+            traversedVertices.add(this);
+
+            isRemoved = this.children.has(object);
+            this.children.delete(object);
+
+            for (let child of this.children) {
+                isRemoved |= child.remove(traversedVertices, object);
+            }
         }
 
         return isRemoved;
@@ -62,32 +68,40 @@ export class Vertex {
         if (this.children.has(object)) {
             this.children.delete(object);
             return true;
+
         } else {
             return false;
         }
     }
 
-    flattenChildren() {
+    flattenChildren(traversedVertices) {
         var flattenedArray = [];
 
         for (let child of this.children) {
-            flattenedArray.push(child);
-            if (child !== null) {
-                flattenedArray.push(...child.flattenChildren());
+            if (!traversedVertices.has(child)) {
+                traversedVertices.add(child);
+                flattenedArray.push(child);
+
+                if (child !== null) {
+                    flattenedArray.push(...child.flattenChildren(traversedVertices));
+                }
             }
         }
 
         return flattenedArray;
     }
 
-    has(object) {
+    has(traversedVertices, object) {
         if (this.children.has(object)) {
             return true;
 
         } else {
             for (let child of this.children) {
-                if (child.has(object)) {
-                    return true;
+                if (!traversedVertices.has(child)) {
+                    traversedVertices.add(child);
+                    if (child.has(traversedVertices, object)) {
+                        return true;
+                    }
                 }
             }
         }

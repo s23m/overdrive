@@ -67,6 +67,7 @@ export class Graph {
     remove(object) {
         if (object.constructor.name === "Vertex") {
             let isRemoved = this.rootVertices.has(object);
+            let traversedVertices = new Set();
 
             this.rootVertices.delete(object);
             for (let child of object.children) {
@@ -74,7 +75,8 @@ export class Graph {
             }
             
             for (let vertex of this.rootVertices) {
-                isRemoved |= vertex.remove(object);
+                traversedVertices.add(vertex);
+                isRemoved |= vertex.remove(traversedVertices, object);
             }
 
             if (isRemoved) {
@@ -155,11 +157,17 @@ export class Graph {
     flatten(verticesOnly = false) {
         var flattenedSet = new Set();
 
+        let traversedVertices = new Set();
+
         for (let vertex of this.rootVertices) {
-            flattenedSet.add(vertex);
-            if (vertex !== null) {
-                for (let child of vertex.flattenChildren()) {
-                    flattenedSet.add(child);
+            if (!traversedVertices.has(vertex)) {
+                traversedVertices.add(vertex);
+                flattenedSet.add(vertex);
+
+                if (vertex !== null) {
+                    for (let child of vertex.flattenChildren(traversedVertices)) {
+                        flattenedSet.add(child);
+                    }
                 }
             }
         }
