@@ -4,7 +4,6 @@
 
 import { drawMarker } from "../UIElements/CanvasDraw";
 import { SemanticIdentity } from "./SemanticIdentity";
-import iconVertex from "../Resources/vertex.svg";
 
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
@@ -52,9 +51,11 @@ export class Vertex {
 
         traversedVertices.add(this);
 
+        //Remove from the current vertex
         isRemoved = this.children.has(object);
         this.children.delete(object);
 
+        //Continue to remove from anywhere deeper in the tree
         for (let child of this.children) {
             if (!traversedVertices.has(child)) {
                 traversedVertices.add(child);
@@ -65,6 +66,7 @@ export class Vertex {
         return isRemoved;
     }
 
+    //Remove from just the children of this object, without removing from deeper in the tree
     removeFromChildren(object) {
         if (this.children.has(object)) {
             this.children.delete(object);
@@ -93,10 +95,13 @@ export class Vertex {
     }
 
     has(traversedVertices, object) {
+        //Search for object in children
         if (this.children.has(object)) {
             return true;
 
         } else {
+
+            //Search for object in children of children
             for (let child of this.children) {
                 if (!traversedVertices.has(child)) {
                     traversedVertices.add(child);

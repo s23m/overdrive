@@ -37,8 +37,6 @@ export class Graph {
                     break;
             }
         }
-
-        console.log(this);
     }
 
     addVertex(vertex) {
@@ -55,6 +53,11 @@ export class Graph {
 
             if (arrow.destVertex !== null && arrow.sourceVertex !== null) {
                 arrow.sourceVertex.add(arrow.destVertex);
+
+                //If the destination of the arrow is currently a root vertex,
+                //search for if the destination has any other possible roots,
+                //and remove from the root ONLY IF another root is found
+                //This retains an entry point for the graph even if there is a cycle back to root
                 if (this.rootVertices.has(arrow.destVertex)) {
                     let isAnotherRoot = false;
 
@@ -72,8 +75,6 @@ export class Graph {
                         this.rootVertices.delete(arrow.destVertex);
                     }
                 }
-                
-                //TODO: only remove from root IF it is visible down the tree from a different root vertex
             }
 
         } else {
@@ -81,16 +82,18 @@ export class Graph {
         }
     }
 
-    //Removes and object while moving it's children up to it's place in the tree
+    //Removes and object while shifting it's children's position in the tree
     remove(object) {
         if (object.constructor.name === "Vertex") {
             let isRemoved = this.rootVertices.has(object);
 
+            //Remove from the root
             this.rootVertices.delete(object);
             for (let child of object.children) {
                 this.rootVertices.add(child);
             }
             
+            //Remove from anywhere deeper in the tree
             let traversedVertices = new Set();
             for (let vertex of this.rootVertices) {
                 if (!traversedVertices.has(vertex)) {
@@ -166,16 +169,18 @@ export class Graph {
     }
 
     has(object) {
+        //Search for object in root vertices
         if (this.rootVertices.has(object)) {
             return true;
 
         } else {
             let traversedVertices = new Set();
 
-            for (let child of this.rootVertices) {
-                if (!traversedVertices.has(child)) {
-                    traversedVertices.add(child);
-                    if (child.has(traversedVertices, object)) {
+            //Search for object in children of root vertices
+            for (let vertex of this.rootVertices) {
+                if (!traversedVertices.has(vertex)) {
+                    traversedVertices.add(vertex);
+                    if (vertex.has(traversedVertices, object)) {
                         return true;
                     }
                 }
@@ -187,7 +192,6 @@ export class Graph {
 
     flatten(verticesOnly = false) {
         var flattenedSet = new Set();
-
         let traversedVertices = new Set();
 
         for (let vertex of this.rootVertices) {

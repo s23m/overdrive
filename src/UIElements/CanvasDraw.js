@@ -104,8 +104,6 @@ export function deleteElement(element) {
     } else {
         console.error("Attempted to delete a null element");
     }
-
-    console.log(currentObjects);
     
     drawAll()
 }
