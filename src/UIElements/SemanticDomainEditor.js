@@ -231,7 +231,7 @@ function removeColumn() {
     const value = textInput.current.value
 
     // Delete from currentObjects
-    for (let object of currentObjects) {
+    for (let object of currentObjects.flatten()) {
         object.semanticIdentity.translations.delete(value);
     }
 
@@ -268,6 +268,7 @@ function getRowForObject(object) {
 
 export function resetRows() {
     var newRows = []
+    var currentObjectsFlattened = currentObjects.flatten();
 
     for (let i = 0; i < currentObjects.length; i++) {
         newRows.push(getRowForObject(currentObjects[i]));

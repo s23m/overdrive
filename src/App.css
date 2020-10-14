@@ -277,6 +277,15 @@ input{
     background-color: #E0FFFF;
 }
 
+.jstree-node {
+    font-size: calc(0.5vh + 0.5vw);
+    text-align: left;
+}
+
+.jstree li > a > .jstree-icon {
+    display: none;
+}
+
 .LeftSelector {
     width: 15vw;
     text-align-last: center;
