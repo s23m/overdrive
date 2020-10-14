@@ -85,18 +85,20 @@ export class Graph {
     remove(object) {
         if (object.constructor.name === "Vertex") {
             let isRemoved = this.rootVertices.has(object);
-            let traversedVertices = new Set();
 
             this.rootVertices.delete(object);
             for (let child of object.children) {
                 this.rootVertices.add(child);
             }
             
+            let traversedVertices = new Set();
             for (let vertex of this.rootVertices) {
-                traversedVertices.add(vertex);
-                isRemoved |= vertex.remove(traversedVertices, object);
+                if (!traversedVertices.has(vertex)) {
+                    traversedVertices.add(vertex);
+                    isRemoved |= vertex.remove(traversedVertices, object);
+                }
             }
-
+            
             if (isRemoved) {
                 //Remove the vertex from being the source or dest of any arrow
                 for (let arrow of this.arrows) {
@@ -104,9 +106,10 @@ export class Graph {
                         arrow.sourceVertex = null;
                     }
 
-                    if (arrow.sourceVertex !== null && arrow.destVertex.semanticIdentity.UUID === object.semanticIdentity.UUID) {
+                    if (arrow.destVertex !== null && arrow.destVertex.semanticIdentity.UUID === object.semanticIdentity.UUID) {
                         arrow.destVertex = null;
                     }
+
                 }
             }
 

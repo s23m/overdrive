@@ -50,13 +50,14 @@ export class Vertex {
     remove(traversedVertices, object) {
         let isRemoved = false;
 
-        if (!traversedVertices.has(this)) {
-            traversedVertices.add(this);
+        traversedVertices.add(this);
 
-            isRemoved = this.children.has(object);
-            this.children.delete(object);
+        isRemoved = this.children.has(object);
+        this.children.delete(object);
 
-            for (let child of this.children) {
+        for (let child of this.children) {
+            if (!traversedVertices.has(child)) {
+                traversedVertices.add(child);
                 isRemoved |= child.remove(traversedVertices, object);
             }
         }
