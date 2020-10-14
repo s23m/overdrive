@@ -265,7 +265,7 @@ export class LeftMenu extends React.Component{
         </div>;
 
         if (this.state.menu === LeftMenuType.TreeView) {
-            leftMenuContents = <ContainmentTree className="ContainmentTree" />;
+            leftMenuContents = <ContainmentTree/>;
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
