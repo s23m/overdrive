@@ -190,29 +190,25 @@ export class Graph {
         return false;
     }
 
-    flatten(verticesOnly = false) {
-        var flattenedSet = new Set();
+    flatten() {
+        var verticesSet = new Set();
         let traversedVertices = new Set();
 
         for (let vertex of this.rootVertices) {
             if (!traversedVertices.has(vertex)) {
                 traversedVertices.add(vertex);
-                flattenedSet.add(vertex);
+                verticesSet.add(vertex);
 
                 if (vertex !== null) {
                     for (let child of vertex.flattenChildren(traversedVertices)) {
-                        flattenedSet.add(child);
+                        verticesSet.add(child);
                     }
                 }
             }
         }
 
-        if (verticesOnly) {
-            return Array.from(flattenedSet);
-        } else {
-            let flattenedArray = Array.from(flattenedSet);
-            flattenedArray.push(...Array.from(this.arrows));
-            return flattenedArray;
-        }
+        let flattenedArray = Array.from(verticesSet);
+        flattenedArray.push(...Array.from(this.arrows));
+        return flattenedArray;
     }
 }
