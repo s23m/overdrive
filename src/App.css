@@ -34,9 +34,9 @@
 }
 
 #File-Select{
-    word-wrap: break-word;
+    word-wrap: normal;
     white-space: normal;
-    width: 100px;
+    width: 300px;
 }
 
 #IconSelector{
@@ -125,12 +125,9 @@ input{
  }
 
 
-a,#json-downloader{
+#downloader, #json-downloader{
     color: black;
     text-decoration: none;
-    border: none;
-    background-color: white;
-    cursor: pointer;
 }
 
 .DropdownItem{

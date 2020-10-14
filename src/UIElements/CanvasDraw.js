@@ -2,11 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import {Vertex, padding} from "../DataStructures/Vertex";
+import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
 import {Tool} from "./LeftMenu";
-import {useState} from "react";
-import {SemanticIdentity} from "../DataStructures/SemanticIdentity";
 
 // Core variables
 var canvasElement;
@@ -243,7 +241,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
                 nearestAngle = angles[i];
             }
         }
-        let nearestRad = nearestAngle * (Math.PI/180)
+        let nearestRad = nearestAngle * (Math.PI/180);
 
         // Create vector
         let xv = l * Math.cos(nearestRad);
@@ -347,7 +345,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 
     if (arrowToolSelected()) {
 
-        if (getConnectionDataForArrow(x,y).snapped && !firstArrowJoint) UID?
+        if (getConnectionDataForArrow(x,y).snapped && !firstArrowJoint) {
             // Create
             let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
 
@@ -454,11 +452,11 @@ export function drawMarker(xpos, ypos) {
     const strokeColour = "#007ACC";
     const fillColour = "#007ACC55";
 
-    var oldLineWidth = canvasContext.lineWidth;
+    let oldLineWidth = canvasContext.lineWidth;
     canvasContext.lineWidth = lineWidth;
-    var oldStrokeStyle = canvasContext.strokeStyle;
+    let oldStrokeStyle = canvasContext.strokeStyle;
     canvasContext.strokeStyle = strokeColour;
-    var oldFillStyle = canvasContext.fillStyle;
+    let oldFillStyle = canvasContext.fillStyle;
     canvasContext.fillStyle = fillColour;
     
     canvasContext.globalAlpha = 1.0;
@@ -471,11 +469,6 @@ export function drawMarker(xpos, ypos) {
     canvasContext.lineWidth = oldLineWidth;
     canvasContext.strokeStyle = oldStrokeStyle;
     canvasContext.fillStyle = oldFillStyle;
-}
-
-// Setting colors indirectly
-export function setFillStyle(color) {
-    canvasContext.fillStyle = color;
 }
 
 // Gets the distance between x1, y1 and x2, y2
@@ -525,7 +518,7 @@ export function getGraphXYFromMouseEvent(e) {
 export function getDownload() {
 
     let DLelement = document.createElement("a");
-    DLelement.href = canvasElement.toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream')
+    DLelement.href = canvasElement.toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream');
     DLelement.download = "Graph.png";
     document.body.appendChild(DLelement);
     DLelement.click();
@@ -552,7 +545,7 @@ function recalculateScale() {
     // Adjusts the aspect ratio so it is 1:1 instead of matching the windows.
     // Also removes blurry rendering
     //let dpi = window.devicePixelRatio;
-    let canvasContainer = document.getElementsByClassName("Canvas")[0]
+    let canvasContainer = document.getElementsByClassName("Canvas")[0];
     let styleHeight = +getComputedStyle(canvasContainer).getPropertyValue("height").slice(0, -2);
     let styleWidth = +getComputedStyle(canvasContainer).getPropertyValue("width").slice(0, -2);
 

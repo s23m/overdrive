@@ -4,14 +4,15 @@
 
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
-import {EdgeEndToString, LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
+import {LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
 
 import { SketchPicker } from 'react-color';
 
 // Icons
 import iconVertex from "../Resources/vertex.svg";
-import iconArrow from "../Resources/arrow.svg";
-import iconContainment from "../Resources/containment_arrow.svg";
+import iconEdge from "../Resources/edge.svg";
+import iconSpecialisation from "../Resources/specialisation.svg";
+import iconVisibility from "../Resources/visibility.svg"
 import iconSelect from "../Resources/select.svg"
 
 import {deleteElement} from "./CanvasDraw";
@@ -46,7 +47,7 @@ export const Tool = {
 // object editing tools for now
 export class LeftMenu extends React.Component{
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             menu: LeftMenuType.TreeView,
@@ -72,14 +73,14 @@ export class LeftMenu extends React.Component{
         this.props.setMode(this.selectedItem)
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps,nextContext) {
         this.setState({menu:nextProps.mainState.menu});
         this.setState({selectedObject:nextProps.mainState.selectedObject});
 
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        let elem = document.getElementById("LeftTitle")
+        let elem = document.getElementById("LeftTitle");
         if(elem !== null){
             elem.select();
             elem.click()
@@ -116,62 +117,50 @@ export class LeftMenu extends React.Component{
 
     //VERTEX SETTERS
     setTitle() {
-        var newTitle = document.getElementById("LeftTitle").value;
+        let newTitle = document.getElementById("LeftTitle").value;
         this.state.selectedObject.setTitle(newTitle);
         canvasDraw.drawAll()
     }
 
     setContent() {
-        var newContent = document.getElementById("LeftContent").value;
+        let newContent = document.getElementById("LeftContent").value;
         newContent = newContent.split("\n");
         this.state.selectedObject.setContent(newContent);
         canvasDraw.drawAll()
     }
 
     //ARROW SETTERS
-    setFromNodeHead() {
-        var newFromHead = document.getElementById("ArrowHeadFrom").value;
-        this.state.selectedObject.setStartType(newFromHead);
-        canvasDraw.drawAll()
-    }
-
-    setToNodeHead() {
-        var newToHead = document.getElementById("ArrowHeadTo").value;
-        this.state.selectedObject.setEndType(newToHead);
-        canvasDraw.drawAll()
-    }
-
     setLineType() {
-        var newLineType = document.getElementById("LineType").value;
+        let newLineType = document.getElementById("LineType").value;
         this.state.selectedObject.setLineType(newLineType);
         canvasDraw.drawAll()
     }
 
     setColour() {
-        var newColour = document.getElementById("LineColour").value;
+        let newColour = document.getElementById("LineColour").value;
         this.state.selectedObject.setLineColour(newColour);
         canvasDraw.drawAll()
     }
 
     setStartLabel() {
-        var newLabel = document.getElementById("SourceLabel").value;
+        let newLabel = document.getElementById("SourceLabel").value;
         this.state.selectedObject.setStartLabel(newLabel);
         canvasDraw.drawAll();
     }
 
     setEndLabel() {
-        var newLabel = document.getElementById("DestLabel").value;
+        let newLabel = document.getElementById("DestLabel").value;
         this.state.selectedObject.setEndLabel(newLabel);
         canvasDraw.drawAll();
     }
 
     updateCardinality() {
-        var sourceLowerBound = document.getElementById("sourceFromCardindality").value;
-        var sourceUpperBound = document.getElementById("sourceToCardindality").value;
-        var currentSourceVisibility = this.state.selectedObject.getSourceCardinalityVisibility();
-        var destLowerBound = document.getElementById("destFromCardindality").value;
-        var destUpperBound = document.getElementById("destToCardindality").value;
-        var currentDestVisibility = this.state.selectedObject.getDestCardinalityVisibility();
+        let sourceLowerBound = document.getElementById("sourceFromCardindality").value;
+        let sourceUpperBound = document.getElementById("sourceToCardindality").value;
+        let currentSourceVisibility = this.state.selectedObject.getSourceCardinalityVisibility();
+        let destLowerBound = document.getElementById("destFromCardindality").value;
+        let destUpperBound = document.getElementById("destToCardindality").value;
+        let currentDestVisibility = this.state.selectedObject.getDestCardinalityVisibility();
 
         this.state.selectedObject.updateSourceCardinality(sourceLowerBound, sourceUpperBound, currentSourceVisibility);
         this.state.selectedObject.updateDestCardinality(destLowerBound, destUpperBound, currentDestVisibility);
@@ -213,12 +202,11 @@ export class LeftMenu extends React.Component{
     };
 
     setVertexColour = (colour) =>{
-        this.state.selectedObject.setColour(colour.hex)
+        this.state.selectedObject.setColour(colour.hex);
         canvasDraw.drawAll()
     };
 
     getColourPicker() {
-        let reference = this;
         return <DropdownButton title = "Colour Selector" id = "ColourSelector">
         <SketchPicker
             color={this.getVertexColour}
@@ -265,19 +253,18 @@ export class LeftMenu extends React.Component{
 
 // return the correct menu based on the selected item
     getMenu = () =>{
-        var leftMenuContents;
+        let leftMenuContents;
 
-        var toolbar = <div id = "Toolbar" className = "Toolbar">
+        let toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
             <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}><img src={iconVertex} alt ="Vertex"/></div>
-            <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconArrow} alt ="Edge"/></div>
-            <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconContainment} alt ="Specialisation"/></div>
-            <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={null} alt ="Visibility"/></div>
+            <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
+            <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt ="Specialisation"/></div>
+            <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt ="Visibility"/></div>
         </div>;
 
         if (this.state.menu === LeftMenuType.TreeView) {
-            //TODO: Containment tree display
-            console.log("TreeView")
+            leftMenuContents = this.getContainmentTree();
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
@@ -298,7 +285,7 @@ export class LeftMenu extends React.Component{
                 {this.getColourPicker()}
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <button className="LeftLabel" onClick={(e) => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
+                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
             </form>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
@@ -310,10 +297,10 @@ export class LeftMenu extends React.Component{
                 <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">Is Navigable?</label>
-                <input type="checkbox" id="IsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable()} onChange={() => this.setNavigable()}/>
+                <input type="checkbox" id="IsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable()} onClick={() => this.setNavigable()}/>
 
                 <label className="LeftLabel">Is Aggregation?</label>
-                <input type="checkbox" id="IsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation()} onChange={() => this.setAggregation()}/>
+                <input type="checkbox" id="IsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation()} onClick={() => this.setAggregation()}/>
 
                 <label className="LeftLabel">Line Type</label>
                 <select name="LineType" id="LineType" className="LeftSelector" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
@@ -333,7 +320,7 @@ export class LeftMenu extends React.Component{
 
                 {/* -1 represents n or *  */}
                 <label className="LeftLabel">Source Cardinality</label>
-                <div className="CardinalityArea"> <div className="LeftCheckboxLabel"> Visible: </div> <input type="checkbox" id = "sourceCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getSourceCardinalityVisibility()} onChange={() => this.toggleSourceCardinalityVisibility()}/>
+                <div className="CardinalityArea"> <div className="LeftCheckboxLabel"> Visible: </div> <input type="checkbox" id = "sourceCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getSourceCardinalityVisibility()} onChange={() => {this.toggleSourceCardinalityVisibility();canvasDraw.drawAll()}}/>
                     <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getSourceCardinalityLowerBound()} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getSourceCardinalityUpperBound()} min="-1" max="25" onChange={() => this.updateCardinality()}/>
@@ -341,7 +328,7 @@ export class LeftMenu extends React.Component{
 
 
                 <label className="LeftLabel">Destination Cardinality</label>
-                <div className="CardinalityArea"> <div className="LeftCheckboxLabel">Visible:</div> <input type="checkbox" id = "destCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getDestCardinalityVisibility()} onChange={() => this.toggleDestCardinalityVisibility()}/>
+                <div className="CardinalityArea"> <div className="LeftCheckboxLabel">Visible:</div> <input type="checkbox" id = "destCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getDestCardinalityVisibility()} onChange={() => {this.toggleDestCardinalityVisibility();canvasDraw.drawAll()}}/>
                     <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getDestCardinalityLowerBound()} min="0" max="25" onChange={() => this.updateCardinality()}/>
                     <label>..</label>
                     <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getDestCardinalityUpperBound()} min="-1" max="25" onChange={() => this.updateCardinality()}/>
@@ -372,6 +359,10 @@ export class LeftMenu extends React.Component{
             {leftMenuContents}
             </form></div>;
     };
+
+    getContainmentTree() {
+        return;
+    }
 
     render() {
         let menu = this.getMenu();
