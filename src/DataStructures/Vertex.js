@@ -109,10 +109,13 @@ export class Vertex {
         return false;
     }
 
-    toTreeViewElement() {
+    toTreeViewElement(traversedVertices) {
         let children = [];
-        for (let child of this.children) {
-            children.push(child.toTreeViewElement());
+        if (!traversedVertices.has(this)) {
+            traversedVertices.add(this);
+            for (let child of this.children) {
+                children.push(child.toTreeViewElement(traversedVertices));
+            }
         }
 
         let text = this.title;

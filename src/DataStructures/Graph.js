@@ -55,7 +55,25 @@ export class Graph {
 
             if (arrow.destVertex !== null && arrow.sourceVertex !== null) {
                 arrow.sourceVertex.add(arrow.destVertex);
-                this.rootVertices.delete(arrow.destVertex);
+                if (this.rootVertices.has(arrow.destVertex)) {
+                    let isAnotherRoot = false;
+
+                    for (let vertex of this.rootVertices) {
+                        if (vertex.semanticIdentity.UUID === arrow.destVertex.semanticIdentity.UUID) {
+                            continue;
+                        }
+
+                        if (vertex.has(new Set(), arrow.destVertex)) {
+                            isAnotherRoot = true;
+                        }
+                    }
+
+                    if (isAnotherRoot) {
+                        this.rootVertices.delete(arrow.destVertex);
+                    }
+                }
+                
+                //TODO: only remove from root IF it is visible down the tree from a different root vertex
             }
 
         } else {
@@ -123,6 +141,11 @@ export class Graph {
                     if (!isArrowWithSameDest) {
                         this.add(object.destVertex);
                     }
+
+                    //Remove vertex from the root if removing this arrow has resolved a cycle
+                    if (object.destVertex.has(new Set(), object.sourceVertex)) {
+                        this.rootVertices.delete(object.sourceVertex);
+                    }
                 }
 
                 return true;
@@ -144,9 +167,14 @@ export class Graph {
             return true;
 
         } else {
+            let traversedVertices = new Set();
+
             for (let child of this.rootVertices) {
-                if (child.has(object)) {
-                    return true;
+                if (!traversedVertices.has(child)) {
+                    traversedVertices.add(child);
+                    if (child.has(traversedVertices, object)) {
+                        return true;
+                    }
                 }
             }
         }

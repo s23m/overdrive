@@ -14,7 +14,7 @@ export class ContainmentTree extends React.Component {
 
         let treeData = [];
         for (let vertex of currentObjects.rootVertices) {
-            treeData.push(vertex.toTreeViewElement());
+            treeData.push(vertex.toTreeViewElement(new Set()));
         }
 
         this.state = {
