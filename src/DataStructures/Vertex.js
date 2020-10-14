@@ -58,6 +58,15 @@ export class Vertex {
         return isRemoved;
     }
 
+    removeFromChildren(object) {
+        if (this.children.has(object)) {
+            this.children.delete(object);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     flattenChildren() {
         var flattenedArray = [];
 
@@ -98,9 +107,7 @@ export class Vertex {
         }
 
         return {
-            text: text, 
-            id: this.semanticIdentity.UUID, 
-            icon: "",
+            text: text,
             children: children 
         };
     }

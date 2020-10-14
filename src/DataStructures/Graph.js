@@ -116,7 +116,7 @@ export class Graph {
                     }
                     
                     if (!isEquivalentArrow) {
-                        object.sourceVertex.remove(object.destVertex);
+                        object.sourceVertex.removeFromChildren(object.destVertex);
                     }
                     if (!isArrowWithSameDest) {
                         this.add(object.destVertex);
