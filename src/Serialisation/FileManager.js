@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import {currentObjects, setCurrentObjects, updateArrows} from "../UIElements/CanvasDraw"
+import {currentObjects, drawAll, setCurrentObjects, updateArrows} from "../UIElements/CanvasDraw"
 import {version} from "../UIElements/MainView"
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
 
@@ -13,7 +13,8 @@ import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
 
 export function getSaveData() {
-    let objectsToSave = currentObjects;
+    let vertexObjects = currentObjects.flatten(true, false);
+    let arrowObjects = currentObjects.flatten(false, true);
 
     // Combine into save data
     let saveData = {
@@ -26,7 +27,8 @@ export function getSaveData() {
         translationColumns: translationColumns,
 
         // The data here should all have uuids and should be convertible back into their objects.
-        currentObjects: objectsToSave,
+        vertices: vertexObjects,
+        arrows: arrowObjects,
 
         "modelName":document.getElementById("ModelName").value
     };
@@ -43,38 +45,28 @@ export function save() {
     let dataFile = new Blob([dataStr], {type: 'text/json'});
 
     DLelement.href = URL.createObjectURL(dataFile);
-    DLelement.download = document.getElementById("ModelName").value + ".json";
+    let title = document.getElementById("ModelName").value;
+    if (title === "") {
+        title = "untitled";
+    }
+    DLelement.download = title + ".json";
     document.body.appendChild(DLelement);
     DLelement.click();
 }
 
 // This is done since serialised objects lose their methods
-function rebuildObject(item) {
+// verticesArray parameter is only used when rebuilding an Arrow type
+function rebuildObject(item, verticesArray) {
     switch (item.typeName) {
-        case "Graph":
-            var newRootVertices = new Set();
-            var newArrows = new Set();
-
-            for (let i = 0; i < item.rootVertices.length; i++) {
-                newRootVertices.add(rebuildObject(vertex));
-            }
-            for (let i = 0; i < item.arrows.length; i++) {
-                newRootVertices.add(rebuildObject(arrow));
-            }
-            return new Graph(newRootVertices, newArrows);
-
         case "Vertex":
             var vertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
-            for (let i = 0 ; i < item.children.length; i++) {
-                vertex.children[i] = rebuildObject(vertex.children[i]);
-            }
             return vertex;
 
         case "Edge":
         case "Specialisation":
         case "Visibility":
         case "Arrow":
-            var arrow = new Arrow(null, item.pathData, item.edgeType, item.semanticIdentity);
+            var arrow = new Arrow(verticesArray, item.pathData, item.edgeType, item.semanticIdentity);
             arrow.sourceEdgeEnd = rebuildObject(arrow.sourceEdgeEnd);
             arrow.destEdgeEnd = rebuildObject(arrow.destEdgeEnd);
             arrow.sourceCardinality = rebuildObject(arrow.sourceCardinality);
@@ -94,8 +86,6 @@ function rebuildObject(item) {
 }
 
 export function open(jsonString) {
-    console.log("Loading jsonString")
-
     if (jsonString == null) return;
     try {
         // TODO Add check to see if there is unsaved progress
@@ -105,13 +95,23 @@ export function open(jsonString) {
         setTranslationColumns(loadedJSON.translationColumns);
 
         // Update current objects
-        var newObjects = rebuildObject(loadedJSON.currentObjects);
-        console.log(newObjects);
-        console.log('\n\n\n\n\n')
+        var newVertices = [];
+        var newArrows = [];
+        for (let serialisedVertex of loadedJSON.vertices) {
+            if (serialisedVertex !== null) {
+                newVertices.push(rebuildObject(serialisedVertex));
+            }
+        }
 
-        setCurrentObjects(newObjects);
+        for (let serialisedArrow of loadedJSON.arrows) {
+            if (serialisedArrow !== null) {
+                newArrows.push(rebuildObject(serialisedArrow, newVertices));
+            }
+        }
 
-        // Rebuild arrows
+        setCurrentObjects(new Graph(newVertices, newArrows));
+
+        //Rebuild arrow paths
         updateArrows();
 
     } catch (e) {

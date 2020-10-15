@@ -15,7 +15,7 @@ import * as ArrowProps from "./ArrowProperties";
 export class EdgeEnd {
     constructor(attachedToUUID, headType = ArrowProps.EdgeEnd.NONE, cardinality, label = "", semanticIdentity) {
         this.attachedToUUID = attachedToUUID;
-        this.typeName = "Edge End";
+        this.typeName = "EdgeEnd";
 
         if (semanticIdentity !== undefined){
             this.semanticIdentity = semanticIdentity;
