@@ -5,6 +5,7 @@
 import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
 import {Tool} from "./LeftMenu";
+import {Graph} from "../DataStructures/Graph";
 
 // Core variables
 var canvasElement;
@@ -27,7 +28,7 @@ var canvasHeight;
 var zoom = 200.0;
 
 // Renderable objects
-export var currentObjects = [];
+export var currentObjects = new Graph();
 
 // Arrow Path
 export var arrowPath = [];
@@ -87,7 +88,7 @@ export function drawAll() {
         drawLine(0,y2,canvasWidth,y2,"#E0E0E0");
     }
 
-    currentObjects.forEach((item) => {
+    currentObjects.flatten().forEach((item) => {
         if (item !== null) {
             item.draw(canvasContext);
         }
@@ -96,13 +97,14 @@ export function drawAll() {
 }
 
 export function deleteElement(element) {
-    currentObjects.forEach((item,index,object) => {
-        if (item !== null) {
-            if (item.semanticIdentity.UUID === element.semanticIdentity.UUID) {
-                object.splice(index,1)
-            }
+    if (element !== null) {
+        if (!currentObjects.remove(element)){
+            console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
         }
-    });
+    } else {
+        console.error("Attempted to delete a null element");
+    }
+    
     drawAll()
 }
 
@@ -127,8 +129,9 @@ function findNearestGridY(y,top) {
 // Checks to see which side it should resize on
 function checkResizeBounds(x, y) {
     // Iterate through all objects and only check vertices
-    for(let i = 0; i < currentObjects.length; i++){
-        let item = currentObjects[i];
+    var currentObjectsFlattened = currentObjects.flatten();
+    for(let i = 0; i < currentObjectsFlattened.length; i++){
+        let item = currentObjectsFlattened[i];
 
         if (item.constructor.name === "Vertex") {
             // Get vertex bounds
@@ -189,7 +192,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     let nearestDistance = 0;
 
     // Find nearest connectable
-    currentObjects.forEach((item) => {
+    currentObjects.flatten().forEach((item) => {
         if (item !== null) {
             if (item.constructor.name === "Vertex") {
                 let sideData = item.getNearestSideFrom(cursorX, cursorY, lastX, lastY);
@@ -259,9 +262,9 @@ function resizeObjectOnMouseMove(e,resizeVars) {
     resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1],canvasContext);
 }
 
-// Sets the objects uuid and adds it to the currentObjects
+// Sets the objects uuid and adds it to the root of currentObjects
 function addObject(object) {
-    currentObjects.push(object);
+    currentObjects.add(object);
 }
 
 // Sets the currentObjects value to a new one. WARNING it will override the current value without any checks
@@ -422,11 +425,17 @@ function moveObject(e, object) {
         }
     }
 }
+<<<<<<< HEAD
 export function updateArrows() {
     currentObjects.forEach((item) => {
+=======
+function updateArrows() {
+    var flattenedObjects = currentObjects.flatten();
+    flattenedObjects.forEach((item) => {
+>>>>>>> 274410673cabf6d7c4814b8bdc96c5f30e5f2a7a
         if (item !== null) {
             if (item.constructor.name === "Arrow") {
-                item.rebuildPath(currentObjects);
+                item.rebuildPath(flattenedObjects);
             }
         }
     });
@@ -479,7 +488,7 @@ export function getDistance(x1, y1, x2, y2) {
 // Finds the object that is intersected with the cursor, returns null if no objects are intersected
 export function findIntersected(x, y) {
     let selectedItem = null;
-    currentObjects.forEach((item) => {
+    currentObjects.flatten().forEach((item) => {
         if (item !== null) {
             if (item.intersects(x, y)) {
                 console.log("Intersection detected with ", item.constructor.name);
@@ -497,12 +506,15 @@ function createObject(canvas, x1, y1, x2, y2) {
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
         return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
-    }else
-        if(arrowToolSelected()) {
+    } else if(arrowToolSelected()) {
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
+<<<<<<< HEAD
         var arrow = Arrow(currentObjects, newPath, arrowType);
         arrow.rebuildPath(currentObjects);
         return arrow;
+=======
+        return new Arrow(currentObjects.flatten(), newPath, arrowType);
+>>>>>>> 274410673cabf6d7c4814b8bdc96c5f30e5f2a7a
     }
 
     return null;

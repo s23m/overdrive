@@ -6,9 +6,35 @@
 import React from 'react';
 import TreeView from 'react-simple-jstree';
 
+import { currentObjects } from "./CanvasDraw";
+
 export class ContainmentTree extends React.Component {
     constructor(props) {
         super();
 
+        let treeData = [];
+        for (let vertex of currentObjects.rootVertices) {
+            treeData.push(vertex.toTreeViewElement(new Set()));
+        }
+
+        this.state = {
+            data: {
+                core: {
+                    data: [
+                        { text: "Graph", children: treeData }
+                    ]
+                }
+            }
+        }
+    }
+
+    render() {
+        const data = this.state.data;
+
+        return (
+            <div>
+                <TreeView treeData={data} />
+            </div>
+        )
     }
 }

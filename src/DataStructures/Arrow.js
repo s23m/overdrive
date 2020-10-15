@@ -41,6 +41,16 @@ export class Arrow {
         // Save pathData for later
         this.pathData = pathData;
 
+<<<<<<< HEAD
+=======
+        this.sourceVertexUUID = null;
+        this.destVertexUUID = null;
+        this.updateAttachedVertices();
+
+        // Construct Path
+        this.rebuildPath(objectsList);
+
+>>>>>>> 274410673cabf6d7c4814b8bdc96c5f30e5f2a7a
         // Type
 
         this.lineColour = ArrowProps.LineColour.BLACK;
@@ -114,9 +124,11 @@ export class Arrow {
             // Check if its case 0 or 1
             let pathItem = this.pathData[i];
 
+            //If the first element of a PathItem is 0, the second element contains the UUID of an object
             if (pathItem[0] === 0) {
                 this.path.push(this.getZerothCasePathItem(objects, pathItem));
             }
+            //If the first element is 1, the next two elements are the X and Y points, respectively
             else if (pathItem[0] === 1) {
                 this.path.push([pathItem[1], pathItem[2]]);
             } else {
@@ -139,6 +151,23 @@ export class Arrow {
 
         console.error("Could not find vertex to connect for pathItem", pathItem);
         return null;
+    }
+
+    updateAttachedVertices() {
+        var pathStart = this.pathData[0];
+        var pathEnd = this.pathData[this.pathData.length - 1];
+
+        if (pathStart[0] === 0) {
+            this.sourceVertexUUID = pathStart[1];
+        } else {
+            this.sourceVertexUUID = null;
+        }
+
+        if (pathEnd[0] === 0) {
+            this.destVertexUUID = pathEnd[1];
+        } else {
+            this.destVertexUUID = null;
+        }
     }
 
     setSelected(selected) {

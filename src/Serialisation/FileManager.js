@@ -12,7 +12,6 @@ import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
 
 export function getSaveData() {
-
     let objectsToSave = currentObjects;
 
     // Combine into save data
@@ -26,7 +25,10 @@ export function getSaveData() {
         translationColumns: translationColumns,
 
         // The data here should all have uuids and should be convertible back into their objects.
-        currentObjects: objectsToSave,
+
+        //TODO: TEMPORARILY DISABLED TO PREVENT CRASHING FROM THE GRAPH OVERHAUL
+        //FIX AND RE-ENABLE
+        //currentObjects: objectsToSave,
 
         "modelName":document.getElementById("ModelName").value
     };

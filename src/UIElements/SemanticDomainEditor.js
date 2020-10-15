@@ -231,7 +231,7 @@ function removeColumn() {
     const value = textInput.current.value
 
     // Delete from currentObjects
-    for (let object of currentObjects) {
+    for (let object of currentObjects.flatten()) {
         object.semanticIdentity.translations.delete(value);
     }
 
@@ -268,14 +268,15 @@ function getRowForObject(object) {
 
 export function resetRows() {
     var newRows = []
+    var currentObjectsFlattened = currentObjects.flatten();
 
-    for (let i = 0; i < currentObjects.length; i++) {
-        newRows.push(getRowForObject(currentObjects[i]));
+    for (let i = 0; i < currentObjectsFlattened.length; i++) {
+        newRows.push(getRowForObject(currentObjectsFlattened[i]));
 
         // Add Arrow Ends
-        if (currentObjects[i].constructor.name === "Arrow") {
-            newRows.push(getRowForObject(currentObjects[i].sourceEdgeEnd));
-            newRows.push(getRowForObject(currentObjects[i].destEdgeEnd));
+        if (currentObjectsFlattened[i].constructor.name === "Arrow") {
+            newRows.push(getRowForObject(currentObjectsFlattened[i].sourceEdgeEnd));
+            newRows.push(getRowForObject(currentObjectsFlattened[i].destEdgeEnd));
         }
     }
 
@@ -337,17 +338,19 @@ function updateChangedObject(object, row) {
 }
 
 function updateChangedObjects(rows) {
+    var currentObjectsFlattened = currentObjects.flatten();
+    
     // Iterate through all rows
     for (let i = 0; i < rows.length; i++) {
         // Iterate through all objects
-        for (let o = 0; o < currentObjects.length; o++) {
+        for (let o = 0; o < currentObjectsFlattened.length; o++) {
             // Update main objects
-            rows[i] = updateChangedObject(currentObjects[o], rows[i]);
+            rows[i] = updateChangedObject(currentObjectsFlattened[o], rows[i]);
 
             // Update edge ends
-            if (currentObjects[o].constructor.name === "Arrow") {
-                rows[i] = updateChangedObject(currentObjects[o].sourceEdgeEnd, rows[i]);
-                rows[i] = updateChangedObject(currentObjects[o].destEdgeEnd, rows[i]);
+            if (currentObjectsFlattened[o].constructor.name === "Arrow") {
+                rows[i] = updateChangedObject(currentObjectsFlattened[o].sourceEdgeEnd, rows[i]);
+                rows[i] = updateChangedObject(currentObjectsFlattened[o].destEdgeEnd, rows[i]);
             }
         }
     }
