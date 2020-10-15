@@ -21,7 +21,7 @@ export class Arrow {
     constructor(objectsList, pathData, type, semanticIdentity) {
         this.typeName = "Arrow";
 
-        if (semanticIdentity !== undefined){
+        if (semanticIdentity !== undefined || objectsList === null){
             this.semanticIdentity = semanticIdentity;
         } else {
             if (objectsList.length > 1) {
@@ -40,9 +40,6 @@ export class Arrow {
         if (pathData.length === 1) pathData.push(pathData[0]);
         // Save pathData for later
         this.pathData = pathData;
-
-        // Construct Path
-        this.rebuildPath(objectsList);
 
         // Type
 

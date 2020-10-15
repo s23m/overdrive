@@ -422,7 +422,7 @@ function moveObject(e, object) {
         }
     }
 }
-function updateArrows() {
+export function updateArrows() {
     currentObjects.forEach((item) => {
         if (item !== null) {
             if (item.constructor.name === "Arrow") {
@@ -500,7 +500,9 @@ function createObject(canvas, x1, y1, x2, y2) {
     }else
         if(arrowToolSelected()) {
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
-        return new Arrow(currentObjects, newPath, arrowType);
+        var arrow = Arrow(currentObjects, newPath, arrowType);
+        arrow.rebuildPath(currentObjects);
+        return arrow;
     }
 
     return null;

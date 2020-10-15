@@ -2,12 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import {currentObjects, setCurrentObjects} from "../UIElements/CanvasDraw"
+import {currentObjects, setCurrentObjects, updateArrows} from "../UIElements/CanvasDraw"
 import {version} from "../UIElements/MainView"
-import {translationColumns, setTranslationColumns} from "../UIElements/SemanticDomainEditor"
+import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
 
 import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
+import {Cardinality} from "../DataStructures/Cardinality";
+import {EdgeEnd} from "../DataStructures/EdgeEnd";
 
 export function getSaveData() {
 
@@ -46,6 +48,39 @@ export function save() {
     DLelement.click();
 }
 
+// This is done since serialised objects lose their methods
+function rebuildObject(item) {
+    switch (item.typeName) {
+        case "Vertex":
+            var vertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
+            for (let i = 0 ; i < item.children.length; i++) {
+                vertex.children[i] = rebuildObject(vertex.children[i]);
+            }
+            return vertex;
+
+        case "Edge":
+        case "Specialisation":
+        case "Visibility":
+        case "Arrow":
+            var arrow = new Arrow(null, item.pathData, item.edgeType, item.semanticIdentity);
+            arrow.sourceEdgeEnd = rebuildObject(arrow.sourceEdgeEnd);
+            arrow.destEdgeEnd = rebuildObject(arrow.destEdgeEnd);
+            arrow.sourceCardinality = rebuildObject(arrow.sourceCardinality);
+            arrow.destCardinality = rebuildObject(arrow.destCardinality);
+            return arrow;
+
+        case "Cardinality":
+            return new Cardinality(item.numLowerBound, item.numUpperBound, item.attachedToUUID, item.isVisible, item.semanticIdentity);
+
+        case "EdgeEnd":
+            return new EdgeEnd(item.attachedToUUID, item.headType, item.cardinality, item.label, item.semanticIdentity);
+
+        default:
+            console.error("Unknown object to deserialise ", item);
+            break;
+    }
+}
+
 export function open(jsonString) {
     console.log("Loading jsonString")
 
@@ -57,44 +92,17 @@ export function open(jsonString) {
         // Loaded objects ONLY with variables
         setTranslationColumns(loadedJSON.translationColumns);
 
-        // Loaded objects ONLY with variables
-        var loadedObjects = loadedJSON.currentObjects;
-
-        // Loaded objects with variables and functions
-        var newObjects = [];
-
-        // Copy behaviour over (vertexs first)
-        loadedObjects.forEach((item) => {
-            if (item !== null) {
-                switch (item.typeName) {
-                    case "Vertex":
-                        var newVertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
-                        newObjects.push(newVertex);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
-        // Copy behaviour over (everything else)
-        loadedObjects.forEach((item) => {
-            if (item !== null) {
-                switch (item.typeName) {
-                    case "Vertex":
-                        break;
-                    case "Arrow":
-                        var newArrow = new Arrow(newObjects, item.pathData, null, item.semanticIdentity);
-                        newObjects.push(newArrow);
-                        break;
-                    default:
-                        console.error("Unknown object to deserialise ", item);
-                        break;
-                }
-            }
-        });
+        // Update current objects
+        var newObjects = loadedJSON.currentObjects;
+        for (let i = 0 ; i < newObjects.length; i++) {
+            newObjects[i] = rebuildObject(newObjects[i]);
+        }
 
         setCurrentObjects(newObjects);
+
+        // Rebuild arrows
+        updateArrows();
+
     } catch (e) {
         alert(e);
     }
