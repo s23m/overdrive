@@ -3,12 +3,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 class ArrowEdge {
-    constructor(verticesArray, arrow) {
+    constructor(flattenedVertices, arrow) {
         this.arrow = arrow;
-        this.updateVertices(verticesArray);
+        this.updateVertices(flattenedVertices);
     }
 
-    updateVertices(verticesArray) {
+    updateVertices(flattenedVertices) {
         this.sourceVertexObject = null;
         this.destVertexObject = null;
 
@@ -16,7 +16,7 @@ class ArrowEdge {
             let isSourceFound = this.arrow.sourceVertexUUID === null;
             let isDestFound = this.arrow.destVertexUUID === null;
 
-            for (let vertex of verticesArray) {
+            for (let vertex of flattenedVertices) {
                 if (isSourceFound && isDestFound) {
                     break;
                 }
