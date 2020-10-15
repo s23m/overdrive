@@ -496,15 +496,18 @@ export function findIntersected(x, y) {
 
 function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
+    let currentObjectsFlattened = currentObjects.flatten();
+
     if(canvas.tool === "Vertex") {
         let pos = orderCoordinates(x1, y1, x2, y2);
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
         return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+
     } else if(arrowToolSelected()) {
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
-        var arrow = new Arrow(currentObjects, newPath, arrowType);
-        arrow.rebuildPath(currentObjects);
+        var arrow = new Arrow(currentObjectsFlattened, newPath, arrowType);
+        arrow.rebuildPath(currentObjectsFlattened);
         return arrow;
     }
 
