@@ -25,7 +25,6 @@ export class Vertex {
         this.x = x;
         this.y = y;
         this.icons = [[],[],[]];
-        this.children = new Set();
         this.colour = defaultColour;
         this.selected = false;
         this.imageElements = {};
@@ -42,99 +41,6 @@ export class Vertex {
         this.height = Math.max(height, defaultMinimumSize)
     }
 
-    add(object) {
-        this.children.add(object);
-    }
-
-    remove(traversedVertices, object) {
-        let isRemoved = false;
-
-        traversedVertices.add(this);
-
-        //Remove from the current vertex
-        isRemoved = this.children.has(object);
-        this.children.delete(object);
-
-        //Continue to remove from anywhere deeper in the tree
-        for (let child of this.children) {
-            if (!traversedVertices.has(child)) {
-                traversedVertices.add(child);
-                isRemoved |= child.remove(traversedVertices, object);
-            }
-        }
-
-        return isRemoved;
-    }
-
-    //Remove from just the children of this object, without removing from deeper in the tree
-    removeFromChildren(object) {
-        if (this.children.has(object)) {
-            this.children.delete(object);
-            return true;
-
-        } else {
-            return false;
-        }
-    }
-
-    flattenChildren(traversedVertices) {
-        var flattenedArray = [];
-
-        for (let child of this.children) {
-            if (!traversedVertices.has(child)) {
-                traversedVertices.add(child);
-                flattenedArray.push(child);
-
-                if (child !== null) {
-                    flattenedArray.push(...child.flattenChildren(traversedVertices));
-                }
-            }
-        }
-
-        return flattenedArray;
-    }
-
-    has(traversedVertices, object) {
-        //Search for object in children
-        if (this.children.has(object)) {
-            return true;
-
-        } else {
-
-            //Search for object in children of children
-            for (let child of this.children) {
-                if (!traversedVertices.has(child)) {
-                    traversedVertices.add(child);
-                    if (child.has(traversedVertices, object)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    toTreeViewElement(traversedVertices) {
-        let children = [];
-        if (!traversedVertices.has(this)) {
-            traversedVertices.add(this);
-            for (let child of this.children) {
-                children.push(child.toTreeViewElement(traversedVertices));
-            }
-        }
-
-        let text = this.title;
-        if (text === null || text === "") {
-            text = "Unnamed Vertex";
-        }
-
-        return {
-            text: text,
-            children: children 
-        };
-    }
-
     setSelected(selected) {
         this.selected = selected;
     }
@@ -145,13 +51,6 @@ export class Vertex {
 
     setColour(colour){
         this.colour = colour;
-    }
-
-    addChild(child) {
-        this.children.push(child);
-        if (this.width < this.children.length * 60) {
-            this.width = this.children.length * 60
-        }
     }
 
     setTitle(title) {

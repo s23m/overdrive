@@ -2,32 +2,163 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-class ArrowEdge {
-    constructor(flattenedVertices, arrow) {
-        this.arrow = arrow;
-        this.updateVertices(flattenedVertices);
+class VertexNode {
+    constructor(vertex) {
+        this.vertex = vertex;
+        this.children = new Set();
     }
 
-    updateVertices(flattenedVertices) {
-        this.sourceVertexObject = null;
-        this.destVertexObject = null;
+    add(node) {
+        this.children.add(node);
+    }
+
+    remove(traversedVertices, node) {
+        let isRemoved = false;
+        traversedVertices.add(this);
+
+        //Remove from the current vertex
+        isRemoved = this.children.has(node);
+        this.children.delete(node);
+
+        //Continue to remove from anywhere deeper in the tree
+        for (let child of this.children) {
+            if (!traversedVertices.has(child)) {
+                traversedVertices.add(child);
+                isRemoved |= child.remove(traversedVertices, node);
+            }
+        }
+
+        return isRemoved;
+    }
+
+    getVertexNode(vertex, recursive = true) {
+        for (let child of this.children) {
+            if (child.vertex.semanticIdentity.UUID === vertex.semanticIdentity.UUID) {
+                return child;
+            } else if (recursive) {
+                let node = child.getVertexNode(vertex);
+                if (node !== null) {
+                    return node;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    //Remove from just the children of this object, without removing from deeper in the tree
+    removeFromChildren(node) {
+        if (this.children.has(node)) {
+            this.children.delete(node);
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    flatten(traversedVertices) {
+        var flattenedArray = [];
+
+        for (let childNode of this.children) {
+            if (!traversedVertices.has(childNode)) {
+                traversedVertices.add(childNode);
+                flattenedArray.push(childNode.vertex);
+
+                if (childNode !== null) {
+                    flattenedArray.push(...childNode.flatten(traversedVertices));
+                }
+            }
+        }
+
+        return flattenedArray;
+    }
+
+    flattenVertexNodes(traversedVertices) {
+        var flattenedArray = [];
+
+        for (let childNode of this.children) {
+            if (!traversedVertices.has(childNode)) {
+                traversedVertices.add(childNode);
+                flattenedArray.push(childNode);
+
+                if (childNode !== null) {
+                    flattenedArray.push(...childNode.flattenVertexNodes(traversedVertices));
+                }
+            }
+        }
+
+        return flattenedArray;
+    }
+
+    has(traversedVertices, node) {
+        //Search for object in children
+        if (this.children.has(node)) {
+            return true;
+
+        } else {
+
+            //Search for object in children of children
+            for (let child of this.children) {
+                if (!traversedVertices.has(child)) {
+                    traversedVertices.add(child);
+                    if (child.has(traversedVertices, node)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    toTreeViewElement(traversedVertices) {
+        let children = [];
+        if (!traversedVertices.has(this)) {
+            traversedVertices.add(this);
+            for (let child of this.children) {
+                children.push(child.toTreeViewElement(traversedVertices));
+            }
+        }
+
+        let text = this.vertex.title;
+        if (text === null || text === "") {
+            text = "Unnamed Vertex";
+        }
+
+        return {
+            text: text,
+            children: children 
+        };
+    }
+}
+
+class ArrowEdge {
+    constructor(flattenedVertexNodes, arrow) {
+        this.arrow = arrow;
+        this.updateVertices(flattenedVertexNodes);
+    }
+
+    updateVertices(flattenedVertexNodes) {
+        this.sourceVertexNodeObject = null;
+        this.destVertexNodeObject = null;
 
         if (this.arrow !== null) {
             let isSourceFound = this.arrow.sourceVertexUUID === null;
             let isDestFound = this.arrow.destVertexUUID === null;
 
-            for (let vertex of flattenedVertices) {
+            for (let vertexNode of flattenedVertexNodes) {
                 if (isSourceFound && isDestFound) {
                     break;
                 }
 
-                if (vertex !== null) {
-                    if (vertex.semanticIdentity.UUID === this.arrow.sourceVertexUUID) {
-                        this.sourceVertexObject = vertex;
+                if (vertexNode !== null) {
+                    if (vertexNode.vertex.semanticIdentity.UUID === this.arrow.sourceVertexUUID) {
+                        this.sourceVertexNodeObject = vertexNode;
                         isSourceFound = true;
 
-                    } else if (vertex.semanticIdentity.UUID === this.arrow.destVertexUUID) {
-                        this.destVertexObject = vertex;
+                    } else if (vertexNode.vertex.semanticIdentity.UUID === this.arrow.destVertexUUID) {
+                        this.destVertexNodeObject = vertexNode;
                         isDestFound = true;
                     }
                 }
@@ -36,54 +167,62 @@ class ArrowEdge {
         }
     }
 
-    set sourceVertex(vertex) {
-        this.sourceVertexObject = vertex;
+    set sourceVertexNode(vertexNode) {
+        this.sourceVertexNodeObject = vertexNode;
 
-        if (vertex !== null) {
-            this.arrow.sourceVertexUUID = vertex.semanticIdentity.UUID;
+        if (vertexNode !== null) {
+            this.arrow.sourceVertexUUID = vertexNode.vertex.semanticIdentity.UUID;
         } else {
             this.arrow.sourceVertexUUID = null;
         }
     }
 
-    get sourceVertex() {
-        return this.sourceVertexObject;
+    get sourceVertexNode() {
+        return this.sourceVertexNodeObject;
     }
 
-    set destVertex(vertex) {
-        this.destVertexObject = vertex;
+    get sourceVertex() {
+        if (this.sourceVertexNodeObject !== null) {
+            return this.sourceVertexNodeObject.vertex;
+        } else {
+            return null;
+        }
+    }
 
-        if (vertex !== null) {
-            this.arrow.destVertexUUID = vertex.semanticIdentity.UUID;
+    set destVertexNode(vertexNode) {
+        this.destVertexNodeObject = vertexNode;
+
+        if (vertexNode !== null) {
+            this.arrow.destVertexUUID = vertexNode.vertex.semanticIdentity.UUID;
         } else {
             this.arrow.destVertexUUID = null;
         }
     }
 
+    get destVertexNode() {
+        return this.destVertexNodeObject;
+    }
+
     get destVertex() {
-        return this.destVertexObject;
+        if (this.destVertexNodeObject !== null) {
+            return this.destVertexNodeObject.vertex;
+        } else {
+            return null;
+        }
     }
 }
 
 //Supply with an array/set of Vertex objects or Arrow objects (NOT ArrowEdge objects)
 export class Graph {
-    constructor(rootVertices, arrows) {
-        if (rootVertices !== undefined) {
-            for (let vertex of rootVertices) {
-                this.add(vertex);
-            }
-
-        } else {
-            this.rootVertices = new Set();
+    constructor(vertexArrayFlattened, arrowArrayFlattened) {
+        this.rootVertices = new Set();
+        if (vertexArrayFlattened !== undefined) {
+            this.add(vertexArrayFlattened);
         }
 
-        if (arrows !== undefined) {
-            for (let arrow of arrows) {
-                this.add(arrow);
-            }
-
-        } else {
-            this.arrows = new Set();
+        this.arrows = new Set();
+        if (arrowArrayFlattened !== undefined) {
+            this.add(arrowArrayFlattened)
         }
     }
 
@@ -92,15 +231,19 @@ export class Graph {
             objects = [objects];
         }
 
-        for (let i = 0; i < objects.length; i++) {
-            let object = objects[i];
-
+        for (let object of objects) {
             switch (object.constructor.name) {
                 case "Vertex":
                     this.addVertex(object);
                     break;
                 case "Arrow":
                     this.addArrow(object);
+                    break;
+                case "VertexNode":
+                    this.rootVertices.add(object);
+                    break;
+                case "ArrowEdge":
+                    this.arrows.add(object);
                     break;
                 default:
                     console.error("Attempted to add object to unknown type %s to Graph", object.constructor.name)
@@ -110,7 +253,8 @@ export class Graph {
     }
 
     addVertex(vertex) {
-        if (!this.rootVertices.has(vertex)) {
+        if (this.getVertexNode(vertex) === null) {
+            vertex = new VertexNode(vertex);
             this.rootVertices.add(vertex);
         } else {
             console.error("Attempted to add duplicate vertex");
@@ -121,31 +265,31 @@ export class Graph {
     //This is intentional behaviour of the modelling spec
     addArrow(arrow) {
         if (this.getArrowEdge(arrow) === null) {
-            arrow = new ArrowEdge(this.flattenVertices(), arrow);
+            arrow = new ArrowEdge(this.flattenVertexNodes(), arrow);
             this.arrows.add(arrow);
 
-            if (arrow.destVertex !== null && arrow.sourceVertex !== null) {
-                arrow.destVertex.add(arrow.sourceVertex);
+            if (arrow.destVertexNode !== null && arrow.sourceVertexNode !== null) {
+                arrow.destVertexNode.add(arrow.sourceVertexNode);
 
                 //If the destination of the arrow is currently a root vertex,
                 //search for if the destination has any other possible roots,
                 //and remove from the root ONLY IF another root is found
                 //This retains an entry point for the graph even if there is a cycle back to root
-                if (this.rootVertices.has(arrow.sourceVertex)) {
+                if (this.rootVertices.has(arrow.sourceVertexNode)) {
                     let isAnotherRoot = false;
 
-                    for (let vertex of this.rootVertices) {
-                        if (vertex.semanticIdentity.UUID === arrow.sourceVertex.semanticIdentity.UUID) {
+                    for (let vertexNode of this.rootVertices) {
+                        if (vertexNode.vertex.semanticIdentity.UUID === arrow.sourceVertex.semanticIdentity.UUID) {
                             continue;
                         }
 
-                        if (vertex.has(new Set(), arrow.sourceVertex)) {
+                        if (vertexNode.has(new Set(), arrow.sourceVertexNode)) {
                             isAnotherRoot = true;
                         }
                     }
 
                     if (isAnotherRoot) {
-                        this.rootVertices.delete(arrow.sourceVertex);
+                        this.rootVertices.delete(arrow.sourceVertexNode);
                     }
                 }
             }
@@ -158,6 +302,7 @@ export class Graph {
     //Removes and object while shifting it's children's position in the tree
     remove(object) {
         if (object.constructor.name === "Vertex") {
+            object = this.getVertexNode(object);
             let isRemoved = this.rootVertices.has(object);
 
             //Remove from the root
@@ -168,24 +313,23 @@ export class Graph {
             
             //Remove from anywhere deeper in the tree
             let traversedVertices = new Set();
-            for (let vertex of this.rootVertices) {
-                if (!traversedVertices.has(vertex)) {
-                    traversedVertices.add(vertex);
-                    isRemoved |= vertex.remove(traversedVertices, object);
+            for (let vertexNode of this.rootVertices) {
+                if (!traversedVertices.has(vertexNode)) {
+                    traversedVertices.add(vertexNode);
+                    isRemoved |= vertexNode.remove(traversedVertices, object);
                 }
             }
             
             if (isRemoved) {
                 //Remove the vertex from being the source or dest of any arrow
                 for (let arrow of this.arrows) {
-                    if (arrow.sourceVertex !== null && arrow.sourceVertex.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                        arrow.sourceVertex = null;
+                    if (arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
+                        arrow.sourceVertexNode = null;
                     }
-
-                    if (arrow.destVertex !== null && arrow.destVertex.semanticIdentity.UUID === object.semanticIdentity.UUID) {
-                        arrow.destVertex = null;
+                    
+                    if (arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
+                        arrow.destVertexNode = null;
                     }
-
                 }
             }
 
@@ -194,19 +338,18 @@ export class Graph {
         } else if (object.constructor.name === "Arrow") {
             object = this.getArrowEdge(object);
 
-            if (this.arrows.has(object)) {
+            if (object !== null) {
                 this.arrows.delete(object);
                 //IF arrow has a sourceVertex AND destVertex
-                if (object.sourceVertex !== null && object.destVertex !== null) {
+                if (object.sourceVertexNode !== null && object.destVertexNode !== null) {
                     //IF there is no other arrow from sourceVertex to destVertex, remove the sourceVertex from the children of destVertex
                     //AND move the sourceVertex to root, if there is no other arrow with the same sourceVertex
                     let isEquivalentArrow = false;
                     let isArrowWithSameSource = false;
                     
                     for (let arrow of this.arrows) {
-
-                        let isEquivalentSource = arrow.sourceVertex !== null && arrow.sourceVertex.semanticIdentity.UUID === object.sourceVertex.semanticIdentity.UUID;
-                        let isEquivalentDest = arrow.destVertex !== null && arrow.destVertex.semanticIdentity.UUID === object.destVertex.semanticIdentity.UUID;
+                        let isEquivalentSource = arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === object.sourceVertex.semanticIdentity.UUID;
+                        let isEquivalentDest = arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === object.destVertex.semanticIdentity.UUID;
                         
                         if (isEquivalentSource && isEquivalentDest) {
                             isEquivalentArrow = true;
@@ -217,15 +360,15 @@ export class Graph {
                     }
                     
                     if (!isEquivalentArrow) {
-                        object.sourceVertex.removeFromChildren(object.destVertex);
+                        object.destVertexNode.removeFromChildren(object.sourceVertexNode);
                     }
                     if (!isArrowWithSameSource) {
-                        this.add(object.sourceVertex);
+                        this.add(object.sourceVertexNode);
                     }
 
                     //Remove vertex from the root if removing this arrow has resolved a cycle
-                    if (object.sourceVertex.has(new Set(), object.destVertex)) {
-                        this.rootVertices.delete(object.destVertex);
+                    if (object.sourceVertexNode.has(new Set(), object.destVertexNode)) {
+                        this.rootVertices.delete(object.destVertexNode);
                     }
                 }
 
@@ -265,6 +408,21 @@ export class Graph {
         return false;
     }
 
+    getVertexNode(vertex) {
+        for (let rootNode of this.rootVertices) {
+            if (rootNode.vertex.semanticIdentity.UUID === vertex.semanticIdentity.UUID) {
+                return rootNode;
+            } else {
+                let node = rootNode.getVertexNode(vertex);
+                if (node !== null) {
+                    return node;
+                }
+            }
+        }
+
+        return null;
+    }
+
     getArrowEdge(arrow) {
         for (let arrowEdge of this.arrows) {
             if (arrowEdge.arrow.semanticIdentity.UUID === arrow.semanticIdentity.UUID) {
@@ -281,13 +439,13 @@ export class Graph {
 
         let traversedVertices = new Set();
 
-        for (let vertex of this.rootVertices) {
-            if (!traversedVertices.has(vertex)) {
-                traversedVertices.add(vertex);
-                verticesSet.add(vertex);
+        for (let vertexNode of this.rootVertices) {
+            if (!traversedVertices.has(vertexNode)) {
+                traversedVertices.add(vertexNode);
+                verticesSet.add(vertexNode.vertex);
 
-                if (vertex !== null) {
-                    for (let child of vertex.flattenChildren(traversedVertices)) {
+                if (vertexNode !== null) {
+                    for (let child of vertexNode.flatten(traversedVertices)) {
                         verticesSet.add(child);
                     }
                 }
@@ -302,17 +460,17 @@ export class Graph {
         return flattenedArray.concat(Array.from(arrowsSet));
     }
 
-    flattenVertices() {
+    flattenVertexNodes() {
         var verticesSet = new Set();
         let traversedVertices = new Set();
 
-        for (let vertex of this.rootVertices) {
-            if (!traversedVertices.has(vertex)) {
-                traversedVertices.add(vertex);
-                verticesSet.add(vertex);
+        for (let vertexNode of this.rootVertices) {
+            if (!traversedVertices.has(vertexNode)) {
+                traversedVertices.add(vertexNode);
+                verticesSet.add(vertexNode);
 
-                if (vertex !== null) {
-                    for (let child of vertex.flattenChildren(traversedVertices)) {
+                if (vertexNode !== null) {
+                    for (let child of vertexNode.flattenVertexNodes(traversedVertices)) {
                         verticesSet.add(child);
                     }
                 }
