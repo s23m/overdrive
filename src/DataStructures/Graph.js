@@ -52,27 +52,27 @@ export class Graph {
             this.arrows.add(arrow);
 
             if (arrow.destVertex !== null && arrow.sourceVertex !== null) {
-                arrow.sourceVertex.add(arrow.destVertex);
+                arrow.destVertex.add(arrow.sourceVertex);
 
                 //If the destination of the arrow is currently a root vertex,
                 //search for if the destination has any other possible roots,
                 //and remove from the root ONLY IF another root is found
                 //This retains an entry point for the graph even if there is a cycle back to root
-                if (this.rootVertices.has(arrow.destVertex)) {
+                if (this.rootVertices.has(arrow.sourceVertex)) {
                     let isAnotherRoot = false;
 
                     for (let vertex of this.rootVertices) {
-                        if (vertex.semanticIdentity.UUID === arrow.destVertex.semanticIdentity.UUID) {
+                        if (vertex.semanticIdentity.UUID === arrow.sourceVertex.semanticIdentity.UUID) {
                             continue;
                         }
 
-                        if (vertex.has(new Set(), arrow.destVertex)) {
+                        if (vertex.has(new Set(), arrow.sourceVertex)) {
                             isAnotherRoot = true;
                         }
                     }
 
                     if (isAnotherRoot) {
-                        this.rootVertices.delete(arrow.destVertex);
+                        this.rootVertices.delete(arrow.sourceVertex);
                     }
                 }
             }
@@ -126,7 +126,7 @@ export class Graph {
                     //IF there is no other arrow from sourceVertex to destVertex, remove the destVertex from the children of sourceVertex
                     //AND move the destVertex to root, if there is no other arrow with the same destVertex
                     let isEquivalentArrow = false;
-                    let isArrowWithSameDest = false;
+                    let isArrowWithSameSource = false;
                     
                     for (let arrow of this.arrows) {
 
@@ -136,21 +136,21 @@ export class Graph {
                         if (isEquivalentSource && isEquivalentDest) {
                             isEquivalentArrow = true;
                         }
-                        if (isEquivalentDest) {
-                            isArrowWithSameDest = true;
+                        if (isEquivalentSource) {
+                            isArrowWithSameSource = true;
                         }
                     }
                     
                     if (!isEquivalentArrow) {
                         object.sourceVertex.removeFromChildren(object.destVertex);
                     }
-                    if (!isArrowWithSameDest) {
-                        this.add(object.destVertex);
+                    if (!isArrowWithSameSource) {
+                        this.add(object.sourceVertex);
                     }
 
                     //Remove vertex from the root if removing this arrow has resolved a cycle
-                    if (object.destVertex.has(new Set(), object.sourceVertex)) {
-                        this.rootVertices.delete(object.sourceVertex);
+                    if (object.sourceVertex.has(new Set(), object.destVertex)) {
+                        this.rootVertices.delete(object.destVertex);
                     }
                 }
 
