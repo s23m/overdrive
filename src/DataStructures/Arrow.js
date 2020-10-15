@@ -8,6 +8,7 @@ import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {Cardinality} from "./Cardinality";
 import {Tool} from "../UIElements/LeftMenu";
+import * as canvasDraw from "../UIElements/CanvasDraw"
 
 export class Arrow {
     // Connects an arrow fromVertex to toVertex
@@ -46,7 +47,7 @@ export class Arrow {
         this.updateAttachedVertices();
 
         // Construct Path
-        this.rebuildPath(objectsList);
+        this.rebuildPath();
         
         // Type
 
@@ -110,7 +111,15 @@ export class Arrow {
     }
 
     // Rebuilds path from cached pathData
-    rebuildPath(objects) {
+    rebuildPath() {
+
+        let connectedObjectUUIDs = this.getObjectUUIDList();
+        let objects = [];
+
+        connectedObjectUUIDs.forEach((UUID) => {
+            objects.push(canvasDraw.getObjectFromUUID(UUID))
+        });
+
         // X, Y data for path
         this.path = [];
 
@@ -145,6 +154,16 @@ export class Arrow {
 
         console.error("Could not find vertex to connect for pathItem", pathItem);
         return null;
+    }
+
+    getObjectUUIDList(){
+        let output = [];
+        this.pathData.forEach((item) => {
+            if(item[0] === 0) {
+                output.push(item[1])
+            }
+        });
+        return output
     }
 
     updateAttachedVertices() {

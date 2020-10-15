@@ -80,6 +80,7 @@ function drawLine(x0, y0, x1, y1, color) {
 
 // Core functions
 export function drawAll() {
+    updateArrows();
     clearCanvas();
 
     canvasContext.resetTransform();
@@ -220,7 +221,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     }
 
     // If can't snap to right angles
-    if (arrowPath.length < 1 || coordinate[0] === 0) return {coord:coordinate, snapped:nearest!== null};
+    if (arrowPath.length < 1 || coordinate[0] === 0) return {coord:coordinate, snapped:nearest!== null, nearest:nearest};
 
     // Get angle
     let lastPathX = arrowPath[arrowPath.length-1][1];
@@ -258,7 +259,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         coordinate = [coordinate[0], lastPathX+xv, lastPathY+yv];
     }
 
-    return {coord:coordinate, snapped:nearest!== null}
+    return {coord:coordinate, snapped:nearest!== null, nearest:nearest}
 }
 
 function resizeObjectOnMouseMove(e,resizeVars) {
@@ -281,11 +282,65 @@ function arrowToolSelected(){
     return arrowType === Tool.Visibility || arrowType === Tool.Edge || arrowType === Tool.Specialisation
 }
 
+export function getObjectFromUUID(UUID) {
+    let foundObject;
+    currentObjects.flatten().forEach((item) => {
+        if(item.semanticIdentity.UUID === UUID){
+            foundObject = item;
+        }
+    });
+    return foundObject;
+}
+
+function findNearestArrowPointIndex(x,y){
+    let nearestPointIndex= -1;
+    // Nearest distance here is used as a tolerance variable
+    let nearestDistance = 30;
+    let cDist;
+    let nearestArrow = null;
+
+    currentObjects.flatten().forEach((item) => {
+        if(item.constructor.name === "Arrow") {
+            item.path.forEach((point) => {
+                cDist = Math.hypot(x-point[0],y-point[1]);
+                console.log(cDist);
+                if(cDist < nearestDistance){
+                    nearestDistance = cDist;
+                    nearestPointIndex = item.path.indexOf(point);
+                    nearestArrow = item
+                }
+            });
+        }
+    });
+    return [nearestPointIndex, nearestArrow]
+}
+
+function moveArrowPointOnMouseMove(e,index,arrow) {
+    let x,y;
+    [x,y] = getGraphXYFromMouseEvent(e);
+    let conData = getConnectionDataForArrow(x,y);
+    arrow.pathData[index] = conData['nearest'];
+
+    if(conData['snapped'] === false) {
+        let coord = conData['coord'];
+        arrow.path[index] = [coord[1], coord[2]]
+    }else{
+        let vertexUUID = conData['nearest'][1];
+        let vertex = getObjectFromUUID(vertexUUID);
+
+        if(vertex !== undefined) {
+            arrow.path[index] = arrow.rebuildPath()
+        }
+    }
+
+}
+
 // Event based functions
 export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x,y);
 
-    if (canvas.tool === Tool.Vertex) {
+
+    if (canvas.tool === Tool.Vertex || canvas.tool === Tool.Select) {
 
         if (resizeVars[0] !== null) {
             resizing = true;
@@ -301,6 +356,21 @@ export function onLeftMousePress(canvas, x, y) {
             canvas.props.setLeftMenu(intersection);
             cancelDraw = true;
             return;
+        }
+    }
+
+    if(canvas.tool === Tool.Select){
+        let index,arrow;
+        [index,arrow] = findNearestArrowPointIndex(x,y);
+        console.log(index,arrow);
+        if(index !== -1){
+            resizing = true;
+            let func = function (e) {
+                moveArrowPointOnMouseMove(e,index,arrow)
+            };
+
+            canvasElement.addEventListener("mousemove", func);
+            canvasElement.addEventListener("mouseup", () => {canvasElement.removeEventListener("mousemove",func); console.log("removed")})
         }
     }
 
@@ -446,10 +516,11 @@ function moveObject(e, object) {
                 }
             }
 
+
             // Update index
             console.log(index, x, y);
             object.pathData[index] = getConnectionDataForArrow(x, y);
-            object.rebuildPath(currentObjects);
+            object.rebuildPath();
         }
     }
 }
@@ -458,7 +529,7 @@ export function updateArrows() {
     flattenedObjects.forEach((item) => {
         if (item !== null) {
             if (item.constructor.name === "Arrow") {
-                item.rebuildPath(flattenedObjects);
+                item.rebuildPath();
             }
         }
     });
