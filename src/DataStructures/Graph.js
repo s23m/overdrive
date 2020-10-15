@@ -2,16 +2,86 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+class ArrowEdge {
+    constructor(verticesArray, arrow) {
+        this.arrow = arrow;
+        this.updateVertices(verticesArray);
+    }
+
+    updateVertices(verticesArray) {
+        this.sourceVertexObject = null;
+        this.destVertexObject = null;
+
+        if (this.arrow !== null) {
+            let isSourceFound = this.arrow.sourceVertexUUID === null;
+            let isDestFound = this.arrow.destVertexUUID === null;
+
+            for (let vertex of verticesArray) {
+                if (isSourceFound && isDestFound) {
+                    break;
+                }
+
+                if (vertex !== null) {
+                    if (vertex.semanticIdentity.UUID === this.arrow.sourceVertexUUID) {
+                        this.sourceVertexObject = vertex;
+                        isSourceFound = true;
+
+                    } else if (vertex.semanticIdentity.UUID === this.arrow.destVertexUUID) {
+                        this.destVertexObject = vertex;
+                        isDestFound = true;
+                    }
+                }
+            }
+        
+        }
+    }
+
+    set sourceVertex(vertex) {
+        this.sourceVertexObject = vertex;
+
+        if (vertex !== null) {
+            this.arrow.sourceVertexUUID = vertex.semanticIdentity.UUID;
+        } else {
+            this.arrow.sourceVertexUUID = null;
+        }
+    }
+
+    get sourceVertex() {
+        return this.sourceVertexObject;
+    }
+
+    set destVertex(vertex) {
+        this.destVertexObject = vertex;
+
+        if (vertex !== null) {
+            this.arrow.destVertexUUID = vertex.semanticIdentity.UUID;
+        } else {
+            this.arrow.destVertexUUID = null;
+        }
+    }
+
+    get destVertex() {
+        return this.destVertexObject;
+    }
+}
+
+//Supply with an array/set of Vertex objects or Arrow objects (NOT ArrowEdge objects)
 export class Graph {
     constructor(rootVertices, arrows) {
         if (rootVertices !== undefined) {
-            this.rootVertices = rootVertices;
+            for (let vertex of rootVertices) {
+                this.add(vertex);
+            }
+
         } else {
             this.rootVertices = new Set();
         }
 
         if (arrows !== undefined) {
-            this.arrows = arrows;
+            for (let arrow of arrows) {
+                this.add(arrow);
+            }
+
         } else {
             this.arrows = new Set();
         }
@@ -50,6 +120,8 @@ export class Graph {
     //NOTE: Graph direction is inverted, flowing from the dest to source of arrows
     //This is intentional behaviour of the modelling spec
     addArrow(arrow) {
+        arrow = new ArrowEdge(this.rootVertices, arrow);
+
         if (!this.arrows.has(arrow)) {
             this.arrows.add(arrow);
 
@@ -121,6 +193,8 @@ export class Graph {
             return isRemoved;
 
         } else if (object.constructor.name === "Arrow") {
+            object = this.getArrowEdge(object);
+            
             if (this.arrows.has(object)) {
                 this.arrows.delete(object);
                 //IF arrow has a sourceVertex AND destVertex
@@ -192,7 +266,44 @@ export class Graph {
         return false;
     }
 
+    getArrowEdge(arrow) {
+        for (let arrowEdge of this.arrows) {
+            if (arrowEdge.arrow.semanticIdentity.UUID === arrow.semanticIdentity.UUID) {
+                return arrowEdge;
+            }
+        }
+
+        return null;
+    }
+
     flatten() {
+        let verticesSet = new Set();
+        let arrowsSet = new Set();
+
+        let traversedVertices = new Set();
+
+        for (let vertex of this.rootVertices) {
+            if (!traversedVertices.has(vertex)) {
+                traversedVertices.add(vertex);
+                verticesSet.add(vertex);
+
+                if (vertex !== null) {
+                    for (let child of vertex.flattenChildren(traversedVertices)) {
+                        verticesSet.add(child);
+                    }
+                }
+            }
+        }
+
+        for (let arrowEdge of this.arrows) {
+            arrowsSet.add(arrowEdge.arrow);
+        }
+
+        let flattenedArray = Array.from(verticesSet);
+        return flattenedArray.concat(Array.from(arrowsSet));
+    }
+
+    flattenVertices() {
         var verticesSet = new Set();
         let traversedVertices = new Set();
 
@@ -209,8 +320,6 @@ export class Graph {
             }
         }
 
-        let flattenedArray = Array.from(verticesSet);
-        flattenedArray.push(...Array.from(this.arrows));
-        return flattenedArray;
+        return Array.from(verticesSet);
     }
 }

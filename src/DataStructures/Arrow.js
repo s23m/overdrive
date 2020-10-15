@@ -41,9 +41,9 @@ export class Arrow {
         // Save pathData for later
         this.pathData = pathData;
 
-        this.sourceVertex = null;
-        this.destVertex = null;
-        this.updateAttachedVertices(objectsList);
+        this.sourceVertexUUID = null;
+        this.destVertexUUID = null;
+        this.updateAttachedVertices();
 
         // Construct Path
         this.rebuildPath(objectsList);
@@ -150,28 +150,20 @@ export class Arrow {
         return null;
     }
 
-    updateAttachedVertices(objectsArray) {
+    updateAttachedVertices() {
         var pathStart = this.pathData[0];
         var pathEnd = this.pathData[this.pathData.length - 1];
 
         if (pathStart[0] === 0) {
-            objectsArray.forEach((currentObject, index, arr) => {
-                if (currentObject.semanticIdentity.UUID === pathStart[1]) {
-                    this.sourceVertex = currentObject;
-                }
-            });
+            this.sourceVertexUUID = pathStart[1];
         } else {
-            this.sourceVertex = null;
+            this.sourceVertexUUID = null;
         }
 
         if (pathEnd[0] === 0) {
-            objectsArray.forEach((currentObject, index, arr) => {
-                if (currentObject.semanticIdentity.UUID === pathEnd[1]) {
-                    this.destVertex = currentObject;
-                }
-            });
+            this.destVertexUUID = pathEnd[1];
         } else {
-            this.destVertex = null;
+            this.destVertexUUID = null;
         }
     }
 
