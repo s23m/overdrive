@@ -47,6 +47,8 @@ export class Graph {
         }
     }
 
+    //NOTE: Graph direction is inverted, flowing from the dest to source of arrows
+    //This is intentional behaviour of the modelling spec
     addArrow(arrow) {
         if (!this.arrows.has(arrow)) {
             this.arrows.add(arrow);
@@ -123,8 +125,8 @@ export class Graph {
                 this.arrows.delete(object);
                 //IF arrow has a sourceVertex AND destVertex
                 if (object.sourceVertex !== null && object.destVertex !== null) {
-                    //IF there is no other arrow from sourceVertex to destVertex, remove the destVertex from the children of sourceVertex
-                    //AND move the destVertex to root, if there is no other arrow with the same destVertex
+                    //IF there is no other arrow from sourceVertex to destVertex, remove the sourceVertex from the children of destVertex
+                    //AND move the sourceVertex to root, if there is no other arrow with the same sourceVertex
                     let isEquivalentArrow = false;
                     let isArrowWithSameSource = false;
                     
