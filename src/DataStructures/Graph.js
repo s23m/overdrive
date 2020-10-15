@@ -31,14 +31,18 @@ class VertexNode {
         return isRemoved;
     }
 
-    getVertexNode(vertex, recursive = true) {
+    getVertexNode(traversedVertices, vertex, recursive = true) {
         for (let child of this.children) {
-            if (child.vertex.semanticIdentity.UUID === vertex.semanticIdentity.UUID) {
-                return child;
-            } else if (recursive) {
-                let node = child.getVertexNode(vertex);
-                if (node !== null) {
-                    return node;
+            if (!traversedVertices.has(child)) {
+                traversedVertices.add(child);
+
+                if (child.vertex.semanticIdentity.UUID === vertex.semanticIdentity.UUID) {
+                    return child;
+                } else if (recursive) {
+                    let node = child.getVertexNode(traversedVertices, vertex);
+                    if (node !== null) {
+                        return node;
+                    }
                 }
             }
         }
@@ -114,7 +118,8 @@ class VertexNode {
 
     toTreeViewElement(traversedVertices) {
         let children = [];
-        if (!traversedVertices.has(this)) {
+        let traversed = traversedVertices.has(this);
+        if (!traversed) {
             traversedVertices.add(this);
             for (let child of this.children) {
                 children.push(child.toTreeViewElement(traversedVertices));
@@ -122,6 +127,7 @@ class VertexNode {
         }
 
         let text = this.vertex.title;
+
         if (text === null || text === "") {
             text = "Unnamed Vertex";
         }
@@ -222,7 +228,7 @@ export class Graph {
 
         this.arrows = new Set();
         if (arrowArrayFlattened !== undefined) {
-            this.add(arrowArrayFlattened)
+            this.add(arrowArrayFlattened);
         }
     }
 
@@ -354,7 +360,7 @@ export class Graph {
                         if (isEquivalentSource && isEquivalentDest) {
                             isEquivalentArrow = true;
                         }
-                        if (isEquivalentSource) {
+                        if (isEquivalentSource && arrow.destVertexNode !== null) {
                             isArrowWithSameSource = true;
                         }
                     }
@@ -409,13 +415,18 @@ export class Graph {
     }
 
     getVertexNode(vertex) {
+        let traversedVertices = new Set();
+
         for (let rootNode of this.rootVertices) {
-            if (rootNode.vertex.semanticIdentity.UUID === vertex.semanticIdentity.UUID) {
-                return rootNode;
-            } else {
-                let node = rootNode.getVertexNode(vertex);
-                if (node !== null) {
-                    return node;
+            if (!traversedVertices.has(rootNode)) {
+                traversedVertices.add(rootNode);
+                if (rootNode.vertex.semanticIdentity.UUID === vertex.semanticIdentity.UUID) {
+                    return rootNode;
+                } else {
+                    let node = rootNode.getVertexNode(traversedVertices, vertex);
+                    if (node !== null) {
+                        return node;
+                    }
                 }
             }
         }
@@ -433,27 +444,31 @@ export class Graph {
         return null;
     }
 
-    flatten() {
+    flatten(doFlattenVertices = true, doFlattenArrows = true) {
         let verticesSet = new Set();
         let arrowsSet = new Set();
 
         let traversedVertices = new Set();
 
-        for (let vertexNode of this.rootVertices) {
-            if (!traversedVertices.has(vertexNode)) {
-                traversedVertices.add(vertexNode);
-                verticesSet.add(vertexNode.vertex);
-
-                if (vertexNode !== null) {
-                    for (let child of vertexNode.flatten(traversedVertices)) {
-                        verticesSet.add(child);
+        if (doFlattenVertices) {
+            for (let vertexNode of this.rootVertices) {
+                if (!traversedVertices.has(vertexNode)) {
+                    traversedVertices.add(vertexNode);
+                    verticesSet.add(vertexNode.vertex);
+    
+                    if (vertexNode !== null) {
+                        for (let child of vertexNode.flatten(traversedVertices)) {
+                            verticesSet.add(child);
+                        }
                     }
                 }
             }
         }
-
-        for (let arrowEdge of this.arrows) {
-            arrowsSet.add(arrowEdge.arrow);
+        
+        if (doFlattenArrows) {
+            for (let arrowEdge of this.arrows) {
+                arrowsSet.add(arrowEdge.arrow);
+            }
         }
 
         let flattenedArray = Array.from(verticesSet);
