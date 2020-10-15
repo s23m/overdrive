@@ -35,6 +35,10 @@ export var arrowPath = [];
 var lastX = 0;
 var lastY = 0;
 
+// Arrow moving
+var startMoveX = 0;
+var startMoveY = 0;
+
 // Resize status
 var resizing = false;
 
@@ -400,7 +404,10 @@ function onMouseMove(e, canvas) {
 }
 
 export function onMiddleClick(canvas, x, y) {
-    let selectedObject = findIntersected(x,y);
+    startMoveX = x;
+    startMoveY = y;
+
+    let selectedObject = findIntersected(x, y);
     canvasElement.onmousemove = function(e) {moveObject(e, selectedObject)}
 }
 
@@ -413,7 +420,6 @@ export function onMouseLeave() {
 function moveObject(e, object) {
     if (object != null) {
         if (object.constructor.name === "Vertex") {
-
             let position = getGraphXYFromMouseEvent(e);
             let x = position[0];
             let y = position[1];
@@ -422,6 +428,28 @@ function moveObject(e, object) {
             object.y = y;
 
             updateArrows();
+
+        } else if (object.constructor.name === "Arrow") {
+            return;
+            let position = getGraphXYFromMouseEvent(e);
+            let x = position[0];
+            let y = position[1];
+
+            // Find index for arrow path
+            var index = 0;
+            var distance = getDistance(startMoveX, startMoveY, object.path[0][0], object.path[0][1]);
+            for (let i = 1; i < object.path.length; i++) {
+                let checkDistance = getDistance(startMoveX, startMoveY, object.path[i][0], object.path[i][1]);
+                if (checkDistance < distance) {
+                    index = i;
+                    distance = checkDistance;
+                }
+            }
+
+            // Update index
+            console.log(index, x, y);
+            object.pathData[index] = getConnectionDataForArrow(x, y);
+            object.rebuildPath(currentObjects);
         }
     }
 }
