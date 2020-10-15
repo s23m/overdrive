@@ -120,7 +120,7 @@ export class Graph {
     //NOTE: Graph direction is inverted, flowing from the dest to source of arrows
     //This is intentional behaviour of the modelling spec
     addArrow(arrow) {
-        arrow = new ArrowEdge(this.rootVertices, arrow);
+        arrow = new ArrowEdge(this.flattenVertices(), arrow);
 
         if (!this.arrows.has(arrow)) {
             this.arrows.add(arrow);
@@ -194,7 +194,7 @@ export class Graph {
 
         } else if (object.constructor.name === "Arrow") {
             object = this.getArrowEdge(object);
-            
+
             if (this.arrows.has(object)) {
                 this.arrows.delete(object);
                 //IF arrow has a sourceVertex AND destVertex
