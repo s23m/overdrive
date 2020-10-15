@@ -156,6 +156,8 @@ export class Vertex {
         let ex = 0;
         let ey = 0;
 
+        let pad = (this.hasContent() ? padding*4 : padding*2);
+
         switch (side) {
             case "topLeft":
                 ey += this.y + this.height;
@@ -174,14 +176,16 @@ export class Vertex {
                 break;
 
             case "bottomLeft":
-                this.height = y-this.y;
+
+                this.height = y-this.y  - this.iconAreaHeight - this.contentHeight - pad;
                 ex += this.x + this.width;
                 this.x = x;
                 this.width = ex-this.x;
                 break;
 
             case "bottomRight":
-                this.height = y-this.y-this.contentHeight-padding*4-this.iconAreaHeight;
+
+                this.height = y - this.y - this.iconAreaHeight - this.contentHeight - pad;
                 this.width = x-this.x;
                 break;
 
@@ -202,7 +206,7 @@ export class Vertex {
                 break;
 
             case "bottom":
-                this.height = y-this.y;
+                this.height = y-this.y  - this.iconAreaHeight - this.contentHeight - pad;
                 break;
 
             default:
@@ -219,6 +223,11 @@ export class Vertex {
         }
 
     }
+
+    hasContent() {
+        return !(this.content[0] === "" && this.content.length === 1)
+    }
+
 
     draw(canvasContext) {
 
@@ -262,6 +271,10 @@ export class Vertex {
             let measuredText = canvasContext.measureText(this.content[i]);
             maxWidth = Math.max(maxWidth, measuredText.width, measuredNameText);
             this.contentHeight += this.fontSize+padding;
+        }
+
+        if(!this.hasContent()){
+            this.contentHeight = 0
         }
 
         if (maxWidth > this.width) {
