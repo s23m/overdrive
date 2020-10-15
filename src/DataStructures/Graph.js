@@ -120,9 +120,8 @@ export class Graph {
     //NOTE: Graph direction is inverted, flowing from the dest to source of arrows
     //This is intentional behaviour of the modelling spec
     addArrow(arrow) {
-        arrow = new ArrowEdge(this.flattenVertices(), arrow);
-
-        if (!this.arrows.has(arrow)) {
+        if (this.getArrowEdge(arrow) === null) {
+            arrow = new ArrowEdge(this.flattenVertices(), arrow);
             this.arrows.add(arrow);
 
             if (arrow.destVertex !== null && arrow.sourceVertex !== null) {
