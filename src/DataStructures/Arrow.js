@@ -129,7 +129,7 @@ export class Arrow {
             else if (pathItem[0] === 1) {
                 this.path.push([pathItem[1], pathItem[2]]);
             } else {
-                console.error("Invalid PathData case, full pathData", this.pathData);
+                console.error("Invalid PathData case, wrong case", pathItem);
             }
         }
     }
