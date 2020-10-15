@@ -10,8 +10,9 @@ export function createUUID() {
 }
 
 export class SemanticIdentity {
-
     constructor(name, description, abbreviation, shortAbbreviation, UUID, translations){
+        this.typeName = "SemanticIdentity";
+        
         if (UUID !== undefined){
             this.UUID = UUID;
         } else {

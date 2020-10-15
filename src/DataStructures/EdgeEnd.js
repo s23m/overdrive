@@ -25,6 +25,7 @@ export class EdgeEnd {
         
         this.headType = headType;
         
+        console.log(label);
         if (cardinality !== undefined){
             this.cardinality = cardinality;
         } else {

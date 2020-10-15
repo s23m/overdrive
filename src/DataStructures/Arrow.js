@@ -81,9 +81,6 @@ export class Arrow {
 
         this.isNavigable = false;
         this.isAggregation = false;
-
-        this.sourceCardinality = new Cardinality();
-        this.destCardinality = new Cardinality();
     }
 
     toggleNavigable(){

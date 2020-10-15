@@ -11,6 +11,7 @@ import {Arrow} from "../DataStructures/Arrow";
 import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
+import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
 
 export function getSaveData() {
     let vertexObjects = currentObjects.flatten(true, false);
@@ -66,19 +67,19 @@ function rebuildObject(item, verticesArray) {
         case "Specialisation":
         case "Visibility":
         case "Arrow":
-            var arrow = new Arrow(verticesArray, item.pathData, item.edgeType, item.semanticIdentity);
-            arrow.sourceEdgeEnd = rebuildObject(arrow.sourceEdgeEnd);
-            arrow.destEdgeEnd = rebuildObject(arrow.destEdgeEnd);
-            arrow.sourceCardinality = rebuildObject(arrow.sourceCardinality);
-            arrow.destCardinality = rebuildObject(arrow.destCardinality);
+            var arrow = new Arrow(verticesArray, item.pathData, item.edgeType, rebuildObject(item.semanticIdentity));
+            arrow.sourceEdgeEnd = rebuildObject(item.sourceEdgeEnd);
+            arrow.destEdgeEnd = rebuildObject(item.destEdgeEnd);
             return arrow;
 
         case "Cardinality":
-            return new Cardinality(item.numLowerBound, item.numUpperBound, item.attachedToUUID, item.isVisible, item.semanticIdentity);
+            return new Cardinality(item.numLowerBound, item.numUpperBound, item.attachedToUUID, item.isVisible, rebuildObject(item.semanticIdentity));
 
         case "EdgeEnd":
-            return new EdgeEnd(item.attachedToUUID, item.headType, item.cardinality, item.label, item.semanticIdentity);
+            return new EdgeEnd(item.attachedToUUID, item.headType, rebuildObject(item.cardinality), item.label, rebuildObject(item.semanticIdentity));
 
+        case "SemanticIdentity":
+            return new SemanticIdentity(item.name, item.description, item.abbreviation, item.shortAbbreviation, item.UUID, item.translations);
         default:
             console.error("Unknown object to deserialise ", item);
             break;
