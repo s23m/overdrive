@@ -425,14 +425,9 @@ function moveObject(e, object) {
         }
     }
 }
-<<<<<<< HEAD
 export function updateArrows() {
-    currentObjects.forEach((item) => {
-=======
-function updateArrows() {
     var flattenedObjects = currentObjects.flatten();
     flattenedObjects.forEach((item) => {
->>>>>>> 274410673cabf6d7c4814b8bdc96c5f30e5f2a7a
         if (item !== null) {
             if (item.constructor.name === "Arrow") {
                 item.rebuildPath(flattenedObjects);
@@ -508,13 +503,9 @@ function createObject(canvas, x1, y1, x2, y2) {
         return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
     } else if(arrowToolSelected()) {
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
-<<<<<<< HEAD
         var arrow = Arrow(currentObjects, newPath, arrowType);
         arrow.rebuildPath(currentObjects);
         return arrow;
-=======
-        return new Arrow(currentObjects.flatten(), newPath, arrowType);
->>>>>>> 274410673cabf6d7c4814b8bdc96c5f30e5f2a7a
     }
 
     return null;

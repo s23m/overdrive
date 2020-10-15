@@ -10,6 +10,7 @@ import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
 import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
+import {Graph} from "../DataStructures/Graph";
 
 export function getSaveData() {
     let objectsToSave = currentObjects;
@@ -25,10 +26,7 @@ export function getSaveData() {
         translationColumns: translationColumns,
 
         // The data here should all have uuids and should be convertible back into their objects.
-
-        //TODO: TEMPORARILY DISABLED TO PREVENT CRASHING FROM THE GRAPH OVERHAUL
-        //FIX AND RE-ENABLE
-        //currentObjects: objectsToSave,
+        currentObjects: objectsToSave,
 
         "modelName":document.getElementById("ModelName").value
     };
@@ -53,6 +51,18 @@ export function save() {
 // This is done since serialised objects lose their methods
 function rebuildObject(item) {
     switch (item.typeName) {
+        case "Graph":
+            var newRootVertices = new Set();
+            var newArrows = new Set();
+
+            for (let i = 0; i < item.rootVertices.length; i++) {
+                newRootVertices.add(rebuildObject(vertex));
+            }
+            for (let i = 0; i < item.arrows.length; i++) {
+                newRootVertices.add(rebuildObject(arrow));
+            }
+            return new Graph(newRootVertices, newArrows);
+
         case "Vertex":
             var vertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
             for (let i = 0 ; i < item.children.length; i++) {
@@ -95,10 +105,9 @@ export function open(jsonString) {
         setTranslationColumns(loadedJSON.translationColumns);
 
         // Update current objects
-        var newObjects = loadedJSON.currentObjects;
-        for (let i = 0 ; i < newObjects.length; i++) {
-            newObjects[i] = rebuildObject(newObjects[i]);
-        }
+        var newObjects = rebuildObject(loadedJSON.currentObjects);
+        console.log(newObjects);
+        console.log('\n\n\n\n\n')
 
         setCurrentObjects(newObjects);
 

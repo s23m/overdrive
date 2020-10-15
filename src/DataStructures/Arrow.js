@@ -41,16 +41,13 @@ export class Arrow {
         // Save pathData for later
         this.pathData = pathData;
 
-<<<<<<< HEAD
-=======
         this.sourceVertexUUID = null;
         this.destVertexUUID = null;
         this.updateAttachedVertices();
 
         // Construct Path
         this.rebuildPath(objectsList);
-
->>>>>>> 274410673cabf6d7c4814b8bdc96c5f30e5f2a7a
+        
         // Type
 
         this.lineColour = ArrowProps.LineColour.BLACK;
