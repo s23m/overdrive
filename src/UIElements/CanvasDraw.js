@@ -503,7 +503,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
     } else if(arrowToolSelected()) {
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
-        var arrow = Arrow(currentObjects, newPath, arrowType);
+        var arrow = new Arrow(currentObjects, newPath, arrowType);
         arrow.rebuildPath(currentObjects);
         return arrow;
     }
