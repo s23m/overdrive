@@ -89,7 +89,6 @@ function rebuildObject(item, verticesArray) {
 export function open(jsonString) {
     if (jsonString == null) return;
     try {
-        // TODO Add check to see if there is unsaved progress
         var loadedJSON = JSON.parse(jsonString);
 
         // Loaded objects ONLY with variables

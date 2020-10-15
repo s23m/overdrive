@@ -158,11 +158,15 @@ export class Arrow {
 
     getObjectUUIDList(){
         let output = [];
-        this.pathData.forEach((item) => {
-            if(item[0] === 0) {
-                output.push(item[1])
-            }
-        });
+            this.pathData.forEach((item) => {
+                let index = this.pathData.indexOf(item);
+                if(item == null){
+                    this.pathData[index] = [1,this.path[index][0],this.path[index][1]]
+                }
+                if (this.pathData[index][0] === 0) {
+                    output.push(item[1])
+                }
+            });
         return output
     }
 
