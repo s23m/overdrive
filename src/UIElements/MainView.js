@@ -161,6 +161,7 @@ export class MainProgramClass extends React.Component {
         }
     };
 
+
     render() {
         var GUI =
             <div className="Program">
@@ -180,13 +181,14 @@ export class MainProgramClass extends React.Component {
 
 
                         <div className="TopBar">
+                            <label>Load</label>
                             <input type="file" id="File-Select" onChange={this.showFile} />
                         </div>
 
 
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="json-downloader" onClick={() => fileManager.save()}>Export to JSON</button>
+                                <button id="json-downloader" onClick={() => fileManager.save()}>Save (as Json)</button>
                             </div>
                         </Dropdown.Item>
 
