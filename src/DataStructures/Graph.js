@@ -134,7 +134,8 @@ class VertexNode {
 
         return {
             text: text,
-            children: children 
+            children: children,
+            data: this.vertex
         };
     }
 }

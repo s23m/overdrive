@@ -57,7 +57,7 @@ export function save() {
 
 // This is done since serialised objects lose their methods
 // verticesArray parameter is only used when rebuilding an Arrow type
-function rebuildObject(item, verticesArray) {
+export function rebuildObject(item, verticesArray) {
     switch (item.typeName) {
         case "Vertex":
             var vertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);

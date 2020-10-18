@@ -265,7 +265,7 @@ export class LeftMenu extends React.Component{
         </div>;
 
         if (this.state.menu === LeftMenuType.TreeView) {
-            leftMenuContents = <ContainmentTree/>;
+            leftMenuContents = <ContainmentTree setLeftMenu = {this.props.setLeftMenu} />;
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
@@ -286,7 +286,7 @@ export class LeftMenu extends React.Component{
                 {this.getColourPicker()}
                 <label className="LeftSpacer">&nbsp;</label>
 
-                <button className="LeftLabel" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
+                <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
             </form>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
@@ -344,13 +344,13 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 }
-                <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
+                <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
 
             </form>
             }else{
                 leftMenuContents = <form id = "ArrowMenu">
                     <div className="LeftHeader">Selected Edge</div>
-                    <button className="RemoveButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
+                    <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
 
                     </form>
             }

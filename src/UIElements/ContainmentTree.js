@@ -7,6 +7,7 @@ import React from 'react';
 import TreeView from 'react-simple-jstree';
 
 import { currentObjects } from "./CanvasDraw";
+import { rebuildObject } from "../Serialisation/FileManager";
 
 export class ContainmentTree extends React.Component {
     constructor(props) {
@@ -24,7 +25,22 @@ export class ContainmentTree extends React.Component {
                         { text: "Graph", children: treeData }
                     ]
                 }
-            }
+            },
+            selectedVertex: null
+        }
+    }
+
+    handleElementSelect(e, data) {
+        if (data.selected.length === 1 && data.node.data !== null) {
+            this.setState({
+                selectedVertex: rebuildObject(data.node.data)
+            });
+            this.props.setLeftMenu(this.state.selectedVertex);
+            
+        } else {
+            this.setState({
+                selectedVertex: null
+            });
         }
     }
 
@@ -33,7 +49,7 @@ export class ContainmentTree extends React.Component {
 
         return (
             <div>
-                <TreeView treeData={data} />
+                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} />
             </div>
         )
     }

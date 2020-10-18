@@ -244,7 +244,7 @@ input,button{
     width:14.7vw;
 }
 
-.LeftLabel {
+.LeftLabel, .LeftMenuButton {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
