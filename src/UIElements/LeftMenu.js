@@ -252,6 +252,11 @@ export class LeftMenu extends React.Component{
         canvasDraw.drawAll()
     }
 
+    deselectElement(){
+        this.props.setLeftMenu(null);
+        canvasDraw.drawAll();
+    }
+
 // return the correct menu based on the selected item
     getMenu = () =>{
         let leftMenuContents;
@@ -286,6 +291,8 @@ export class LeftMenu extends React.Component{
                 {this.getColourPicker()}
                 <label className="LeftSpacer">&nbsp;</label>
 
+                <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
+                <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
             </form>;
 
@@ -344,12 +351,16 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
                 {
                 }
+                <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
+                <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
 
             </form>
             }else{
                 leftMenuContents = <form id = "ArrowMenu">
                     <div className="LeftHeader">Selected Edge</div>
+                    <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
+                    <label className="LeftSpacer">&nbsp;</label>
                     <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
 
                     </form>
