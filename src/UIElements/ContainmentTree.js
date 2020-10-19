@@ -33,13 +33,13 @@ export class ContainmentTree extends React.Component {
 
     handleElementSelect(e, data) {
         if (data.selected.length === 1 && data.node.data !== null) {
-            this.setState({
-                selectedVertex: rebuildObject(data.node.data)
-            });
             let UUID = data.node.data.semanticIdentity.UUID;
             for (let vertex of currentObjects.flatten(true, false)) {
                 if (vertex.semanticIdentity.UUID === UUID) {
-                    this.props.setLeftMenu(vertex);
+                    this.setState({
+                        selectedVertex: vertex
+                    });
+                    this.props.setLeftMenu(this.state.selectedVertex);
                 }
             }
             
