@@ -7,7 +7,6 @@ import React from 'react';
 import TreeView from 'react-simple-jstree';
 
 import { currentObjects } from "./CanvasDraw";
-import { rebuildObject } from "../Serialisation/FileManager";
 import { drawAll } from "./CanvasDraw";
 
 export class ContainmentTree extends React.Component {
@@ -23,7 +22,7 @@ export class ContainmentTree extends React.Component {
             data: {
                 core: {
                     data: [
-                        { text: "Graph", children: treeData }
+                        { text: "Graph", children: treeData, state: { opened: true } }
                     ]
                 }
             },

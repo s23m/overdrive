@@ -135,7 +135,8 @@ class VertexNode {
         return {
             text: text,
             children: children,
-            data: this.vertex
+            data: this.vertex,
+            state: { opened: true }
         };
     }
 }
