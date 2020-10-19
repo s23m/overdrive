@@ -6,7 +6,6 @@ import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
-import {Cardinality} from "./Cardinality";
 import {Tool} from "../UIElements/LeftMenu";
 import * as canvasDraw from "../UIElements/CanvasDraw"
 
@@ -143,7 +142,7 @@ export class Arrow {
     // Gets pathItem from object (hopefully a vertex) based on UUID
     getZerothCasePathItem(objects, pathItem) {
         for (let i = 0; i < objects.length; i++) {
-            if (objects[i] !== null) {
+            if (objects[i] !== null && objects[i] !== undefined) {
                 if (objects[i].semanticIdentity.UUID === pathItem[1]) {
                     let x = pathItem[2]*objects[i].width + objects[i].x;
                     let y = pathItem[3]*objects[i].realHeight + objects[i].y;
