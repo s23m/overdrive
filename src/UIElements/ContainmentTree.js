@@ -8,6 +8,7 @@ import TreeView from 'react-simple-jstree';
 
 import { currentObjects } from "./CanvasDraw";
 import { rebuildObject } from "../Serialisation/FileManager";
+import { drawAll } from "./CanvasDraw";
 
 export class ContainmentTree extends React.Component {
     constructor(props) {
@@ -35,13 +36,20 @@ export class ContainmentTree extends React.Component {
             this.setState({
                 selectedVertex: rebuildObject(data.node.data)
             });
-            this.props.setLeftMenu(this.state.selectedVertex);
+            let UUID = data.node.data.semanticIdentity.UUID;
+            for (let vertex of currentObjects.flatten(true, false)) {
+                if (vertex.semanticIdentity.UUID === UUID) {
+                    this.props.setLeftMenu(vertex);
+                }
+            }
             
         } else {
             this.setState({
                 selectedVertex: null
             });
         }
+
+        drawAll();
     }
 
     render() {
