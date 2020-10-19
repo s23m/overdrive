@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 // React imports
-import React, { useState } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
@@ -15,9 +15,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
 import { EditingState } from '@devexpress/dx-react-grid';
 
+import saveAs from 'file-saver';
+
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
+
+import { GridExporter } from '@devexpress/dx-react-grid-export';
 
 import {
     Grid,
@@ -25,6 +29,7 @@ import {
     TableHeaderRow,
     TableInlineCellEditing,
     Toolbar,
+    ExportPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 
 import {
@@ -42,6 +47,12 @@ var setRows = null;
 var setColumns = null;
 var textInput = React.createRef();
 export var translationColumns = [];
+
+const onSave = (workbook) => {
+    workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+    });
+};
 
 const getRowId = row => row.id;
 
@@ -130,18 +141,22 @@ const FocusableCell = ({ onClick, ...restProps }) => (
 );
 
 export default () => {
+    // Create columns
     var [columns, setColumnsRet] = useState(createColumns());
     setColumns = setColumnsRet;
 
+    // Disable editing state
     const [editingStateColumnExtensions] = useState([
         { columnName: 'UUID', editingEnabled: false },
         { columnName: 'type', editingEnabled: false },
     ]);
 
+    // Rows
     const [generatedRows, setRowsRet] = useState([]);
     rows = generatedRows;
     setRows = setRowsRet;
 
+    // Enable/Disable word Wrap
     const [tableColumnExtensions] = useState([
         { columnName: 'UUID', wordWrapEnabled: true },
         { columnName: 'type', wordWrapEnabled: true },
@@ -151,6 +166,7 @@ export default () => {
         { columnName: 'shortAbbreviation', wordWrapEnabled: true },
     ]);
 
+    // Editable
     const [startEditAction, setStartEditAction] = useState('click');
     const [selectTextOnEditStart, setSelectTextOnEditStart] = useState(true);
 
@@ -178,6 +194,14 @@ export default () => {
         setRows(changedRows);
     };
 
+    // Export functionality
+    const exporterRef = useRef(null);
+
+    const startExport = useCallback(() => {
+        exporterRef.current.exportGrid();
+    }, [exporterRef]);
+
+    // Return
     return (
         <Paper>
             <InputGroup>
@@ -210,17 +234,33 @@ export default () => {
                     isSelectText={selectTextOnEditStart}
                     changeSelectText={setSelectTextOnEditStart}
                 />
+                <ExportPanel startExport={startExport} />
                 <TableInlineCellEditing
                     startEditAction={startEditAction}
                     selectTextOnEditStart={selectTextOnEditStart}
                 />
             </Grid>
+            <GridExporter
+                ref={exporterRef}
+                rows={rows}
+                columns={columns}
+                onSave={onSave}
+            />
         </Paper>
     );
 };
 
 function addColumn() {
+    // Get
     const value = textInput.current.value
+
+    // Clear column name
+    textInput.current.value = "";
+
+    // Check if value is empty
+    if (value === "" || value === null || value === undefined) {
+        return;
+    }
 
     // Add column
     translationColumns.push(value);
@@ -228,7 +268,11 @@ function addColumn() {
 }
 
 function removeColumn() {
+    // Get
     const value = textInput.current.value
+
+    // Clear column name
+    textInput.current.value = "";
 
     // Delete from currentObjects
     for (let object of currentObjects.flatten()) {
