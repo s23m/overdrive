@@ -175,7 +175,7 @@ export class MainProgramClass extends React.Component {
 
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="file" onClick={() => canvasDraw.newFile()}>New</button>
+                                <button id="file" onClick={() => canvasDraw.newFile()}>New File</button>
                             </div>
                         </Dropdown.Item>
 
