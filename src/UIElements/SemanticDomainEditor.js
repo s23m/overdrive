@@ -234,7 +234,7 @@ export default () => {
                     isSelectText={selectTextOnEditStart}
                     changeSelectText={setSelectTextOnEditStart}
                 />
-                <ExportPanel startExport={startExport} />
+                <ExportPanel startExport={startExport} />t
                 <TableInlineCellEditing
                     startEditAction={startEditAction}
                     selectTextOnEditStart={selectTextOnEditStart}
