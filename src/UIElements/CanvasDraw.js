@@ -269,6 +269,7 @@ function resizeObjectOnMouseMove(e,resizeVars) {
 
 // Sets the objects uuid and adds it to the root of currentObjects
 function addObject(object) {
+    if (object === null || object === undefined) return;
     currentObjects.add(object);
 }
 
@@ -612,13 +613,25 @@ function createObject(canvas, x1, y1, x2, y2) {
     let currentObjectsFlattened = currentObjects.flatten();
 
     if(canvas.tool === "Vertex") {
+        // Get positions
         let pos = orderCoordinates(x1, y1, x2, y2);
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
+
+        // Add vertex
         return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
 
     } else if(arrowToolSelected()) {
+        // Generate path
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
+
+        // Check if first path connects to a vertex, and ignore if it doesn't
+        // Should be 0 if the connectable connects to a vertex
+        if (newPath[0][0] !== 0) {
+            return null;
+        }
+
+        // Create arrow
         var arrow = new Arrow(currentObjectsFlattened, newPath, arrowType);
         arrow.rebuildPath(currentObjectsFlattened);
         return arrow;
