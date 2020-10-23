@@ -5,6 +5,7 @@
 import {currentObjects, setCurrentObjects, updateArrows} from "../UIElements/CanvasDraw"
 import {version} from "../UIElements/MainView"
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
+import {getModelName} from "../UIElements/CanvasDraw";
 
 import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
@@ -31,7 +32,7 @@ export function getSaveData() {
         vertices: vertexObjects,
         arrows: arrowObjects,
 
-        "modelName":document.getElementById("ModelName").value
+        "modelName":getModelName()
     };
 
 

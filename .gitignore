@@ -18,7 +18,7 @@ node_modules/
 .idea/workspace.xml
 
 #graph auto-save files
-public/saves
+#public/saves
 
 # misc
 .DS_Store
