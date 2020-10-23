@@ -83,8 +83,10 @@ export class LeftMenu extends React.Component{
     componentDidUpdate(prevProps, prevState, snapshot) {
         let elem = document.getElementById("LeftTitle");
         if(elem !== null){
-            elem.select();
-            elem.click()
+            if(document.getElementById("ModelName") !== document.activeElement) {
+                elem.select();
+                elem.click()
+            }
         }
         let leftmenu = document.getElementById("VertexMenu");
         if(leftmenu === null){
@@ -92,8 +94,9 @@ export class LeftMenu extends React.Component{
         }
         if(leftmenu !== null){
             leftmenu.addEventListener("keypress", (e) => {
-                if(e.key === "Enter")
-                e.preventDefault();
+                if(e.key === "Enter") {
+                    e.preventDefault();
+                }
             })
         }
 
