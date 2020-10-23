@@ -39,6 +39,8 @@ export class Vertex {
         // Make sure width and height meet a reasonable minimum
         this.width = Math.max(width, defaultMinimumSize);
         this.height = Math.max(height, defaultMinimumSize)
+
+        this.isAbstract = false;
     }
 
     setSelected(selected) {
@@ -61,6 +63,14 @@ export class Vertex {
     setContent(content) {
         this.content = content;
         this.semanticIdentity.description = content;
+    }
+
+    getAbstract(){
+        return this.isAbstract
+    }
+
+    toggleAbstract(){
+        this.isAbstract = !this.isAbstract
     }
 
     getContentAsString() {
@@ -258,6 +268,7 @@ export class Vertex {
         // Font size
         padding = 5;
         // Set font settings
+        if(this.is)
         canvasContext.font = this.fontSize+"px Segoe UI";
         canvasContext.fontSize = this.fontSize;
 
@@ -383,7 +394,11 @@ export class Vertex {
         // Draw name
         this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title).width);
 
-        canvasContext.font = "italic " + this.fontSize + "px Segoe UI";
+        if(this.isAbstract) {
+            canvasContext.font = "italic " + this.fontSize + "px Segoe UI";
+        }else{
+            canvasContext.font = this.fontSize + "px Segoe UI";
+        }
 
         canvasContext.fillText(this.title, this.x+padding, this.y+dy+this.iconAreaHeight);
         dy = padding*2 +this.height + this.contentHeight;
