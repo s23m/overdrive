@@ -64,9 +64,6 @@ export function rebuildObject(item, verticesArray) {
             var vertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
             return vertex;
 
-        case "Edge":
-        case "Specialisation":
-        case "Visibility":
         case "Arrow":
             var arrow = new Arrow(verticesArray, item.pathData, item.edgeType, rebuildObject(item.semanticIdentity));
             arrow.sourceEdgeEnd = rebuildObject(item.sourceEdgeEnd);

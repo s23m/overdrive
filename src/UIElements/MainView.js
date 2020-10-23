@@ -136,11 +136,17 @@ export class MainProgramClass extends React.Component {
     // Please move it to src/DataStructures/FileManager.js or similar
     showFile = () => {
         if (window.File && window.FileReader && window.FileList && window.Blob) {
-            let file = document.querySelector('input[type=file]').files[0];
+            try {
+                let file = document.querySelector('input[type=file]').files[0];
 
-            let reader = new FileReader();
-            reader.readAsText(file);
-            reader.onload=function() {fileManager.open(reader.result)}
+                let reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function () {
+                    fileManager.open(reader.result)
+                }
+            }catch(e){
+                alert(e.text()+" did you select a file?")
+            }
         } else {
             alert("Your browser is too old to support HTML5 File API");
         }
