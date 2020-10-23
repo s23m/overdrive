@@ -296,6 +296,15 @@ export class Arrow {
         this.destEdgeEnd.draw(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
     }
 
+    isPathSegmentLR(startIndex,endIndex){
+        let indexSx = this.path[startIndex][0];
+        let indexEx = this.path[endIndex][0];
+        let indexSy = this.path[startIndex][1];
+        let indexEy = this.path[endIndex][1];
+
+        return Math.abs(indexSx-indexEx) > Math.abs(indexSy-indexEy)
+    }
+
     getTextOffsets(canvasContext, sourceText, destText, sourceCtext, destCtext) {
         let sourceTextWidth = canvasContext.measureText(sourceText).width;
         let destTextWidth = canvasContext.measureText(destText).width;
@@ -315,33 +324,59 @@ export class Arrow {
         let exOffsetc;
         let eyOffsetc;
 
-        let xFlip = true;
-        let yFlip = true;
+        let sxFlip = true;
+        let syFlip = true;
+        let exFlip = true;
+        let eyFlip = true;
 
         // true if arrow is landscape, false if arrow is portrait;
-        let LRArrow = Math.abs(this.getSX()-this.getEX()) > Math.abs(this.getSY()-this.getEY());
+        let E1index = this.path.length-2;
+        let E2index = this.path.length-1;
 
-        if (LRArrow) {
-            if (this.getSX() > this.getEX()) {
-                xFlip = !xFlip;
+        let startLRArrow = this.isPathSegmentLR(0,1);
+        let endLRArrow = this.isPathSegmentLR(E1index,E2index);
+
+        let SSX = this.path[0][0];
+        let SSY = this.path[0][1];
+        let SEX = this.path[1][0];
+        let SEY = this.path[1][1];
+
+        let ESX = this.path[E1index][0];
+        let ESY = this.path[E1index][1];
+        let EEX = this.path[E2index][0];
+        let EEY = this.path[E2index][1];
+
+        if (startLRArrow) {
+            if (SSX > SEX) {
+                sxFlip = !sxFlip;
             }
         } else {
-            if (this.getSY() > this.getEY()) {
-                yFlip = !yFlip;
+            if (SSY > SEY) {
+                syFlip = !syFlip;
+            }
+        }
+
+        if (endLRArrow) {
+            if (ESX > EEX) {
+                exFlip = !exFlip;
+            }
+        } else {
+            if (ESY > EEY) {
+                eyFlip = !eyFlip;
             }
         }
 
 
-        if (xFlip) {
+        if (sxFlip) {
             sxOffset = charWidth/2;
-            if (LRArrow) {
+            if (startLRArrow) {
                 sxOffsetc = charWidth/2;
             } else {
                 sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
             }
         } else {
             sxOffset = -1*(sourceTextWidth+charWidth/2);
-            if (LRArrow) {
+            if (startLRArrow) {
                 sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
             } else {
                 sxOffsetc = charWidth/2;
@@ -349,16 +384,16 @@ export class Arrow {
         }
         
 
-        if (yFlip) {
+        if (syFlip) {
             syOffset = textHeight;
-            if (LRArrow) {
+            if (startLRArrow) {
                 syOffsetc = -1*(textHeight/2)
             } else {
                 syOffsetc = syOffset;
             }
         } else {
             syOffset = -1*(textHeight/2);
-            if (LRArrow) {
+            if (startLRArrow) {
                 syOffsetc = syOffset;
             } else {
                 syOffsetc = -1*(textHeight/2)
@@ -367,19 +402,19 @@ export class Arrow {
 
 
         //if true arrow moves more in x than in y
-        xFlip = !xFlip;
-        yFlip = !yFlip;
+        exFlip = !exFlip;
+        eyFlip = !eyFlip;
 
-        if (xFlip) {
+        if (exFlip) {
             exOffset = charWidth/2;
-            if (LRArrow) {
+            if (endLRArrow) {
                 exOffsetc = charWidth/2;
             } else {
                 exOffsetc = -1*(destCtextWidth+charWidth/2)
             }
         } else {
             exOffset = -1*(destTextWidth+charWidth/2);
-            if (LRArrow) {
+            if (endLRArrow) {
                 exOffsetc = -1*(destCtextWidth+charWidth/2)
             } else {
                 exOffsetc = charWidth/2;
@@ -387,16 +422,16 @@ export class Arrow {
         }
 
 
-        if (yFlip) {
+        if (eyFlip) {
             eyOffset = textHeight;
-            if (LRArrow) {
+            if (endLRArrow) {
                 eyOffsetc = -1*(textHeight/2);
             } else {
                 eyOffsetc = eyOffset;
             }
         } else {
             eyOffset = -1*(textHeight/2);
-            if (LRArrow) {
+            if (endLRArrow) {
                 eyOffsetc = textHeight;
             } else {
                 eyOffsetc = eyOffset;
