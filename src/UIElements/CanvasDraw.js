@@ -200,9 +200,10 @@ function checkResizeBounds(x, y) {
     return [null, null];
 }
 
+export const distanceThreshold = 15;
+
 // Find connectable for arrow within a threshold distance
 function getConnectionDataForArrow(cursorX, cursorY) {
-    const distanceThreshold = 15;
     const angleThreshold = 8;
 
     let nearest = null;

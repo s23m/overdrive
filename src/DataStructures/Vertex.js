@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { drawMarker } from "../UIElements/CanvasDraw";
+import { drawMarker, distanceThreshold } from "../UIElements/CanvasDraw";
 import { SemanticIdentity } from "./SemanticIdentity";
 
 export var padding = 5;
@@ -429,6 +429,7 @@ export class Vertex {
 
         // If can connect to top/bottom
         if (cursorX > this.x && cursorX < this.x+this.width) {
+            console.log("success");
             let xPercentage = (cursorX-this.x)/this.width;
 
             sides.push([Math.abs(cursorY-(this.y)), xPercentage, 0]);
@@ -437,6 +438,7 @@ export class Vertex {
 
         // If can connect to left/right
         else if (cursorY > this.y && cursorY < this.y+(this.realHeight)) {
+            console.log("success");
             let yPercentage = (cursorY-this.y)/(this.realHeight);
 
             sides.push([Math.abs(cursorX-(this.x)), 0, yPercentage]);
@@ -444,8 +446,55 @@ export class Vertex {
         }
 
         // Can't connect
-        else {
-            return null;
+
+        let goodSide = false;
+
+        sides.forEach((side) => {
+            if(side[0] < distanceThreshold){
+                goodSide = true;
+            }
+        });
+
+        if(goodSide === false && cursorX > this.x && cursorX < this.x + this.width && cursorY > this.y && cursorY < this.y+this.realHeight){
+                // click was inside the vertex but not in tolerance
+                console.log("trying things")
+                let yPercentage = (cursorY-this.y)/(this.realHeight);
+                let xPercentage = (cursorX-this.x)/this.width;
+
+                // find closest side
+                let rightDist = Math.abs(xPercentage-1)*this.width;
+                let topDist = yPercentage*this.realHeight;
+                let leftDist = xPercentage*this.width;
+                let bottomDist = yPercentage*this.realHeight;
+
+                let closestIndex = 0;
+                let closestDistance = leftDist;
+                let distArrays = [leftDist,rightDist,topDist,bottomDist];
+
+                // no need to go through leftDist here as its already set as shortest
+                for(let i = 1; i< distArrays.length-1; i++){
+                    if(distArrays[i] < closestDistance){
+                        closestDistance = distArrays[i];
+                        closestIndex = i;
+                    }
+                }
+
+                if ( closestIndex === 0 ){
+                    return [0, 0, yPercentage]
+                }
+                if ( closestIndex === 1 ){
+                    return [0, 1, yPercentage]
+                }
+                if ( closestIndex === 2 ){
+                    return [0, xPercentage, 0]
+                }
+                if ( closestIndex === 3 ){
+                    return [0, xPercentage, 1]
+                }
+        }
+
+        if(sides.length === 0){
+            return null
         }
 
         // Return side with shortest distance
