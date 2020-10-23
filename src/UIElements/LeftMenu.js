@@ -242,21 +242,30 @@ export class LeftMenu extends React.Component{
         canvasDraw.drawAll();
     }
 
-    setNavigable(){
-        if(this.state.selectedObject.getAggregation()){
-            this.state.selectedObject.toggleAggregation();
-        }
-        document.getElementById("IsAggregation").checked = false;
-        this.state.selectedObject.toggleNavigable();
+    setNavigable(side){
+
+        this.state.selectedObject.toggleNavigable(side);
+
+        document.getElementById("SourceIsNavigable").checked = this.state.selectedObject.getNavigable(0);
+        document.getElementById("DestIsNavigable").checked = this.state.selectedObject.getNavigable(1);
         canvasDraw.drawAll()
     }
 
-    setAggregation(){
-        if(this.state.selectedObject.getNavigable()){
-            this.state.selectedObject.toggleNavigable();
+    setAggregation(side){
+        if(!this.state.selectedObject.getNavigable(side)){
+            this.state.selectedObject.toggleNavigable(side);
         }
-        document.getElementById("IsNavigable").checked = false;
-        this.state.selectedObject.toggleAggregation();
+        this.state.selectedObject.toggleAggregation(side);
+        let SourceAggregation = this.state.selectedObject.getAggregation(0);
+        let DestAggregation = this.state.selectedObject.getAggregation(1);
+        if(SourceAggregation) {
+            document.getElementById("SourceIsNavigable").checked = true;
+        }
+        if(DestAggregation){
+            document.getElementById("DestIsNavigable").checked = true;
+        }
+        document.getElementById("SourceIsAggregation").checked = SourceAggregation;
+        document.getElementById("DestIsAggregation").checked = DestAggregation;
         canvasDraw.drawAll()
     }
 
@@ -322,11 +331,18 @@ export class LeftMenu extends React.Component{
             leftMenuContents = <form id = "ArrowMenu">
                 <div className="LeftHeader">Edge Properties</div>
 
-                <label className="LeftLabel">Is Navigable?</label>
-                <input type="checkbox" id="IsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable()} onClick={() => this.setNavigable()}/>
+                <label className="LeftLabel">Source Is Navigable?</label>
+                <input type="checkbox" id="SourceIsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable(0)} onClick={() => this.setNavigable(0)}/>
 
-                <label className="LeftLabel">Is Aggregation?</label>
-                <input type="checkbox" id="IsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation()} onClick={() => this.setAggregation()}/>
+                <label className="LeftLabel">Destination Is Navigable?</label>
+                <input type="checkbox" id="DestIsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable(1)} onClick={() => this.setNavigable(1)}/>
+
+                <label className="LeftLabel">Source Is Aggregation?</label>
+                <input type="checkbox" id="SourceIsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation(0)} onClick={() => this.setAggregation(0)}/>
+
+                <label className="LeftLabel">Destination Is Aggregation?</label>
+                <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation(1)} onClick={() => this.setAggregation(1)}/>
+
 
                 <label className="LeftLabel">Line Type</label>
                 <select name="LineType" id="LineType" className="LeftSelector" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>

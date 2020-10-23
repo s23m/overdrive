@@ -79,34 +79,110 @@ export class Arrow {
 
         this.selected = false;
 
-        this.isNavigable = false;
-        this.isAggregation = false;
+        this.sourceIsNavigable = false;
+        this.destIsNavigable = false;
+        this.sourceIsAggregation = false;
+        this.destIsAggregation = false;
     }
 
-    toggleNavigable(){
-        this.isNavigable = !this.isNavigable;
-        if(this.isNavigable){
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW
+    toggleNavigable(side){
+        if(side === 0) {
+            this.sourceIsNavigable = !this.sourceIsNavigable;
+        }else if(side === 1){
+            this.destIsNavigable = !this.destIsNavigable;
+        }
+        if(this.sourceIsAggregation){
+            this.sourceIsNavigable = true;
+        }
+        if(this.destIsAggregation){
+            this.destIsNavigable = true;
+        }
+
+        if(this.sourceIsNavigable && this.destIsNavigable){
+            if(this.sourceIsAggregation){
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+            }
+            else if(this.destIsAggregation){
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+            }else{
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            }
+        }else if(this.sourceIsNavigable){
+            if(this.sourceIsAggregation){
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            }else {
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            }
+        }else if(this.destIsNavigable){
+            if(this.destIsAggregation){
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            }else {
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            }
         }else{
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+        }
+
+    }
+
+    toggleAggregation(side){
+        if(side === 0){
+            this.sourceIsAggregation = !this.sourceIsAggregation;
+            if(this.destIsAggregation && this.sourceIsAggregation){
+                this.destIsAggregation = false;
+            }
+        }else{
+            this.destIsAggregation = !this.destIsAggregation;
+            if(this.destIsAggregation && this.sourceIsAggregation){
+                this.sourceIsAggregation = false;
+            }
+        }
+
+
+        if(this.sourceIsAggregation) {
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+            if(this.destIsNavigable){
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+            }else{
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+            }
+        }else if(this.destIsAggregation){
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+            if(this.sourceIsNavigable){
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+            }else{
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+            }
+        }else{
+            // this updates the arrow heads so they are correct
+            this.toggleNavigable(100)
         }
     }
 
-    toggleAggregation(){
-        this.isAggregation = !this.isAggregation;
-        if(this.isAggregation){
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND
+    getNavigable(side){
+        if(side === 0){
+            return this.sourceIsNavigable;
         }else{
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+            return this.destIsNavigable;
         }
+
     }
 
-    getNavigable(){
-        return this.isNavigable
-    }
+    getAggregation(side){
+        if(side === 0){
+            return this.sourceIsAggregation
+        }else{
+            return this.destIsAggregation
+        }
 
-    getAggregation(){
-        return this.isAggregation
     }
 
     trimPath(){
