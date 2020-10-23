@@ -343,14 +343,6 @@ export class LeftMenu extends React.Component{
                 <label className="LeftLabel">Destination Is Aggregation?</label>
                 <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation(1)} onClick={() => this.setAggregation(1)}/>
 
-
-                <label className="LeftLabel">Line Type</label>
-                <select name="LineType" id="LineType" className="LeftSelector" defaultValue={LineTypeToString[this.state.selectedObject.lineType]} onChange={() => this.setLineType()}>
-                    <option value = "Solid">Solid</option>
-                    <option value = "Dashed">Dashed</option>
-                </select>
-                <label className="LeftSpacer">&nbsp;</label>
-
                 <label className="LeftLabel">Line Colour</label>
                 <select name="LineColour" id="LineColour" className="LeftSelector" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
                     <option value = "Black">Black</option>

@@ -34,10 +34,6 @@ app.post('/serialisation/save', (req,res) => {
 
     let modelName = req.body.modelName;
 
-    if(modelName === undefined){
-        modelName = "Unnamed Model"
-    }
-
     let filePath = __dirname.substring(0,__dirname.length-7) + '/public/saves/' + modelName + " "+ dateString + '.json';
     console.log(filePath);
 

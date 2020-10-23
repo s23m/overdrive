@@ -47,7 +47,7 @@ export function save() {
     let dataFile = new Blob([dataStr], {type: 'text/json'});
 
     DLelement.href = URL.createObjectURL(dataFile);
-    let title = document.getElementById("ModelName").value;
+    let title = getModelName();
     if (title === "") {
         title = "untitled";
     }
