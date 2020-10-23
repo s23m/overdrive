@@ -302,7 +302,7 @@ export function newFile() {
     var r = window.confirm("Are you sure, this will clear the current canvas!");
     if (r === true) {
         console.log("Clearing canvas");
-        currentObjects = new Graph();
+        window.location.reload();
     } else {
         console.log("User opted to not clear the canvas");
     }
