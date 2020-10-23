@@ -56,6 +56,18 @@ export function assignElement(elementID) {
 
 }
 
+export function getModelName() {
+    let nameElement = document.getElementById("ModelName")
+
+    if (nameElement === null){
+        return "Unnamed Model"
+    }
+    if(nameElement.value === "" || nameElement.value === null || nameElement.value === undefined) {
+        return "Unnamed Model"
+    }
+    return nameElement.value;
+}
+
 export function resetMouseOrigin() {
     try {
         let canvasRect = canvasElement.getBoundingClientRect();
@@ -369,6 +381,7 @@ export function onLeftMousePress(canvas, x, y) {
         if(canvas.tool === Tool.Vertex && intersection !== null){
             console.log("Selecting intersected Vertex");
             canvas.props.setLeftMenu(intersection);
+            canvas.props.setMode(Tool.Select);
             cancelDraw = true;
             return;
         }
@@ -417,6 +430,7 @@ export function onRightMouseRelease(canvas, x, y) {
         drawAll(currentObjects);
 
         canvas.props.setLeftMenu(newObject)
+        canvas.props.setMode(Tool.Select);
     }
 }
 
@@ -450,6 +464,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             drawAll(currentObjects);
 
             canvas.props.setLeftMenu(newObject)
+            canvas.props.setMode(Tool.Select);
 
         } else {
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
@@ -468,6 +483,7 @@ export function onLeftMouseRelease(canvas, x, y) {
         addObject(newObject);
 
         canvas.props.setLeftMenu(newObject);
+        canvas.props.setMode(Tool.Select);
     }
     drawAll(currentObjects);
 }

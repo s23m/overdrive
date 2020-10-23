@@ -149,7 +149,7 @@ export class Vertex {
     }
 
     getBounds() {
-        return [this.x, this.y, this.x+this.width, this.y+this.realHeight];
+        return [this.x, this.y, this.x+this.width, this.y+this.realHeight-padding];
     }
 
     expandSide(side, x, y,canvasContext) {

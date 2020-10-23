@@ -221,7 +221,7 @@ export class MainProgramClass extends React.Component {
                 <div className="LowerPanel">
                     <LeftMenu setMode = {this.setMode} setLeftMenu = {this.setLeftMenu} mainState = {this.state} className = "LeftMenus"/>
                     <div className="Canvas">
-                        <Canvas setLeftMenu = {this.setLeftMenu} mainState = {this.state}/>
+                        <Canvas setLeftMenu = {this.setLeftMenu} setMode = {this.setMode} mainState = {this.state}/>
                     </div>
                 </div>
             </div>;
