@@ -274,8 +274,13 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     return {coord:coordinate, snapped:nearest!== null, nearest:nearest}
 }
 
+function getSelectedObject(canvas){
+    return canvas.props.mainState.selectedObject
+}
+
 function resizeObjectOnMouseMove(e,resizeVars) {
     let coords = getGraphXYFromMouseEvent(e);
+
     resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1],canvasContext);
 }
 
@@ -370,11 +375,13 @@ export function onLeftMousePress(canvas, x, y) {
     if (canvas.tool === Tool.Vertex || canvas.tool === Tool.Select) {
 
         if (resizeVars[0] !== null) {
-            resizing = true;
-            canvasElement.onmousemove = function (e) {
-                resizeObjectOnMouseMove(e, resizeVars);
-            };
-            return;
+            if (resizeVars[0] === getSelectedObject(canvas)) {
+                resizing = true;
+                canvasElement.onmousemove = function (e) {
+                    resizeObjectOnMouseMove(e, resizeVars);
+                };
+                return;
+            }
         }
 
         let intersection = findIntersected(x,y);
@@ -391,14 +398,19 @@ export function onLeftMousePress(canvas, x, y) {
         let index,arrow;
         [index,arrow] = findNearestArrowPointIndex(x,y);
         console.log(index,arrow);
-        if(index !== -1){
-            resizing = true;
-            let func = function (e) {
-                moveArrowPointOnMouseMove(e,index,arrow)
-            };
+        if(arrow === getSelectedObject(canvas)) {
+            if (index !== -1) {
+                resizing = true;
+                let func = function (e) {
+                    moveArrowPointOnMouseMove(e, index, arrow)
+                };
 
-            canvasElement.addEventListener("mousemove", func);
-            canvasElement.addEventListener("mouseup", () => {canvasElement.removeEventListener("mousemove",func); console.log("removed")})
+                canvasElement.addEventListener("mousemove", func);
+                canvasElement.addEventListener("mouseup", () => {
+                    canvasElement.removeEventListener("mousemove", func);
+                    console.log("removed")
+                })
+            }
         }
     }
 
