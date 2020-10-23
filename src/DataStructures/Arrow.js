@@ -109,6 +109,11 @@ export class Arrow {
         return this.isAggregation
     }
 
+    trimPath(){
+        this.pathData = [this.pathData[0], this.pathData[this.pathData.length-1]];
+        this.path = [this.path[0], this.path[this.path.length-1]];
+    }
+
     // Rebuilds path from cached pathData
     rebuildPath() {
 
