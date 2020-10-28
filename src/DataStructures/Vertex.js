@@ -350,6 +350,7 @@ export class Vertex {
 
                     let imageElement = new Image();
                     imageElement.src = "http://localhost:8080/icons/" + this.icons[0][i];
+                    imageElement.crossOrigin = "anonymous";
 
                     imageElement.onload = () => {
                         loadImage(imageElement);
