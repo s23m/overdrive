@@ -1,3 +1,5 @@
+> :warning: This repository has been archived. The authoritative repository is now https://github.com/s23m/model-editor/.
+
 ## Capstone S23M Graph Editor
 A repository to house all code and configuration artefacts produced by the OverDrive Development team in collaboration with S23M
 
